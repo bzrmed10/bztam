@@ -1,0 +1,169 @@
+name: Bztam
+options:
+  bundleIdPrefix: com.bzrmed
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "26.0"
+  developmentLanguage: en
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: "${APPLE_TEAM_ID}"
+    TARGETED_DEVICE_FAMILY: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+targets:
+  Bztam:
+    type: application
+    platform: iOS
+    sources:
+      - path: Bztam
+      - path: Shared
+    info:
+      path: Bztam/Info.plist
+      properties:
+        CFBundleDisplayName: Bztam
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, fr]
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        CFBundleURLTypes:
+          - CFBundleURLName: com.bzrmed.bztam
+            CFBundleURLSchemes:
+              - bztam
+        ITSAppUsesNonExemptEncryption: false
+    entitlements:
+      path: Bztam/Bztam.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.bzrmed.bztam
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bzrmed.bztam
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+      configs:
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: "Apple Distribution"
+          "CODE_SIGN_IDENTITY[sdk=iphoneos*]": "Apple Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "Bztam CI AppStore"
+    dependencies:
+      - target: BztamShare
+        embed: true
+      - target: BztamWatch
+        embed: true
+  BztamShare:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: BztamShare
+      - path: Shared/AppGroup.swift
+    info:
+      path: BztamShare/Info.plist
+      properties:
+        CFBundleDisplayName: Bztam
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.share-services
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController
+          NSExtensionAttributes:
+            NSExtensionActivationRule:
+              NSExtensionActivationSupportsImageWithMaxCount: 1
+              NSExtensionActivationSupportsFileWithMaxCount: 1
+    entitlements:
+      path: BztamShare/BztamShare.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.bzrmed.bztam
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bzrmed.bztam.share
+        TARGETED_DEVICE_FAMILY: "1"
+        SKIP_INSTALL: YES
+      configs:
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: "Apple Distribution"
+          "CODE_SIGN_IDENTITY[sdk=iphoneos*]": "Apple Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "Bztam CI Share AppStore"
+  BztamWatch:
+    type: application
+    platform: watchOS
+    deploymentTarget: "10.0"
+    sources:
+      - path: BztamWatch
+    info:
+      path: BztamWatch/Info.plist
+      properties:
+        CFBundleDisplayName: Bztam
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleLocalizations: [en, fr]
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: com.bzrmed.bztam
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bzrmed.bztam.watchkitapp
+        TARGETED_DEVICE_FAMILY: "4"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SKIP_INSTALL: YES
+      configs:
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: "Apple Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "Bztam CI Watch AppStore"
+  BztamTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: BztamTests
+    dependencies:
+      - target: Bztam
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bzrmed.bztam.tests
+        GENERATE_INFOPLIST_FILE: YES
+  BztamUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: BztamUITests
+    dependencies:
+      - target: Bztam
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bzrmed.bztam.uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: Bztam
+schemes:
+  BztamScreenshots:
+    build:
+      targets:
+        Bztam: all
+        BztamShare: all
+        BztamWatch: all
+    test:
+      targets:
+        - BztamUITests
+  Bztam:
+    build:
+      targets:
+        Bztam: all
+        BztamShare: all
+        BztamWatch: all
+    test:
+      targets:
+        - BztamTests
+    run:
+      config: Debug
+    archive:
+      config: Release
