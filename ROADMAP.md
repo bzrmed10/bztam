@@ -3,12 +3,12 @@
 One task = one commit. Mark `[x]` when committed and CI is green. Progress is summarized in `REPORT.md`.
 
 ## Milestone 0 — Foundation
-- [ ] M0.1 README
-- [ ] M0.2 SPEC.md, ROADMAP.md, REPORT.md
-- [ ] M0.3 Xcode project via XcodeGen (`project.yml`): app `Bztam`, watch app `BztamWatch`, share extension `BztamShare`, unit and UI tests, iOS 26, App Group, placeholder screens and icons
-- [ ] M0.4 CI: build + test + screenshots on a macOS runner on every push
-- [ ] M0.5 TestFlight workflow (manual trigger and on tag): temporary signing via the API, archive, upload
-- [ ] M0.6 Setup guide for secrets and first TestFlight install (`docs/SETUP.md`)
+- [x] M0.1 README
+- [x] M0.2 SPEC.md, ROADMAP.md, REPORT.md
+- [x] M0.3 Xcode project via XcodeGen (`project.yml`): app `Bztam`, watch app `BztamWatch`, share extension `BztamShare`, unit and UI tests, iOS 26, App Group, placeholder screens and icons
+- [x] M0.4 CI: build + test + screenshots on a macOS runner on every push
+- [x] M0.5 TestFlight workflow (manual trigger and on tag): temporary signing via the API, archive, upload
+- [x] M0.6 Setup guide for secrets and first TestFlight install (`docs/SETUP.md`)
 
 ## Milestone 1 — Core money (first TestFlight)
 - [ ] M1.1 Design system: color tokens (light/dark), type styles, money formatting (MAD, en/fr)
