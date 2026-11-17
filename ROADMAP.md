@@ -5,10 +5,14 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 ## Milestone 0 — Foundation
 - [x] M0.1 README
 - [x] M0.2 SPEC.md, ROADMAP.md, REPORT.md
-- [x] M0.3 Xcode project via XcodeGen (`project.yml`): app `Bztam`, watch app `BztamWatch`, share extension `BztamShare`, unit and UI tests, iOS 26, App Group, placeholder screens and icons
+- [x] M0.3 Xcode project via XcodeGen (`project.yml`): app `Bztam`, share extension `BztamShare`, unit and UI tests, iOS 26, App Group, placeholder screens and icons
 - [x] M0.4 CI: build + test + screenshots on a macOS runner on every push
 - [x] M0.5 TestFlight workflow (manual trigger and on tag): temporary signing via the API, archive, upload
 - [x] M0.6 Setup guide for secrets and first TestFlight install (`docs/SETUP.md`)
+
+## Design
+- [ ] D.1 Design canvas of all screens, approved before Milestone 1
+- [x] D.2 Watch app removed from v1 (project, CI, signing)
 
 ## Milestone 1 — Core money (first TestFlight)
 - [ ] M1.1 Design system: color tokens (light/dark), type styles, money formatting (MAD, en/fr)
@@ -46,15 +50,11 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [ ] M5.2 Foundation Models extraction and category guess when available
 - [ ] M5.3 Duplicate warning
 
-## Milestone 6 — Apple Watch
-- [ ] M6.1 Summary payload from iPhone, glance screen
-- [ ] M6.2 Quick add from the watch, synced to the iPhone
-
-## Milestone 7 — App Store readiness
-- [ ] M7.1 Privacy manifests, permission strings (en/fr), encryption flag
-- [ ] M7.2 App icon (iPhone and watch)
-- [ ] M7.3 Website: privacy, terms, support
-- [ ] M7.4 Metadata en + fr (+ primary locale), screenshots, metadata workflow
+## Milestone 6 — App Store readiness
+- [ ] M6.1 Privacy manifests, permission strings (en/fr), encryption flag
+- [ ] M6.2 App icon
+- [ ] M6.3 Website: privacy, terms, support
+- [ ] M6.4 Metadata en + fr (+ primary locale), screenshots, metadata workflow
 
 ## Later
-- Monetization (when decided), iCloud sync, recurring entries, Siri / Shortcuts, export.
+- Apple Watch app, widgets, monetization (when decided), iCloud sync, recurring entries, Siri / Shortcuts, export.

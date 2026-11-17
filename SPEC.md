@@ -4,15 +4,15 @@
 Show clearly **where your money goes**: how much came in, how much went out, and how much is left in each category. Adding an expense takes under 5 seconds, including from a paper receipt, a screenshot or a PDF bill. Simple and minimal above everything.
 
 ## Platform and stack
-- iOS 26+, iPhone only. watchOS 10+ companion app. Swift 6, SwiftUI, SwiftData, Swift Charts, Vision, VisionKit, PDFKit, WatchConnectivity, Foundation Models (when available).
+- iOS 26+, iPhone only. Swift 6, SwiftUI, SwiftData, Swift Charts, Vision, VisionKit, PDFKit, Foundation Models (when available).
 - No backend, no accounts, no bank connection, no ads. All data on device in a SwiftData store inside the App Group container, so the app and the share extension read the same data.
-- Bundle IDs: app `com.bzrmed.bztam`, watch `com.bzrmed.bztam.watchkitapp`, share extension `com.bzrmed.bztam.share`, App Group `group.com.bzrmed.bztam`.
+- Bundle IDs: app `com.bzrmed.bztam`, share extension `com.bzrmed.bztam.share`, App Group `group.com.bzrmed.bztam`.
 - Languages: English and French (custom table, English text as key). Currency: Moroccan dirham (MAD, shown as "DH") by default, changeable.
-- Widgets: none in v1 (no Home Screen widgets, no watch complications).
+- Apple Watch app and widgets: not in v1.
 - Money (paid features): not decided. v1 is free. StoreKit 2 can be added later without a server.
 
 ## Core concepts
-- **Entry**: one money movement. Kind = expense or income. Amount stored as whole centimes (`Int`), never `Double`. Date, merchant, note, category (expenses), income source (income), optional attachment (image or PDF file), source (manual, camera, screenshot, share, watch).
+- **Entry**: one money movement. Kind = expense or income. Amount stored as whole centimes (`Int`), never `Double`. Date, merchant, note, category (expenses), income source (income), optional attachment (image or PDF file), source (manual, camera, screenshot, share).
 - **Category**: name, SF Symbol icon, color, monthly budget (centimes), order, archived flag. Defaults: Courses, Café & Food, Transport, Bills, Phone & Internet, Rent, Going out, Other.
 - **Period**: a budget month runs from the user's **payday** (day 1–28, default 1) to the day before the next payday.
 - **Money in** for a period = sum of income entries. **Spent** = sum of expenses. **Left** = money in − spent.
@@ -49,10 +49,6 @@ Navigation: iOS 26 Liquid Glass tab bar (Home, Activity, Insights) and a glass S
 - Optional Face ID / passcode lock when the app opens.
 - Privacy manifest in every target; no tracking, no data collected.
 
-## Apple Watch
-- Glance: left this period and per-category list.
-- Quick add: amount (keypad) + category, sent to the iPhone with WatchConnectivity (`transferUserInfo`, queued when the phone is not reachable). The iPhone sends a small summary payload back.
-
 ## Design
 - Minimal: lots of space, one number at a time, rounded system type.
 - Colors: warm terracotta accent, green for money in, coral for over budget, quiet greys. Light and dark mode.
@@ -60,4 +56,4 @@ Navigation: iOS 26 Liquid Glass tab bar (Home, Activity, Insights) and a glass S
 - Accessibility: Dynamic Type, VoiceOver labels on every control, sufficient contrast.
 
 ## Out of scope for v1
-Bank sync, investments, crypto, shared budgets, recurring entries, iCloud sync, cloud AI, widgets.
+Bank sync, investments, crypto, shared budgets, recurring entries, iCloud sync, cloud AI, widgets, Apple Watch app.

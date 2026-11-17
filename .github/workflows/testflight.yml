@@ -84,7 +84,6 @@ jobs:
             <dict>
               <key>com.bzrmed.bztam</key><string>Bztam CI AppStore</string>
               <key>com.bzrmed.bztam.share</key><string>Bztam CI Share AppStore</string>
-              <key>com.bzrmed.bztam.watchkitapp</key><string>Bztam CI Watch AppStore</string>
             </dict>
             <key>uploadSymbols</key><true/>
           </dict>

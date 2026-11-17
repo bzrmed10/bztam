@@ -69,10 +69,6 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             | tee build/uitest.log | xcbeautify --renderer github-actions
 
-      - name: Capture watch screenshots
-        continue-on-error: true
-        run: bash scripts/ci/watch-screenshots.sh build/screenshots
-
       - name: Publish screenshots to the ci-screenshots branch
         if: always() && github.ref == 'refs/heads/main'
         run: |
