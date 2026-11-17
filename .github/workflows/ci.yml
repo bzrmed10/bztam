@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["website/**", "docs/**", "scripts/ci/asc_metadata.py", ".github/workflows/appstore-metadata.yml"]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: macos-26
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    env:
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Install tools
+        run: brew install xcodegen xcbeautify
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Pick simulator
+        id: sim
+        run: echo "udid=$(bash scripts/ci/select-simulator.sh)" >> "$GITHUB_OUTPUT"
+
+      - name: Build and test
+        run: |
+          set -o pipefail
+          mkdir -p build
+          xcodebuild test \
+            -project Bztam.xcodeproj \
+            -scheme Bztam \
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            -resultBundlePath build/Test.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee build/xcodebuild.log | xcbeautify --renderer github-actions
+
+      - name: Show compile errors
+        if: failure()
+        run: |
+          grep -nE 'error|Stack dump|bug report|signal|Killed|unable to type-check' build/xcodebuild.log | head -60 || true
+          echo "-----"
+          grep -n -B25 -A12 'Please submit a bug report' build/xcodebuild.log | grep -vE '^[0-9]+[-:][0-9]+ +swift-frontend +0x|libsystem|dyld' | head -80 || true
+          grep -nE "^[0-9]+\.\s|While |for '|\.swift" build/xcodebuild.log | grep -iE "while|for '|In function|SIL|IRGen" | head -30 || true
+
+      - name: Capture screenshots
+        run: |
+          set -o pipefail
+          mkdir -p build/screenshots
+          xcrun simctl boot "${{ steps.sim.outputs.udid }}" 2>/dev/null || true
+          xcrun simctl status_bar "${{ steps.sim.outputs.udid }}" override --time 9:41 --dataNetwork wifi --wifiBars 3 --cellularBars 4 --batteryState charged --batteryLevel 100 || true
+          TEST_RUNNER_SCREENSHOT_DIR="$PWD/build/screenshots" xcodebuild test \
+            -project Bztam.xcodeproj \
+            -scheme BztamScreenshots \
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            -resultBundlePath build/UITest.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee build/uitest.log | xcbeautify --renderer github-actions
+
+      - name: Capture watch screenshots
+        continue-on-error: true
+        run: bash scripts/ci/watch-screenshots.sh build/screenshots
+
+      - name: Publish screenshots to the ci-screenshots branch
+        if: always() && github.ref == 'refs/heads/main'
+        run: |
+          cd build/screenshots 2>/dev/null || exit 0
+          git init -q -b ci-screenshots
+          git config user.name "github-actions"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -q -m "screenshots for ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" ci-screenshots
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: build/screenshots
+          if-no-files-found: ignore
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-logs
+          path: |
+            build/xcodebuild.log
+            build/Test.xcresult
+          if-no-files-found: ignore
