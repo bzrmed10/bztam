@@ -19,8 +19,7 @@ struct BztamApp: App {
     let container: ModelContainer
 
     init() {
-        let inMemory = LaunchOptions.demoData || LaunchOptions.freshStart
-        container = DataStore.makeContainer(inMemory: inMemory)
+        container = DataStore.shared
         if LaunchOptions.demoData {
             DataStore.seedDemo(in: container.mainContext)
         } else {

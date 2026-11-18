@@ -5,6 +5,9 @@ import SwiftData
 enum DataStore {
     static let schema = Schema([Entry.self, BudgetCategory.self, AppSettings.self])
 
+    /// The one container of the app process, shared with Siri / Shortcuts.
+    @MainActor static let shared: ModelContainer = makeContainer(inMemory: LaunchOptions.demoData || LaunchOptions.freshStart)
+
     /// The store lives in the App Group so the share extension can add entries later.
     /// Falls back to the app's own folder when the group is unavailable (unsigned simulator builds).
     @MainActor
