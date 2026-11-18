@@ -14,12 +14,13 @@ enum BudgetSnapshot {
         entries.map { EntryValue(kind: $0.kind, amount: $0.amount, date: $0.date, categoryID: $0.category?.id) }
     }
 
-    static func value(_ category: BudgetCategory) -> CategoryValue {
-        CategoryValue(id: category.id, budget: category.budget, isFixed: category.isFixed)
+    /// The category for the calculator; with a period, money moved for that period is included.
+    static func value(_ category: BudgetCategory, period: BudgetPeriod? = nil) -> CategoryValue {
+        CategoryValue(id: category.id, budget: period.map { category.budget(in: $0) } ?? category.budget, isFixed: category.isFixed)
     }
 
     static func summary(entries: [Entry], categories: [BudgetCategory], period: BudgetPeriod, expectedIncome: Centimes) -> PeriodSummary {
-        BudgetCalculator.summary(entries: values(entries), categories: categories.map(value),
+        BudgetCalculator.summary(entries: values(entries), categories: categories.map { value($0, period: period) },
                                  period: period, expectedIncome: expectedIncome)
     }
 
@@ -27,7 +28,7 @@ enum BudgetSnapshot {
     static func lines(entries: [Entry], categories: [BudgetCategory], period: BudgetPeriod) -> [CategoryLine] {
         let ev = values(entries)
         return categories
-            .map { CategoryLine(category: $0, status: BudgetCalculator.status(for: value($0), entries: ev, period: period)) }
+            .map { CategoryLine(category: $0, status: BudgetCalculator.status(for: value($0, period: period), entries: ev, period: period)) }
             .sorted {
                 let a = BudgetCalculator.homeRank($0.status), b = BudgetCalculator.homeRank($1.status)
                 return a != b ? a < b : $0.category.order < $1.category.order

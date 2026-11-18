@@ -12,6 +12,7 @@ struct CategoryDetailView: View {
     @Environment(UndoCenter.self) private var undo
     @Query private var allEntries: [Entry]
     @State private var editingBudget = false
+    @State private var moving = false
     @State private var editing: Entry?
 
     private var entries: [Entry] {
@@ -21,13 +22,20 @@ struct CategoryDetailView: View {
     }
 
     var body: some View {
-        let status = BudgetCalculator.status(for: BudgetSnapshot.value(category),
+        let status = BudgetCalculator.status(for: BudgetSnapshot.value(category, period: period),
                                              entries: BudgetSnapshot.values(allEntries), period: period)
         List {
             VStack(alignment: .leading, spacing: 24) {
                 HStack {
                     CircleIconButton(symbol: "chevron.left", label: L10n.t("Back")) { dismiss() }
                     Spacer()
+                    Button(L10n.t("Move money")) { moving = true }
+                        .buttonStyle(.plain)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(Theme.Colors.ink)
+                        .padding(.horizontal, 16)
+                        .frame(height: 40)
+                        .background(Theme.Colors.surface, in: Capsule())
                     Button(L10n.t("Edit budget")) { editingBudget = true }
                         .buttonStyle(.plain)
                         .font(.system(size: 14, weight: .semibold))
@@ -97,6 +105,9 @@ struct CategoryDetailView: View {
         .sheet(isPresented: $editingBudget) {
             BudgetEditSheet(category: category)
                 .presentationDetents([.large])
+        }
+        .sheet(isPresented: $moving) {
+            MoveMoneySheet(category: category, period: period)
         }
         .sheet(item: $editing) { entry in
             AddEntryView(editing: entry)

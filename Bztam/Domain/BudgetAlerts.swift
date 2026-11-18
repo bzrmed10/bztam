@@ -19,15 +19,16 @@ enum BudgetAlerts {
     /// Call after adding an expense. Sends at most one notification per threshold, category and period.
     @MainActor
     static func afterAdding(_ entry: Entry, context: ModelContext) {
-        guard isEnabled, entry.kind == .expense, let category = entry.category, category.budget > 0 else { return }
+        guard isEnabled, entry.kind == .expense, let category = entry.category else { return }
         let payday = DataStore.settings(in: context).payday
         let period = BudgetCalculator.period(containing: .now, payday: payday)
-        guard period.contains(entry.date) else { return }
+        let budget = category.budget(in: period)
+        guard budget > 0, period.contains(entry.date) else { return }
         let all = (try? context.fetch(FetchDescriptor<Entry>())) ?? []
         let after = all.filter { $0.kind == .expense && $0.category?.id == category.id && period.contains($0.date) }
             .reduce(0) { $0 + $1.amount }
         let before = after - entry.amount
-        guard let top = crossed(before: before, after: after, budget: category.budget).last else { return }
+        guard let top = crossed(before: before, after: after, budget: budget).last else { return }
 
         let key = "alert-\(category.id.uuidString)-\(Int(period.start.timeIntervalSince1970))-\(top)"
         guard !UserDefaults.standard.bool(forKey: key) else { return }
@@ -36,8 +37,8 @@ enum BudgetAlerts {
         let name = category.displayName
         let title = top >= 100 ? L10n.t("%@ budget used up", name) : L10n.t("%@: %d%% spent", name, top)
         let body = top >= 100
-            ? L10n.t("You've spent %@ of %@ this month.", Money.format(after, symbol: false), Money.format(category.budget))
-            : L10n.t("%@ left until %@.", Money.format(category.budget - after), DateText.short(period.end))
+            ? L10n.t("You've spent %@ of %@ this month.", Money.format(after, symbol: false), Money.format(budget))
+            : L10n.t("%@ left until %@.", Money.format(budget - after), DateText.short(period.end))
         Task { await send(title: title, body: body, id: key) }
     }
 

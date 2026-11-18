@@ -39,6 +39,8 @@ final class Entry {
     var incomeSourceRaw: String = IncomeSource.other.rawValue
     var sourceRaw: String = EntrySource.manual.rawValue
     var attachmentName: String?
+    /// Set when the entry was created by a recurring rule (or started one).
+    var recurringID: UUID?
     var createdAt: Date = Date()
     var category: BudgetCategory?
 
@@ -94,6 +96,9 @@ final class BudgetCategory {
     var order: Int = 0
     var isArchived: Bool = false
     @Relationship(deleteRule: .nullify, inverse: \Entry.category) var entries: [Entry]? = []
+    @Relationship(deleteRule: .nullify, inverse: \RecurringRule.category) var rules: [RecurringRule]? = []
+    /// Money moved in or out of this category for one period only, keyed by `BudgetCategory.periodKey`.
+    var periodAdjustments: [String: Int] = [:]
 
     init(key: String = "", name: String, symbol: String, budget: Centimes = 0, isFixed: Bool = false, order: Int = 0) {
         self.id = UUID()
@@ -103,6 +108,17 @@ final class BudgetCategory {
         self.budget = budget
         self.isFixed = isFixed
         self.order = order
+    }
+
+    /// "2026-10-25" for the period starting on 25 Oct 2026.
+    static func periodKey(_ period: BudgetPeriod, calendar: Calendar = .current) -> String {
+        let c = calendar.dateComponents([.year, .month, .day], from: period.start)
+        return String(format: "%04d-%02d-%02d", c.year ?? 0, c.month ?? 0, c.day ?? 0)
+    }
+
+    /// The budget for one period: the monthly budget plus money moved in, minus money moved out.
+    func budget(in period: BudgetPeriod) -> Centimes {
+        max(0, budget + (periodAdjustments[Self.periodKey(period)] ?? 0))
     }
 
     /// Built-in categories are shown in the app language; renamed or custom ones as typed.

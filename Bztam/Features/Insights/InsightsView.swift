@@ -201,7 +201,7 @@ struct InsightsView: View {
             lines.append(L10n.t("Biggest expense: %@ in %@.", Money.format(biggest.amount), name(biggest.categoryID)))
         }
         if offset == 0 {
-            let warnings = Advice.paceWarnings(categories: categories.map(BudgetSnapshot.value), entries: values, period: period)
+            let warnings = Advice.paceWarnings(categories: categories.map { BudgetSnapshot.value($0, period: period) }, entries: values, period: period)
             for w in warnings.prefix(2) {
                 lines.append(L10n.t("At this pace, %@ runs out around %@.", name(w.categoryID), DateText.short(w.runOut)))
             }
