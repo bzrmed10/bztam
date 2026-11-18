@@ -22,6 +22,9 @@ struct BztamApp: App {
         container = DataStore.makeContainer(inMemory: inMemory)
         if LaunchOptions.demoData {
             DataStore.seedDemo(in: container.mainContext)
+        } else {
+            let names = Set(((try? container.mainContext.fetch(FetchDescriptor<Entry>())) ?? []).compactMap(\.attachmentName))
+            AttachmentStore.removeOrphans(keeping: names)
         }
     }
 
