@@ -1,9 +1,19 @@
 # Bztam — Progress report
 
-Last updated: 2026-11-18
+Last updated: 2026-11-18 (evening)
 
 ## Status
-Milestone 1 (core money) is built and CI is green: 0 failing unit tests, screenshots in English and French on the `ci-screenshots` branch. TestFlight build 1 is blocked by the App Store Connect API key (401).
+Milestones 1 (core money) and 2 (scan receipts and screenshots) are built and CI is green. TestFlight is blocked by the App Store Connect API key (401).
+
+## Done in Milestone 2
+- Camera scanning with Apple's document scanner (edges found, cropped, straightened)
+- On-device text recognition (French and English), boxes grouped into lines
+- Receipt reader for Moroccan receipts and bills: TOTAL TTC / NET À PAYER / Montant total, comma decimals, DH/MAD, day-first dates, known shops and billers (Marjane, Carrefour, BIM, Inwi, Orange, Maroc Telecom, Lydec, Redal, Glovo, Afriquia…) with a suggested category; 14 tests
+- Scan review: image, total (tap to fix), shop, date, suggested category; Add expense or retake
+- Screenshot import from Photos; optional "new screenshot looks like a bill" card on Home (Settings toggle, asks for photo access)
+- Receipt images saved with the expense ("View receipt" when editing); unused images cleaned up
+- Camera and photo permission texts in English and French
+- CI screenshot of the review screen runs a sample receipt through the real text recognition: 245.50 DH, Marjane, 17 Nov, Groceries
 
 ## Done in Milestone 1
 - Design system in SwiftUI (Wise-style tokens and components)
@@ -19,7 +29,6 @@ Milestone 1 (core money) is built and CI is green: 0 failing unit tests, screens
 - Demo month and UI-test screenshots (en/fr)
 
 ## Not yet working on purpose
-- Scan and Screenshot quick actions show "Coming in the next update" (Milestone 2)
 - Insights is a placeholder (Milestone 4)
 
 ## Blockers

@@ -27,13 +27,13 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [ ] M1.10 Demo data, UI-test screenshots (en/fr), TestFlight build 1 (screenshots done; TestFlight blocked: API key 401)
 
 ## Milestone 2 — Scan receipts and screenshots → TestFlight 2
-- [ ] M2.1 Attachment storage (compressed images in the App Group)
-- [ ] M2.2 Camera: VisionKit document scanner
-- [ ] M2.3 Text recognition service (Vision, fr/en)
-- [ ] M2.4 `ReceiptParser` + unit tests with Moroccan receipts and bills (Marjane, Carrefour, BIM, Inwi, Orange, IAM, Lydec/Redal, Glovo, Jumia)
-- [ ] M2.5 Scan review screen
-- [ ] M2.6 Screenshot import from Photos + "Add this screenshot?" prompt
-- [ ] M2.7 TestFlight build 2
+- [x] M2.1 Attachment storage (compressed images in the App Group)
+- [x] M2.2 Camera: VisionKit document scanner
+- [x] M2.3 Text recognition service (Vision, fr/en)
+- [x] M2.4 `ReceiptParser` + unit tests with Moroccan receipts and bills (Marjane, Carrefour, BIM, Inwi, Orange, IAM, Lydec/Redal, Glovo, Jumia)
+- [x] M2.5 Scan review screen
+- [x] M2.6 Screenshot import from Photos + "Add this screenshot?" prompt
+- [ ] M2.7 TestFlight build 2 (CI green; TestFlight waits for the API key fix)
 
 ## Milestone 3 — Share extension and PDF bills → TestFlight 3
 - [ ] M3.1 Share extension (images and PDFs) → App Group inbox → review screen
