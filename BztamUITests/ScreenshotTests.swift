@@ -43,6 +43,12 @@ final class ScreenshotTests: XCTestCase {
         save("\(lang)-04-category")
         app.terminate()
 
+        app = launch(lang, ["-demoData", "-openScreen", "scan"])
+        XCTAssertTrue(app.buttons["scan.save"].waitForExistence(timeout: 30))
+        sleep(1)
+        save("\(lang)-07-scan-review")
+        app.terminate()
+
         app = launch(lang, ["-freshStart"])
         XCTAssertTrue(app.buttons["onboarding.continue"].waitForExistence(timeout: 15))
         save("\(lang)-06-onboarding-payday")
