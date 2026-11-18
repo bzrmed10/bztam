@@ -4,6 +4,7 @@ import SwiftUI
 
 /// Where the money went, money in vs out, and how this period compares with the previous one.
 struct InsightsView: View {
+    var onAsk: () -> Void = {}
     @Query private var entries: [Entry]
     @Query private var allCategories: [BudgetCategory]
     @Query private var settingsRows: [AppSettings]
@@ -50,6 +51,9 @@ struct InsightsView: View {
                 Text(DateText.period(period))
                     .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
                     .padding(.top, -24)
+
+                AskField(action: onAsk)
+                    .padding(.top, -12)
 
                 if spends.isEmpty && summary.moneyIn == 0 {
                     EmptyState(symbol: "chart.pie", title: L10n.t("Nothing this period"),

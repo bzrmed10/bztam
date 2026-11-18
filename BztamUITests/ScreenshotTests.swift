@@ -41,6 +41,13 @@ final class ScreenshotTests: XCTestCase {
         save("\(lang)-02-add")
         app.terminate()
 
+        let question = lang == "fr" ? "Combien j'ai dépensé en cafés ce mois ?" : "How much did I spend on coffee this month?"
+        app = launch(lang, ["-demoData", "-openScreen", "ask", "-askQuestion", question])
+        XCTAssertTrue(app.staticTexts["ask.amount"].waitForExistence(timeout: 30))
+        sleep(1)
+        save("\(lang)-10-ask")
+        app.terminate()
+
         app = launch(lang, ["-demoData", "-openScreen", "category"])
         sleep(3)
         save("\(lang)-04-category")

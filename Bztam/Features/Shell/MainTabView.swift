@@ -53,6 +53,7 @@ struct MainTabView: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.modelContext) private var context
     @State private var subscription: SubscriptionCandidate?
+    @State private var asking = false
 
     var body: some View {
         Group {
@@ -63,7 +64,7 @@ struct MainTabView: View {
                          subscription: subscription, onSubscriptionYes: makeRecurring,
                          onSubscriptionDismiss: { SubscriptionDetector.dismiss($0.key); refreshSubscription() })
             case .activity: ActivityView(onAdd: { addRequest = AddRequest() })
-            case .insights: InsightsView()
+            case .insights: InsightsView(onAsk: { asking = true })
             case .settings: SettingsView()
             }
         }
@@ -89,6 +90,7 @@ struct MainTabView: View {
             })
             .environment(undo)
         }
+        .sheet(isPresented: $asking) { AskView() }
         .sheet(item: Bindable(scanner).draft) { draft in
             ScanReviewView(draft: draft, onRetake: {
                 after { startScan(draft.source == .camera ? .camera : .screenshot) }
@@ -147,6 +149,7 @@ struct MainTabView: View {
             if !LaunchOptions.demoData { RecurringEngine.run(in: context) }
             refreshSubscription()
             if LaunchOptions.openScreen == "add" { addRequest = AddRequest() }
+            if LaunchOptions.openScreen == "ask" { tab = .insights; asking = true }
             if LaunchOptions.openScreen == "scan" {
                 await scanner.read([DemoReceipt.image()], source: .camera)
             }
