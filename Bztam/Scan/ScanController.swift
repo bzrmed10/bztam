@@ -23,7 +23,7 @@ final class ScanController {
         for image in images {
             lines += await TextRecognizer.lines(in: image)
         }
-        let receipt = ReceiptParser.parse(lines: lines)
+        let receipt = await ReceiptAI.improve(ReceiptParser.parse(lines: lines), lines: lines)
         isReading = false
         draft = ScanDraft(images: images, source: source, receipt: receipt)
     }
@@ -35,7 +35,7 @@ final class ScanController {
             isReading = false
             return false
         }
-        let receipt = ReceiptParser.parse(lines: result.lines)
+        let receipt = await ReceiptAI.improve(ReceiptParser.parse(lines: result.lines), lines: result.lines)
         isReading = false
         draft = ScanDraft(images: result.pages, source: source, receipt: receipt)
         return true

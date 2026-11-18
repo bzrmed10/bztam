@@ -11,6 +11,8 @@ struct ScanReviewView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
+    @Query private var entries: [Entry]
+    @State private var duplicate: EntryRecord?
 
     @State private var amount = AmountInput()
     @State private var merchant = ""
@@ -100,7 +102,7 @@ struct ScanReviewView: View {
                 }
 
                 VStack(spacing: 10) {
-                    Button(L10n.t("Add expense")) { save() }
+                    Button(L10n.t("Add expense")) { checkThenSave() }
                         .buttonStyle(.pillPrimary)
                         .disabled(!canSave)
                         .opacity(canSave ? 1 : 0.5)
@@ -129,6 +131,14 @@ struct ScanReviewView: View {
         }
         .onAppear(perform: load)
         .onDisappear(perform: onDone)
+        .alert(L10n.t("Already added?"), isPresented: Binding(get: { duplicate != nil }, set: { if !$0 { duplicate = nil } })) {
+            Button(L10n.t("Add anyway")) { save() }
+            Button(L10n.t("Cancel"), role: .cancel) {}
+        } message: {
+            if let d = duplicate {
+                Text(L10n.t("An expense of %@ was already added on %@.", Money.format(d.amount), DateText.day(d.date)))
+            }
+        }
     }
 
     private func row<Content: View>(_ label: String, @ViewBuilder content: () -> Content) -> some View {
@@ -147,11 +157,24 @@ struct ScanReviewView: View {
         if let a = r.amount { amount = AmountInput(centimes: a) }
         merchant = r.merchant ?? ""
         if let d = r.date { date = d }
-        if let key = r.categoryKey, let c = categories.first(where: { $0.key == key }) {
+        let records = entries.map { EntryRecord($0) }
+        if let remembered = CategoryMemory.category(for: merchant, in: records),
+           categories.contains(where: { $0.id == remembered }) {
+            categoryID = remembered
+            suggested = true
+        } else if let key = r.categoryKey, let c = categories.first(where: { $0.key == key }) {
             categoryID = c.id
             suggested = true
         } else {
             categoryID = categories.first(where: { $0.key == "other" })?.id
+        }
+    }
+
+    private func checkThenSave() {
+        if let d = DuplicateCheck.find(amount: amount.centimes, date: date, merchant: merchant, in: entries.map { EntryRecord($0) }) {
+            duplicate = d
+        } else {
+            save()
         }
     }
 
