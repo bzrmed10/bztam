@@ -3,9 +3,37 @@ import Foundation
 /// Amounts are always whole centimes (`Int`). 1 DH = 100 centimes. Never `Double` for money.
 typealias Centimes = Int
 
+/// Currencies the user can pick in Settings. Amounts are never converted; only the label changes.
+enum Currency: String, CaseIterable, Identifiable, Sendable {
+    case mad, eur, usd
+    var id: String { rawValue }
+
+    var symbol: String {
+        switch self {
+        case .mad: "DH"
+        case .eur: "€"
+        case .usd: "$"
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .mad: L10n.t("Moroccan dirham (DH)")
+        case .eur: L10n.t("Euro (€)")
+        case .usd: L10n.t("US dollar ($)")
+        }
+    }
+}
+
 enum Money {
-    /// Currency suffix shown after amounts.
-    static let currencySymbol = "DH"
+    static let currencyKey = "currency"
+
+    static var currency: Currency {
+        Currency(rawValue: UserDefaults.standard.string(forKey: currencyKey) ?? "") ?? .mad
+    }
+
+    /// Currency label shown after amounts.
+    static var currencySymbol: String { currency.symbol }
 
     /// "2,760 DH" (en) or "2 760 DH" (fr). Decimals only when there are centimes: "245.50 DH" / "245,50 DH".
     static func format(_ amount: Centimes, language: String = L10n.code, sign: Bool = false, symbol: Bool = true) -> String {

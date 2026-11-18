@@ -2,27 +2,35 @@ import SwiftData
 import SwiftUI
 import UIKit
 
-/// Settings: payday, categories and budgets, privacy, about. More arrives in Milestone 4.
+/// Settings: money, alerts, receipts, privacy and app.
 struct SettingsView: View {
     @Environment(\.modelContext) private var context
     @Query private var settingsRows: [AppSettings]
-    @State private var showPlan = false
+    @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }) private var categories: [BudgetCategory]
+
     @AppStorage(ScreenshotWatcher.enabledKey) private var suggestScreenshots = false
+    @AppStorage(BudgetAlerts.enabledKey) private var budgetAlerts = true
+    @AppStorage(AppLock.enabledKey) private var faceIDLock = false
+    @AppStorage(L10n.storageKey) private var language = AppLanguage.system.rawValue
+    @AppStorage(Money.currencyKey) private var currency = Currency.mad.rawValue
     @State private var photosDenied = false
+    @State private var showCategories = false
 
     private var version: String {
-        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
+        let v = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
+        let b = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
+        return "\(v) (\(b))"
     }
 
     var body: some View {
         let settings = settingsRows.first
+        let planned = categories.reduce(0) { $0 + $1.budget }
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
                     ScreenTitle(text: L10n.t("Settings"))
 
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(L10n.t("Money")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                    section(L10n.t("Money")) {
                         Menu {
                             Picker(L10n.t("Payday"), selection: Binding(
                                 get: { settings?.payday ?? 1 },
@@ -35,42 +43,52 @@ struct SettingsView: View {
                                         value: L10n.t("Day %d of the month", settings?.payday ?? 1))
                         }
                         .buttonStyle(.plain)
-                        SettingsRow(symbol: "dollarsign.circle", title: L10n.t("Currency"),
-                                    value: L10n.t("Moroccan dirham (DH)"), chevron: false)
-                        Button { showPlan = true } label: {
-                            SettingsRow(symbol: "list.bullet", title: L10n.t("Categories and budgets"),
-                                        value: L10n.t("Change how much each category gets"))
+
+                        Menu {
+                            Picker(L10n.t("Currency"), selection: $currency) {
+                                ForEach(Currency.allCases) { Text($0.title).tag($0.rawValue) }
+                            }
+                        } label: {
+                            SettingsRow(symbol: "banknote", title: L10n.t("Currency"),
+                                        value: (Currency(rawValue: currency) ?? .mad).title)
                         }
                         .buttonStyle(.plain)
-                    }
 
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(L10n.t("Receipts")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
-                        Toggle(isOn: Binding(get: { suggestScreenshots }, set: { on in
-                            if on {
-                                Task {
-                                    let ok = await ScreenshotWatcher.requestAccess()
-                                    suggestScreenshots = ok
-                                    photosDenied = !ok
-                                }
-                            } else {
-                                suggestScreenshots = false
-                            }
-                        })) {
-                            HStack(spacing: Theme.Space.m) {
-                                IconCircle(symbol: "photo.on.rectangle", size: 44)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(L10n.t("Offer new screenshots")).font(.bzBodyStrong)
-                                    Text(L10n.t("When you open Bztam after screenshotting a bill")).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
-                                }
-                            }
+                        Button { showCategories = true } label: {
+                            SettingsRow(symbol: "square.grid.2x2", title: L10n.t("Categories and budgets"),
+                                        value: L10n.t("%d categories · %@ planned", categories.count, Money.format(planned)))
                         }
-                        .tint(Theme.Colors.positive)
-                        .frame(minHeight: Theme.Size.row)
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("settings.categories")
                     }
 
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(L10n.t("Privacy")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                    section(L10n.t("Alerts")) {
+                        ToggleRow(symbol: "bell", title: L10n.t("Budget alerts"),
+                                  detail: L10n.t("A notification at 80% and 100% of a category"), isOn: $budgetAlerts)
+                    }
+
+                    section(L10n.t("Receipts")) {
+                        ToggleRow(symbol: "photo.on.rectangle", title: L10n.t("Offer new screenshots"),
+                                  detail: L10n.t("When you open Bztam after screenshotting a bill"),
+                                  isOn: Binding(get: { suggestScreenshots }, set: { on in
+                                      guard on else { suggestScreenshots = false; return }
+                                      Task {
+                                          let ok = await ScreenshotWatcher.requestAccess()
+                                          suggestScreenshots = ok
+                                          photosDenied = !ok
+                                      }
+                                  }))
+                    }
+
+                    section(L10n.t("Privacy")) {
+                        ToggleRow(symbol: "faceid", title: L10n.t("Lock with Face ID"),
+                                  detail: L10n.t("Asks for Face ID or your passcode when Bztam opens"),
+                                  isOn: Binding(get: { faceIDLock }, set: { on in
+                                      Task {
+                                          // Confirm it's really the owner before turning the lock on or off.
+                                          if await AppLock.authenticate(reason: L10n.t("Confirm to change the lock")) { faceIDLock = on }
+                                      }
+                                  }))
                         VStack(alignment: .leading, spacing: 4) {
                             Text(L10n.t("Your data stays on this iPhone")).font(.system(size: 15, weight: .bold))
                             Text(L10n.t("No account, no bank connection, no ads. Receipts are read on your phone."))
@@ -79,20 +97,26 @@ struct SettingsView: View {
                         .padding(16)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
+                        .padding(.top, 8)
                     }
 
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(L10n.t("App")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
-                        HStack {
-                            Text(L10n.t("About Bztam")).font(.bzBodyStrong)
-                            Spacer()
-                            Text(L10n.t("Version %@", version)).font(.system(size: 15, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                    section(L10n.t("App")) {
+                        Menu {
+                            Picker(L10n.t("Language"), selection: $language) {
+                                ForEach(AppLanguage.allCases) { Text($0.nativeName).tag($0.rawValue) }
+                            }
+                        } label: {
+                            SettingsRow(symbol: "globe", title: L10n.t("Language"),
+                                        value: (AppLanguage(rawValue: language) ?? .system).nativeName)
                         }
-                        .frame(height: 52)
+                        .buttonStyle(.plain)
+                        SettingsRow(symbol: "info.circle", title: L10n.t("About Bztam"),
+                                    value: L10n.t("Version %@", version), chevron: false)
                     }
                 }
                 .padding(.horizontal, Theme.Space.l)
                 .padding(.top, Theme.Space.m)
+                .padding(.bottom, Theme.Space.l)
                 .foregroundStyle(Theme.Colors.ink)
             }
             .background(Theme.Colors.canvas)
@@ -105,26 +129,21 @@ struct SettingsView: View {
             } message: {
                 Text(L10n.t("Allow Bztam to see your photos in the Settings app to get new screenshots offered."))
             }
-            .sheet(isPresented: $showPlan) {
-                VStack(alignment: .leading, spacing: 16) {
-                    HStack {
-                        CircleIconButton(symbol: "xmark", label: L10n.t("Close")) {
-                            try? context.save()
-                            showPlan = false
-                        }
-                        Spacer()
-                    }
-                    PlanMonthView(income: settings?.expectedIncome ?? 0)
-                }
-                .padding(Theme.Space.l)
-                .foregroundStyle(Theme.Colors.ink)
-                .background(Theme.Colors.canvas)
+            .sheet(isPresented: $showCategories) {
+                CategoriesEditorView(income: settings?.expectedIncome ?? 0)
             }
+        }
+    }
+
+    private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(title).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+            content()
         }
     }
 }
 
-private struct SettingsRow: View {
+struct SettingsRow: View {
     let symbol: String
     let title: String
     let value: String
@@ -142,7 +161,29 @@ private struct SettingsRow: View {
                 Image(systemName: "chevron.right").font(.system(size: 14, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
             }
         }
-        .frame(height: Theme.Size.row)
+        .frame(minHeight: Theme.Size.row)
         .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+    }
+}
+
+struct ToggleRow: View {
+    let symbol: String
+    let title: String
+    let detail: String
+    @Binding var isOn: Bool
+
+    var body: some View {
+        Toggle(isOn: $isOn) {
+            HStack(spacing: Theme.Space.m) {
+                IconCircle(symbol: symbol, size: 44)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title).font(.bzBodyStrong)
+                    Text(detail).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
+                }
+            }
+        }
+        .tint(Theme.Colors.positive)
+        .frame(minHeight: Theme.Size.row)
     }
 }

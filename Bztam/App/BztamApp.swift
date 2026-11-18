@@ -15,6 +15,7 @@ enum LaunchOptions {
 
 @main
 struct BztamApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     let container: ModelContainer
 
     init() {
@@ -31,7 +32,6 @@ struct BztamApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
-                .environment(\.locale, L10n.locale)
                 .tint(Theme.Colors.ink)
         }
         .modelContainer(container)
@@ -41,19 +41,41 @@ struct BztamApp: App {
 /// Shows onboarding until it is done, then the main tabs.
 struct RootView: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.scenePhase) private var scenePhase
     @Query private var settingsRows: [AppSettings]
+    @AppStorage(L10n.storageKey) private var language = AppLanguage.system.rawValue
+    @AppStorage(Money.currencyKey) private var currency = Currency.mad.rawValue
+    @State private var lock = AppLock()
 
     var body: some View {
-        Group {
-            if settingsRows.first?.onboardingDone == true {
-                MainTabView()
-            } else {
-                OnboardingView()
+        ZStack {
+            Group {
+                if settingsRows.first?.onboardingDone == true {
+                    MainTabView()
+                } else {
+                    OnboardingView()
+                }
+            }
+            // Changing the language or currency in Settings redraws every screen with the new text.
+            .id(language + currency)
+            .environment(\.locale, L10n.locale)
+
+            if lock.locked {
+                LockView { Task { await lock.unlock() } }
+                    .transition(.opacity)
             }
         }
         .background(Theme.Colors.canvas)
         .onAppear {
             if settingsRows.isEmpty { _ = DataStore.settings(in: context) }
         }
+        .onChange(of: scenePhase) { _, phase in
+            switch phase {
+            case .background: lock.lockIfNeeded()
+            case .active: Task { await lock.unlock() }
+            default: break
+            }
+        }
+        .task { await lock.unlock() }
     }
 }
