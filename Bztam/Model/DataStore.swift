@@ -3,7 +3,7 @@ import SwiftData
 
 /// Builds the SwiftData container and seeds data.
 enum DataStore {
-    static let schema = Schema([Entry.self, BudgetCategory.self, AppSettings.self, RecurringRule.self])
+    static let schema = Schema([Entry.self, BudgetCategory.self, AppSettings.self, RecurringRule.self, Dart.self])
 
     /// The one container of the app process, shared with Siri / Shortcuts.
     @MainActor static let shared: ModelContainer = makeContainer(inMemory: LaunchOptions.demoData || LaunchOptions.freshStart)
@@ -105,6 +105,14 @@ enum DataStore {
                                      frequency: .monthly, startDate: day(0), lastGenerated: day(0)))
         context.insert(RecurringRule(kind: .income, amount: 800_000, incomeSource: .salary,
                                      frequency: .monthly, startDate: day(0), lastGenerated: day(0)))
+
+        // A family dart in its second turn; the user collects third and hasn't paid this turn yet.
+        let dartStart = cal.date(byAdding: .month, value: -1, to: cal.date(byAdding: .day, value: -3, to: now) ?? now) ?? now
+        let dart = Dart(name: "Family", amount: 100_000, startDate: dartStart,
+                        memberNames: ["Karim", "Sara", "", "Omar", "Nadia"], meIndex: 2)
+        dart.paid = (0..<5).map { DartPlan.key(round: 0, member: $0) } + [0, 1, 3].map { DartPlan.key(round: 1, member: $0) }
+        dart.reminders = false
+        context.insert(dart)
 
         // The previous period, so Insights has something to compare with.
         let previous = BudgetCalculator.period(period, offset: -1, payday: 25, calendar: cal)

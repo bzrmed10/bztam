@@ -41,6 +41,9 @@ final class Entry {
     var attachmentName: String?
     /// Set when the entry was created by a recurring rule (or started one).
     var recurringID: UUID?
+    /// Set when the entry is a dart payment or a collected pot.
+    var dartID: UUID?
+    var dartRound: Int = -1
     var createdAt: Date = Date()
     var category: BudgetCategory?
 
