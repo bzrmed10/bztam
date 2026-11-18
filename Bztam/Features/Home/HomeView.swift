@@ -9,6 +9,9 @@ struct HomeView: View {
     var suggestion: UIImage?
     var onSuggestionAdd: () -> Void = {}
     var onSuggestionDismiss: () -> Void = {}
+    var subscription: SubscriptionCandidate?
+    var onSubscriptionYes: (SubscriptionCandidate) -> Void = { _ in }
+    var onSubscriptionDismiss: (SubscriptionCandidate) -> Void = { _ in }
 
     @Query private var entries: [Entry]
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
@@ -35,7 +38,10 @@ struct HomeView: View {
                     quickActions
                     if let suggestion, offset == 0 {
                         ScreenshotSuggestionCard(image: suggestion, onAdd: onSuggestionAdd, onDismiss: onSuggestionDismiss)
-                    } else if offset == 0, let warning = Advice.paceWarnings(categories: categories.map(BudgetSnapshot.value),
+                    } else if let subscription, offset == 0 {
+                        SubscriptionCard(candidate: subscription, onYes: { onSubscriptionYes(subscription) },
+                                         onDismiss: { onSubscriptionDismiss(subscription) })
+                    } else if offset == 0, let warning = Advice.paceWarnings(categories: categories.map { BudgetSnapshot.value($0, period: period) },
                                                                              entries: BudgetSnapshot.values(entries), period: period).first,
                               let category = categories.first(where: { $0.id == warning.categoryID }) {
                         PaceCard(text: L10n.t("At this pace, %@ runs out around %@.", category.displayName, DateText.short(warning.runOut)))

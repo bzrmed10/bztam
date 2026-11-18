@@ -50,13 +50,17 @@ struct MainTabView: View {
     @State private var showFiles = false
     @State private var unreadablePDF = false
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.modelContext) private var context
+    @State private var subscription: SubscriptionCandidate?
 
     var body: some View {
         Group {
             switch tab {
             case .home:
                 HomeView(onAdd: { addRequest = $0 }, onScan: startScan, suggestion: watcher.suggestion,
-                         onSuggestionAdd: addSuggestion, onSuggestionDismiss: { watcher.clear() })
+                         onSuggestionAdd: addSuggestion, onSuggestionDismiss: { watcher.clear() },
+                         subscription: subscription, onSubscriptionYes: makeRecurring,
+                         onSubscriptionDismiss: { SubscriptionDetector.dismiss($0.key); refreshSubscription() })
             case .activity: ActivityView(onAdd: { addRequest = AddRequest() })
             case .insights: InsightsView()
             case .settings: SettingsView()
@@ -130,6 +134,8 @@ struct MainTabView: View {
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
+                if !LaunchOptions.demoData { RecurringEngine.run(in: context) }
+                refreshSubscription()
                 Task {
                     await scanner.openNextShared()
                     await watcher.check()
@@ -137,6 +143,8 @@ struct MainTabView: View {
             }
         }
         .task {
+            if !LaunchOptions.demoData { RecurringEngine.run(in: context) }
+            refreshSubscription()
             if LaunchOptions.openScreen == "add" { addRequest = AddRequest() }
             if LaunchOptions.openScreen == "scan" {
                 await scanner.read([DemoReceipt.image()], source: .camera)
@@ -166,6 +174,29 @@ extension MainTabView {
         guard let image = watcher.suggestion else { return }
         watcher.clear()
         Task { await scanner.read([image], source: .screenshot) }
+    }
+
+    /// Looks for a shop paid every month that isn't recurring yet.
+    func refreshSubscription() {
+        let entries = (try? context.fetch(FetchDescriptor<Entry>())) ?? []
+        let rules = (try? context.fetch(FetchDescriptor<RecurringRule>())) ?? []
+        var excluded = SubscriptionDetector.dismissed
+        for rule in rules where rule.isActive { excluded.insert(CategoryMemory.key(rule.merchant)) }
+        let records = entries.filter { $0.recurringID == nil }.map { EntryRecord($0) }
+        subscription = SubscriptionDetector.candidates(records, excluding: excluded).first
+    }
+
+    /// Turns a detected subscription into a monthly rule, starting from its last payment.
+    func makeRecurring(_ candidate: SubscriptionCandidate) {
+        let entries = (try? context.fetch(FetchDescriptor<Entry>())) ?? []
+        let categories = (try? context.fetch(FetchDescriptor<BudgetCategory>())) ?? []
+        let rule = RecurringRule(kind: .expense, amount: candidate.amount, merchant: candidate.merchant,
+                                 category: categories.first { $0.id == candidate.categoryID },
+                                 frequency: .monthly, startDate: candidate.lastDate, lastGenerated: candidate.lastDate)
+        context.insert(rule)
+        entries.first { CategoryMemory.key($0.merchant) == candidate.key && $0.date == candidate.lastDate }?.recurringID = rule.id
+        try? context.save()
+        refreshSubscription()
     }
 
     /// Runs an action once the current sheet has finished closing.
