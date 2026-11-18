@@ -36,9 +36,9 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [ ] M2.7 TestFlight build 2 (CI green; TestFlight waits for the API key fix)
 
 ## Milestone 3 — Share extension and PDF bills → TestFlight 3
-- [ ] M3.1 Share extension (images and PDFs) → App Group inbox → review screen
-- [ ] M3.2 PDF bills: PDFKit text, OCR fallback
-- [ ] M3.3 TestFlight build 3
+- [x] M3.1 Share extension (images and PDFs) → App Group inbox → review screen
+- [x] M3.2 PDF bills: PDFKit text, OCR fallback
+- [ ] M3.3 TestFlight build 3 (CI green; waits for the API key fix)
 
 ## Milestone 4 — Activity, Insights, safety → TestFlight 4
 - [ ] M4.1 Activity: entries by day, search, filter chips

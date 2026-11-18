@@ -3,7 +3,13 @@
 Last updated: 2026-11-18 (evening)
 
 ## Status
-Milestones 1 (core money) and 2 (scan receipts and screenshots) are built and CI is green. TestFlight is blocked by the App Store Connect API key (401).
+Milestones 1 (core money), 2 (scan receipts and screenshots) and 3 (share extension and PDF bills) are built and CI is green. TestFlight is blocked by the App Store Connect API key (401).
+
+## Done in Milestone 3
+- "Share to Bztam" from any app (Photos, Mail, WhatsApp, Files, a biller's app): the image or PDF goes to the App Group inbox; Bztam opens the review screen the next time it opens
+- PDF bills: embedded text read with PDFKit (first 3 pages), text recognition for scanned pages; first page shown as the preview and saved with the expense
+- PDF button in the Add sheet (import from Files)
+- Tests: a generated Lydec PDF is read as 310 DH, Lydec, Bills; CI screenshot of the PDF review
 
 ## Done in Milestone 2
 - Camera scanning with Apple's document scanner (edges found, cropped, straightened)

@@ -38,7 +38,7 @@ struct ScanReviewView: View {
                             .resizable()
                             .scaledToFill()
                             .frame(maxWidth: .infinity)
-                            .frame(height: 200)
+                            .frame(height: 200, alignment: .top)
                             .clipped()
                             .background(Theme.Colors.surface)
                             .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.small))
