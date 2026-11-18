@@ -60,10 +60,10 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [ ] M5.9 TestFlight build 5 (CI green; waits for the API key fix)
 
 ## Milestone 6 — Recurring and planning → TestFlight 6
-- [ ] M6.1 Recurring entries (rent, salary, subscriptions, bills): model, auto-add on their day, edit once or all
-- [ ] M6.2 Subscription detection → "Make this recurring?"
-- [ ] M6.3 Move money between categories
-- [ ] M6.4 TestFlight build 6
+- [x] M6.1 Recurring entries (rent, salary, subscriptions, bills): model, auto-add on their day, edit once or all
+- [x] M6.2 Subscription detection → "Make this recurring?"
+- [x] M6.3 Move money between categories
+- [ ] M6.4 TestFlight build 6 (waiting for the API key secrets and App Group)
 
 ## Milestone 7 — Ask Bztam → TestFlight 7
 - [ ] M7.1 Query functions over entries (by merchant, category, period, kind) + tests

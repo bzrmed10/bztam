@@ -61,3 +61,10 @@ Milestones 1–5 (core money, scanning, share extension and PDFs, Activity/Insig
 
 ## How to test
 Once the secrets are fixed, run Actions -> TestFlight -> Run workflow, then install from the TestFlight app.
+
+## Milestone 6: Recurring and planning
+- Recurring rules (every week, month or year). Choose Repeat when adding an expense or money in. Entries are added automatically on their day when the app opens. Month-end dates are clamped (31 Jan → 28 Feb → 31 Mar).
+- Settings → Recurring lists the rules with their next date. You can edit the amount, name, frequency and category, or stop repeating. Entries already added stay.
+- Subscription detection: a shop paid at a similar amount in at least 3 of the last 4 months shows "Netflix every month?" on Home. Yes makes it a rule; Dismiss hides it for good.
+- Move money: Category → Move money gives to or takes from another category for the current period only.
+- Tests: RecurringTests (dates, month end, leap years, detection rules). CI is green and the screenshots are checked.
