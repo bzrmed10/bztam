@@ -35,6 +35,10 @@ struct HomeView: View {
                     quickActions
                     if let suggestion, offset == 0 {
                         ScreenshotSuggestionCard(image: suggestion, onAdd: onSuggestionAdd, onDismiss: onSuggestionDismiss)
+                    } else if offset == 0, let warning = Advice.paceWarnings(categories: categories.map(BudgetSnapshot.value),
+                                                                             entries: BudgetSnapshot.values(entries), period: period).first,
+                              let category = categories.first(where: { $0.id == warning.categoryID }) {
+                        PaceCard(text: L10n.t("At this pace, %@ runs out around %@.", category.displayName, DateText.short(warning.runOut)))
                     }
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
@@ -202,6 +206,27 @@ struct CategoryRow: View {
         }
         .padding(.vertical, 10)
         .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+    }
+}
+
+/// "At this pace, Going out runs out around 18 Nov."
+struct PaceCard: View {
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "gauge.with.dots.needle.67percent")
+                .font(.system(size: 18, weight: .semibold))
+                .frame(width: 40, height: 40)
+                .background(Theme.Colors.canvas, in: Circle())
+                .accessibilityHidden(true)
+            Text(text).font(.system(size: 15, weight: .semibold))
+            Spacer(minLength: 0)
+        }
+        .padding(12)
+        .foregroundStyle(Theme.Colors.ink)
+        .background(Theme.Colors.brandTint, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
         .accessibilityElement(children: .combine)
     }
 }

@@ -55,6 +55,7 @@ struct InsightsView: View {
                     EmptyState(symbol: "chart.pie", title: L10n.t("Nothing this period"),
                                message: L10n.t("Add expenses and money in to see where your money goes."))
                 } else {
+                    recap(values: values, spends: spends, previousSpends: previousSpends, summary: summary)
                     whereItWent(slices, total: summary.spent)
                     inVsOut(summary)
                     comparison(spent: summary.spent, previous: previousSpent, changes: changes)
@@ -160,6 +161,52 @@ struct InsightsView: View {
                     .font(.bzBody).foregroundStyle(Theme.Colors.inkMuted)
             }
         }
+    }
+
+    /// A few plain sentences about the month. The numbers come from code; nothing is guessed.
+    @ViewBuilder
+    private func recap(values: [EntryValue], spends: [CategorySpend], previousSpends: [CategorySpend], summary: PeriodSummary) -> some View {
+        let sentences = recapSentences(values: values, spends: spends, previousSpends: previousSpends, summary: summary)
+        if !sentences.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                SectionTitle(text: L10n.t("Monthly recap"))
+                ForEach(sentences, id: \.self) { line in
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        Circle().fill(Theme.Colors.brand).frame(width: 8, height: 8)
+                        Text(line).font(.system(size: 16, weight: .medium)).fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Theme.Colors.brandTint, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
+        }
+    }
+
+    private func recapSentences(values: [EntryValue], spends: [CategorySpend], previousSpends: [CategorySpend], summary: PeriodSummary) -> [String] {
+        var lines: [String] = []
+        let categories = allCategories.filter { !$0.isArchived }
+        if offset == 0, summary.moneyIn > 0 {
+            let days = Advice.daysLeft(in: period)
+            lines.append(L10n.t("%@ left for the next %d days.", Money.format(max(0, summary.left)), days))
+        }
+        if let top = InsightsCalculator.biggestChanges(current: spends, previous: previousSpends).first(where: { $0.ratio > 0 }),
+           let id = top.categoryID {
+            let pct = Int((top.ratio * 100).rounded())
+            let weekend = Advice.weekendShare(categoryID: id, entries: values, period: period) >= 0.6
+            lines.append(weekend ? L10n.t("%@ was %d%% higher than last month, mostly on weekends.", name(id), pct)
+                                 : L10n.t("%@ was %d%% higher than last month.", name(id), pct))
+        }
+        if let biggest = Advice.biggestExpense(values, period: period) {
+            lines.append(L10n.t("Biggest expense: %@ in %@.", Money.format(biggest.amount), name(biggest.categoryID)))
+        }
+        if offset == 0 {
+            let warnings = Advice.paceWarnings(categories: categories.map(BudgetSnapshot.value), entries: values, period: period)
+            for w in warnings.prefix(2) {
+                lines.append(L10n.t("At this pace, %@ runs out around %@.", name(w.categoryID), DateText.short(w.runOut)))
+            }
+        }
+        return lines
     }
 
     private func percent(_ part: Centimes, of total: Centimes) -> String {
