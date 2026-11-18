@@ -16,6 +16,8 @@ struct SettingsView: View {
     @State private var photosDenied = false
     @State private var showCategories = false
     @State private var showRecurring = false
+    @State private var showDart = LaunchOptions.openScreen == "dart"
+    @Query private var darts: [Dart]
     @Query(filter: #Predicate<RecurringRule> { $0.isActive }) private var rules: [RecurringRule]
 
     private var version: String {
@@ -68,6 +70,13 @@ struct SettingsView: View {
                                         value: rules.isEmpty ? L10n.t("Rent, salary, subscriptions") : L10n.t("%d active", rules.count))
                         }
                         .buttonStyle(.plain)
+
+                        Button { showDart = true } label: {
+                            SettingsRow(symbol: "person.3", title: L10n.t("Dart"),
+                                        value: darts.isEmpty ? L10n.t("Track your dart (tontine)") : darts.map(\.name).joined(separator: ", "))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("settings.dart")
                     }
 
                     section(L10n.t("Alerts")) {
@@ -138,6 +147,7 @@ struct SettingsView: View {
                 Text(L10n.t("Allow Bztam to see your photos in the Settings app to get new screenshots offered."))
             }
             .sheet(isPresented: $showRecurring) { RecurringListView() }
+            .sheet(isPresented: $showDart) { DartListView() }
             .sheet(isPresented: $showCategories) {
                 CategoriesEditorView(income: settings?.expectedIncome ?? 0)
             }

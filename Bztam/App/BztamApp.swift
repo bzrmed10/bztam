@@ -9,7 +9,7 @@ enum LaunchOptions {
     static var freshStart: Bool { ProcessInfo.processInfo.arguments.contains("-freshStart") }
     /// `-startTab activity|insights|settings`
     static var startTab: String? { UserDefaults.standard.string(forKey: "startTab") }
-    /// `-openScreen add|category|scan|pdf|ask` (`-askQuestion "..."` asks it right away with demo data)
+    /// `-openScreen add|category|scan|pdf|ask|dart` (`-askQuestion "..."` asks it right away with demo data)
     static var openScreen: String? { UserDefaults.standard.string(forKey: "openScreen") }
 }
 

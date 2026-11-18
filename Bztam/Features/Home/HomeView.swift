@@ -16,6 +16,8 @@ struct HomeView: View {
     @Query private var entries: [Entry]
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
     @Query private var settingsRows: [AppSettings]
+    @Query private var darts: [Dart]
+    @Environment(\.modelContext) private var context
     @State private var offset = 0
     @State private var path = NavigationPath()
 
@@ -45,6 +47,16 @@ struct HomeView: View {
                                                                              entries: BudgetSnapshot.values(entries), period: period).first,
                               let category = categories.first(where: { $0.id == warning.categoryID }) {
                         PaceCard(text: L10n.t("At this pace, %@ runs out around %@.", category.displayName, DateText.short(warning.runOut)))
+                    }
+                    if offset == 0, let due = DartActions.due(darts) {
+                        DartCard(dart: due.dart, collect: due.collect) {
+                            if due.collect {
+                                DartActions.toggleReceived(due.dart, context: context)
+                            } else if case .round(let r) = due.dart.plan.status() {
+                                DartActions.togglePaid(due.dart, member: due.dart.meIndex, round: r, context: context)
+                            }
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                        }
                     }
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {

@@ -48,6 +48,11 @@ final class ScreenshotTests: XCTestCase {
         save("\(lang)-10-ask")
         app.terminate()
 
+        app = launch(lang, ["-demoData", "-openScreen", "dart"])
+        sleep(4)
+        save("\(lang)-11-dart")
+        app.terminate()
+
         app = launch(lang, ["-demoData", "-openScreen", "category"])
         sleep(3)
         save("\(lang)-04-category")
