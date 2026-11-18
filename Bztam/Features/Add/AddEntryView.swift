@@ -27,6 +27,7 @@ struct AddEntryView: View {
     @State private var userPickedCategory = false
     @State private var speech = SpeechInput()
     @State private var duplicate: EntryRecord?
+    @State private var repeatFrequency: Frequency?
 
     init(request: AddRequest, onScan: ((ScanKind) -> Void)? = nil) {
         editing = nil
@@ -148,6 +149,31 @@ struct AddEntryView: View {
                 .padding(.horizontal, 14).padding(.vertical, 10)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
+            }
+
+            if editing == nil {
+                Menu {
+                    Picker(L10n.t("Repeat"), selection: $repeatFrequency) {
+                        Text(L10n.t("Never")).tag(Frequency?.none)
+                        ForEach(Frequency.allCases) { Text($0.title).tag(Frequency?.some($0)) }
+                    }
+                } label: {
+                    HStack(spacing: 10) {
+                        Image(systemName: "arrow.triangle.2.circlepath").font(.system(size: 15, weight: .semibold))
+                        Text(L10n.t("Repeat")).font(.system(size: 15, weight: .semibold))
+                        Spacer()
+                        Text(repeatFrequency?.title ?? L10n.t("Never")).font(.system(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
+                        Image(systemName: "chevron.up.chevron.down").font(.system(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                    }
+                    .foregroundStyle(Theme.Colors.ink)
+                    .padding(.horizontal, 16)
+                    .frame(height: 48)
+                    .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
+                }
+                .accessibilityIdentifier("add.repeat")
+            } else if editing?.recurringID != nil {
+                Label(L10n.t("Repeats automatically. Change it in Settings → Recurring."), systemImage: "arrow.triangle.2.circlepath")
+                    .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
             }
             }
             .padding(.bottom, 12)
@@ -286,6 +312,13 @@ struct AddEntryView: View {
             let entry = Entry(kind: kind, amount: amount.centimes, date: date, merchant: kind == .expense ? text : "",
                               note: kind == .income ? text : "", category: category, incomeSource: incomeSource)
             context.insert(entry)
+            if let frequency = repeatFrequency {
+                let rule = RecurringRule(kind: kind, amount: entry.amount, merchant: entry.merchant, note: entry.note,
+                                         category: category, incomeSource: incomeSource, frequency: frequency,
+                                         startDate: date, lastGenerated: date)
+                context.insert(rule)
+                entry.recurringID = rule.id
+            }
             try? context.save()
             BudgetAlerts.afterAdding(entry, context: context)
         }

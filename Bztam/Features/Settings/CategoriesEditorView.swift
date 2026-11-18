@@ -18,7 +18,7 @@ struct CategoriesEditorView: View {
 
     private var suggestions: [BudgetSuggestion] {
         let payday = settingsRows.first?.payday ?? 1
-        return Advice.budgetSuggestions(categories: categories.map(BudgetSnapshot.value), entries: BudgetSnapshot.values(entries),
+        return Advice.budgetSuggestions(categories: categories.map { BudgetSnapshot.value($0) }, entries: BudgetSnapshot.values(entries),
                                         current: BudgetCalculator.period(containing: .now, payday: payday), payday: payday)
     }
 

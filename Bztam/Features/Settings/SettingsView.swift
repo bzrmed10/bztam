@@ -15,6 +15,8 @@ struct SettingsView: View {
     @AppStorage(Money.currencyKey) private var currency = Currency.mad.rawValue
     @State private var photosDenied = false
     @State private var showCategories = false
+    @State private var showRecurring = false
+    @Query(filter: #Predicate<RecurringRule> { $0.isActive }) private var rules: [RecurringRule]
 
     private var version: String {
         let v = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
@@ -60,6 +62,12 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("settings.categories")
+
+                        Button { showRecurring = true } label: {
+                            SettingsRow(symbol: "arrow.triangle.2.circlepath", title: L10n.t("Recurring"),
+                                        value: rules.isEmpty ? L10n.t("Rent, salary, subscriptions") : L10n.t("%d active", rules.count))
+                        }
+                        .buttonStyle(.plain)
                     }
 
                     section(L10n.t("Alerts")) {
@@ -129,6 +137,7 @@ struct SettingsView: View {
             } message: {
                 Text(L10n.t("Allow Bztam to see your photos in the Settings app to get new screenshots offered."))
             }
+            .sheet(isPresented: $showRecurring) { RecurringListView() }
             .sheet(isPresented: $showCategories) {
                 CategoriesEditorView(income: settings?.expectedIncome ?? 0)
             }

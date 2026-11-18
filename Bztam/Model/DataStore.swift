@@ -3,7 +3,7 @@ import SwiftData
 
 /// Builds the SwiftData container and seeds data.
 enum DataStore {
-    static let schema = Schema([Entry.self, BudgetCategory.self, AppSettings.self])
+    static let schema = Schema([Entry.self, BudgetCategory.self, AppSettings.self, RecurringRule.self])
 
     /// The one container of the app process, shared with Siri / Shortcuts.
     @MainActor static let shared: ModelContainer = makeContainer(inMemory: LaunchOptions.demoData || LaunchOptions.freshStart)
@@ -100,6 +100,12 @@ enum DataStore {
             context.insert(Entry(kind: .expense, amount: amount, date: date, merchant: merchant,
                                  category: byKey[key], source: source))
         }
+        // Rent and salary repeat every month; already added for this period.
+        context.insert(RecurringRule(kind: .expense, amount: 300_000, merchant: "Rent", category: byKey["rent"],
+                                     frequency: .monthly, startDate: day(0), lastGenerated: day(0)))
+        context.insert(RecurringRule(kind: .income, amount: 800_000, incomeSource: .salary,
+                                     frequency: .monthly, startDate: day(0), lastGenerated: day(0)))
+
         // The previous period, so Insights has something to compare with.
         let previous = BudgetCalculator.period(period, offset: -1, payday: 25, calendar: cal)
         func prev(_ offset: Int) -> Date { cal.date(byAdding: .day, value: offset, to: previous.start) ?? previous.start }
