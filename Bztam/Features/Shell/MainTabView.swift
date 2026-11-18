@@ -1,4 +1,6 @@
+import PhotosUI
 import SwiftUI
+import UIKit
 
 enum AppTab: String, CaseIterable, Identifiable {
     case home, activity, insights, settings
@@ -23,6 +25,9 @@ enum AppTab: String, CaseIterable, Identifiable {
     }
 }
 
+/// How a receipt comes in.
+enum ScanKind { case camera, screenshot }
+
 /// What the Add sheet opens with.
 struct AddRequest: Identifiable, Equatable {
     let id = UUID()
@@ -35,11 +40,20 @@ struct MainTabView: View {
     @State private var tab: AppTab = AppTab(rawValue: LaunchOptions.startTab ?? "") ?? .home
     @State private var addRequest: AddRequest?
     @State private var undo = UndoCenter()
+    @State private var scanner = ScanController()
+    @State private var watcher = ScreenshotWatcher()
+    @State private var showCamera = false
+    @State private var showPhotos = false
+    @State private var photoItem: PhotosPickerItem?
+    @State private var noCamera = false
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         Group {
             switch tab {
-            case .home: HomeView(onAdd: { addRequest = $0 })
+            case .home:
+                HomeView(onAdd: { addRequest = $0 }, onScan: startScan, suggestion: watcher.suggestion,
+                         onSuggestionAdd: addSuggestion, onSuggestionDismiss: { watcher.clear() })
             case .activity: ActivityView(onAdd: { addRequest = AddRequest() })
             case .insights: InsightsView()
             case .settings: SettingsView()
@@ -61,11 +75,77 @@ struct MainTabView: View {
         .background(Theme.Colors.canvas)
         .environment(undo)
         .sheet(item: $addRequest) { request in
-            AddEntryView(request: request)
-                .environment(undo)
+            AddEntryView(request: request, onScan: { kind in
+                addRequest = nil
+                after { startScan(kind) }
+            })
+            .environment(undo)
         }
-        .onAppear {
+        .sheet(item: Bindable(scanner).draft) { draft in
+            ScanReviewView(draft: draft, onRetake: {
+                after { startScan(draft.source == .camera ? .camera : .screenshot) }
+            })
+        }
+        .fullScreenCover(isPresented: $showCamera) {
+            DocumentScannerView(onFinish: { images in
+                showCamera = false
+                Task { await scanner.read(images, source: .camera) }
+            }, onCancel: { showCamera = false })
+            .ignoresSafeArea()
+        }
+        .photosPicker(isPresented: $showPhotos, selection: $photoItem, matching: .images)
+        .onChange(of: photoItem) { _, item in
+            guard let item else { return }
+            Task {
+                if let data = try? await item.loadTransferable(type: Data.self), let image = UIImage(data: data) {
+                    await scanner.read([image], source: .screenshot)
+                }
+                photoItem = nil
+            }
+        }
+        .alert(L10n.t("Camera not available"), isPresented: $noCamera) {
+            Button(L10n.t("Choose an image")) { showPhotos = true }
+            Button(L10n.t("Cancel"), role: .cancel) {}
+        } message: {
+            Text(L10n.t("This device can't scan documents. You can pick a photo of the receipt instead."))
+        }
+        .overlay {
+            if scanner.isReading { ReadingOverlay() }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { Task { await watcher.check() } }
+        }
+        .task {
             if LaunchOptions.openScreen == "add" { addRequest = AddRequest() }
+            if LaunchOptions.openScreen == "scan" {
+                await scanner.read([DemoReceipt.image()], source: .camera)
+            }
+            await watcher.check()
+        }
+    }
+}
+
+extension MainTabView {
+    func startScan(_ kind: ScanKind) {
+        switch kind {
+        case .camera:
+            if DocumentScannerView.isAvailable { showCamera = true } else { noCamera = true }
+        case .screenshot:
+            showPhotos = true
+        }
+    }
+
+    func addSuggestion() {
+        guard let image = watcher.suggestion else { return }
+        watcher.clear()
+        Task { await scanner.read([image], source: .screenshot) }
+    }
+
+    /// Runs an action once the current sheet has finished closing.
+    func after(_ action: @escaping @MainActor () -> Void) {
+        Task {
+            try? await Task.sleep(for: .milliseconds(450))
+            action()
         }
     }
 }

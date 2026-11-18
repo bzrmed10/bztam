@@ -1,16 +1,20 @@
 import SwiftData
 import SwiftUI
+import UIKit
 
 /// Home: what's left this period, quick actions and the categories.
 struct HomeView: View {
     let onAdd: (AddRequest) -> Void
+    let onScan: (ScanKind) -> Void
+    var suggestion: UIImage?
+    var onSuggestionAdd: () -> Void = {}
+    var onSuggestionDismiss: () -> Void = {}
 
     @Query private var entries: [Entry]
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
     @Query private var settingsRows: [AppSettings]
     @State private var offset = 0
     @State private var path = NavigationPath()
-    @State private var showSoon = false
 
     private var payday: Int { settingsRows.first?.payday ?? 1 }
 
@@ -29,6 +33,9 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 28) {
                     hero(summary)
                     quickActions
+                    if let suggestion, offset == 0 {
+                        ScreenshotSuggestionCard(image: suggestion, onAdd: onSuggestionAdd, onDismiss: onSuggestionDismiss)
+                    }
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             SectionTitle(text: L10n.t("Categories"))
@@ -53,11 +60,6 @@ struct HomeView: View {
             .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(for: BudgetCategory.self) { category in
                 CategoryDetailView(category: category, period: period, onAdd: onAdd)
-            }
-            .alert(L10n.t("Coming in the next update"), isPresented: $showSoon) {
-                Button(L10n.t("OK"), role: .cancel) {}
-            } message: {
-                Text(L10n.t("Scanning receipts and screenshots arrives in the next TestFlight build."))
             }
             .onAppear {
                 if LaunchOptions.openScreen == "category", let first = lines.first {
@@ -108,8 +110,8 @@ struct HomeView: View {
     private var quickActions: some View {
         HStack(alignment: .top, spacing: 8) {
             QuickAction(title: L10n.t("Add"), symbol: "plus", highlighted: true) { onAdd(AddRequest()) }
-            QuickAction(title: L10n.t("Scan"), symbol: "camera") { showSoon = true }
-            QuickAction(title: L10n.t("Screenshot"), symbol: "photo") { showSoon = true }
+            QuickAction(title: L10n.t("Scan"), symbol: "camera") { onScan(.camera) }
+            QuickAction(title: L10n.t("Screenshot"), symbol: "photo") { onScan(.screenshot) }
             QuickAction(title: L10n.t("Money in"), symbol: "arrow.down.to.line") { onAdd(AddRequest(kind: .income)) }
         }
     }

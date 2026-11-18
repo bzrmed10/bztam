@@ -7,6 +7,7 @@ struct AddEntryView: View {
     private let editing: Entry?
     private let initialKind: EntryKind
     private let initialCategoryID: UUID?
+    private let onScan: ((ScanKind) -> Void)?
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
@@ -20,17 +21,20 @@ struct AddEntryView: View {
     @State private var date = Date.now
     @State private var merchant = ""
     @State private var loaded = false
+    @State private var showReceipt = false
 
-    init(request: AddRequest) {
+    init(request: AddRequest, onScan: ((ScanKind) -> Void)? = nil) {
         editing = nil
         initialKind = request.kind
         initialCategoryID = request.categoryID
+        self.onScan = onScan
     }
 
     init(editing entry: Entry) {
         editing = entry
         initialKind = entry.kind
         initialCategoryID = entry.category?.id
+        onScan = nil
     }
 
     private var title: String {
@@ -53,6 +57,25 @@ struct AddEntryView: View {
             }
 
             ScreenTitle(text: title)
+
+            if let onScan, kind == .expense {
+                HStack(spacing: 8) {
+                    scanButton(L10n.t("Scan receipt"), symbol: "camera", fill: Theme.Colors.brandTint) { onScan(.camera) }
+                    scanButton(L10n.t("Screenshot"), symbol: "photo", fill: Theme.Colors.surface) { onScan(.screenshot) }
+                }
+            } else if let name = editing?.attachmentName {
+                Button { showReceipt = true } label: {
+                    Label(L10n.t("View receipt"), systemImage: "doc.text.image")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(Theme.Colors.ink)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .background(Theme.Colors.surface, in: Capsule())
+                }
+                .buttonStyle(.plain)
+                .fullScreenCover(isPresented: $showReceipt) {
+                    ImageViewer(image: AttachmentStore.image(named: name))
+                }
+            }
 
             AmountField(caption: L10n.t("Amount"), text: amount.display())
                 .accessibilityIdentifier("add.amount")
@@ -120,6 +143,17 @@ struct AddEntryView: View {
         .presentationDetents([.large])
         .presentationCornerRadius(Theme.Radius.large)
         .onAppear(perform: load)
+    }
+
+    private func scanButton(_ title: String, symbol: String, fill: Color, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: symbol)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(Theme.Colors.ink)
+                .frame(maxWidth: .infinity, minHeight: 48)
+                .background(fill, in: Capsule())
+        }
+        .buttonStyle(.plain)
     }
 
     private func load() {
