@@ -1,2 +1,3 @@
 "NSCameraUsageDescription" = "Bztam uses the camera to scan your receipts. The text is read on your iPhone.";
 "NSPhotoLibraryUsageDescription" = "Bztam looks at your newest screenshot to offer adding bills. Nothing leaves your iPhone.";
+"NSFaceIDUsageDescription" = "Bztam uses Face ID to keep your money private when you turn on the lock.";
