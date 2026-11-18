@@ -13,6 +13,7 @@ struct AddEntryView: View {
     @Environment(\.modelContext) private var context
     @Environment(UndoCenter.self) private var undo
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
+    @Query private var entries: [Entry]
 
     @State private var kind: EntryKind = .expense
     @State private var amount = AmountInput()
@@ -22,6 +23,10 @@ struct AddEntryView: View {
     @State private var merchant = ""
     @State private var loaded = false
     @State private var showReceipt = false
+    @State private var quickText = ""
+    @State private var userPickedCategory = false
+    @State private var speech = SpeechInput()
+    @State private var duplicate: EntryRecord?
 
     init(request: AddRequest, onScan: ((ScanKind) -> Void)? = nil) {
         editing = nil
@@ -58,6 +63,32 @@ struct AddEntryView: View {
 
             ScreenTitle(text: title)
 
+            if editing == nil {
+                HStack(spacing: 10) {
+                    Image(systemName: "sparkles").foregroundStyle(Theme.Colors.inkMuted)
+                    TextField(L10n.t("Type it: taxi 20, café 38…"), text: $quickText)
+                        .font(.system(size: 15, weight: .medium))
+                        .submitLabel(.done)
+                        .onSubmit(applyQuickText)
+                        .accessibilityIdentifier("add.quick")
+                    Button {
+                        Task { await speech.toggle() }
+                    } label: {
+                        Image(systemName: speech.isListening ? "stop.fill" : "mic")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(Theme.Colors.ink)
+                            .frame(width: 36, height: 36)
+                            .background(speech.isListening ? Theme.Colors.brand : Theme.Colors.canvas, in: Circle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(speech.isListening ? L10n.t("Stop") : L10n.t("Say it"))
+                }
+                .padding(.leading, 16)
+                .padding(.trailing, 6)
+                .frame(height: 48)
+                .background(Theme.Colors.surface, in: Capsule())
+            }
+
             if let onScan, kind == .expense {
                 HStack(spacing: 8) {
                     scanButton(L10n.t("Scan"), symbol: "camera", fill: Theme.Colors.brandTint) { onScan(.camera) }
@@ -84,7 +115,7 @@ struct AddEntryView: View {
             FlowLayout(spacing: 8) {
                 if kind == .expense {
                     ForEach(categories) { c in
-                        Chip(title: c.displayName, selected: c.id == categoryID) { categoryID = c.id }
+                        Chip(title: c.displayName, selected: c.id == categoryID) { categoryID = c.id; userPickedCategory = true }
                     }
                 } else {
                     ForEach(IncomeSource.allCases) { s in
@@ -120,7 +151,7 @@ struct AddEntryView: View {
 
             KeypadView { amount.press($0) }
 
-            Button(editing == nil ? title : L10n.t("Save")) { save() }
+            Button(editing == nil ? title : L10n.t("Save")) { checkThenSave() }
                 .buttonStyle(.pillPrimary)
                 .disabled(!canSave)
                 .opacity(canSave ? 1 : 0.5)
@@ -144,6 +175,57 @@ struct AddEntryView: View {
         .presentationDetents([.large])
         .presentationCornerRadius(Theme.Radius.large)
         .onAppear(perform: load)
+        .onChange(of: speech.transcript) { _, text in quickText = text }
+        .onChange(of: speech.isListening) { was, now in
+            if was && !now { applyQuickText() }
+        }
+        .onChange(of: merchant) { _, name in
+            guard editing == nil, kind == .expense, !userPickedCategory else { return }
+            if let id = CategoryMemory.category(for: name, in: entries.map { EntryRecord($0) }) { categoryID = id }
+        }
+        .onDisappear { speech.stop() }
+        .alert(L10n.t("Already added?"), isPresented: Binding(get: { duplicate != nil }, set: { if !$0 { duplicate = nil } })) {
+            Button(L10n.t("Add anyway")) { save() }
+            Button(L10n.t("Cancel"), role: .cancel) {}
+        } message: {
+            if let d = duplicate {
+                Text(L10n.t("An expense of %@ was already added on %@.", Money.format(d.amount), DateText.day(d.date)))
+            }
+        }
+        .alert(L10n.t("Microphone or speech access is off"), isPresented: Bindable(speech).denied) {
+            Button(L10n.t("OK"), role: .cancel) {}
+        } message: {
+            Text(L10n.t("Allow them in the Settings app, or use the keyboard's dictation key."))
+        }
+    }
+
+    /// Fills the form from "taxi 20", "+8000 salaire", "khlst 50 f l9hwa".
+    private func applyQuickText() {
+        let q = QuickEntryParser.parse(quickText)
+        guard q.amount != nil || q.categoryKey != nil || !q.text.isEmpty else { return }
+        kind = q.kind
+        if let a = q.amount { amount = AmountInput(centimes: a) }
+        if q.kind == .income {
+            incomeSource = q.incomeSource
+        } else {
+            let records = entries.map { EntryRecord($0) }
+            if let id = CategoryMemory.category(for: q.text, in: records) {
+                categoryID = id
+            } else if let key = q.categoryKey, let c = categories.first(where: { $0.key == key }) {
+                categoryID = c.id
+            }
+            userPickedCategory = categoryID != nil
+        }
+        if !q.text.isEmpty { merchant = q.text }
+    }
+
+    private func checkThenSave() {
+        if editing == nil, kind == .expense,
+           let d = DuplicateCheck.find(amount: amount.centimes, date: date, merchant: merchant, in: entries.map { EntryRecord($0) }) {
+            duplicate = d
+        } else {
+            save()
+        }
     }
 
     private func scanButton(_ title: String, symbol: String, fill: Color, action: @escaping () -> Void) -> some View {

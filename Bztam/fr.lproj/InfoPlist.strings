@@ -1,3 +1,5 @@
 "NSCameraUsageDescription" = "Bztam utilise l'appareil photo pour scanner vos tickets. Le texte est lu sur votre iPhone.";
 "NSPhotoLibraryUsageDescription" = "Bztam regarde votre dernière capture d'écran pour proposer d'ajouter une facture. Rien ne quitte votre iPhone.";
 "NSFaceIDUsageDescription" = "Bztam utilise Face ID pour garder votre argent privé quand vous activez le verrouillage.";
+"NSMicrophoneUsageDescription" = "Bztam écoute quand vous touchez le micro pour ajouter une dépense à la voix.";
+"NSSpeechRecognitionUsageDescription" = "Bztam transforme ce que vous dites en dépense, comme « taxi 20 ».";
