@@ -15,16 +15,16 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] D.2 Apple Watch app removed from v1
 
 ## Milestone 1 — Core money → TestFlight 1
-- [ ] M1.1 Design system in SwiftUI: color tokens, type styles, spacing, radius, pill button, icon circle, row, chip, progress bar
-- [ ] M1.2 L10n table (en/fr) with tests: every string exists, placeholders match; money formatting (2,760 DH / 2 760 DH)
-- [ ] M1.3 Data layer: SwiftData models (`Entry`, `Category`, `Settings`) in the App Group store, amounts in centimes, default categories
-- [ ] M1.4 `BudgetCalculator`: periods from payday, money in / spent / left, per category left/over/paid, not planned + unit tests
-- [ ] M1.5 App shell: flat tab bar (Home, Activity, Insights, Settings), empty states
-- [ ] M1.6 Onboarding: payday, money in, plan your month
-- [ ] M1.7 Home: hero, quick actions, category list, previous periods
-- [ ] M1.8 Add sheet: manual expense and money in (keypad, chips, date, shop/note)
-- [ ] M1.9 Category detail + edit budget; edit and delete entries with Undo
-- [ ] M1.10 Demo data, UI-test screenshots (en/fr), TestFlight build 1
+- [x] M1.1 Design system in SwiftUI: color tokens, type styles, spacing, radius, pill button, icon circle, row, chip, progress bar
+- [x] M1.2 L10n table (en/fr) with tests: every string exists, placeholders match; money formatting (2,760 DH / 2 760 DH)
+- [x] M1.3 Data layer: SwiftData models (`Entry`, `Category`, `Settings`) in the App Group store, amounts in centimes, default categories
+- [x] M1.4 `BudgetCalculator`: periods from payday, money in / spent / left, per category left/over/paid, not planned + unit tests
+- [x] M1.5 App shell: flat tab bar (Home, Activity, Insights, Settings), empty states
+- [x] M1.6 Onboarding: payday, money in, plan your month
+- [x] M1.7 Home: hero, quick actions, category list, previous periods
+- [x] M1.8 Add sheet: manual expense and money in (keypad, chips, date, shop/note)
+- [x] M1.9 Category detail + edit budget; edit and delete entries with Undo
+- [ ] M1.10 Demo data, UI-test screenshots (en/fr), TestFlight build 1 (screenshots done; TestFlight blocked: API key 401)
 
 ## Milestone 2 — Scan receipts and screenshots → TestFlight 2
 - [ ] M2.1 Attachment storage (compressed images in the App Group)

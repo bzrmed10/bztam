@@ -3,27 +3,27 @@
 Last updated: 2026-11-18
 
 ## Status
-Milestone 0 and the design are done. Full roadmap (Milestones 1–10) written in ROADMAP.md. Next: Milestone 1, core money.
+Milestone 1 (core money) is built and CI is green: 0 failing unit tests, screenshots in English and French on the `ci-screenshots` branch. TestFlight build 1 is blocked by the App Store Connect API key (401).
 
-## Done
-- M0.1 README, repo connected, push access verified
-- M0.2 SPEC.md, ROADMAP.md, REPORT.md
-- M0.3 Xcode project (XcodeGen): app, share extension, watch app, unit and UI tests, App Group, placeholder screens and icons
-- M0.4 CI: build, unit tests, iPhone and watch screenshots on every push. First run: green.
-- M0.5 TestFlight workflow (manual or on tag): temporary signing via the App Store Connect API, archive, upload. Not run yet.
-- M0.6 Setup guide in `docs/SETUP.md`
+## Done in Milestone 1
+- Design system in SwiftUI (Wise-style tokens and components)
+- English/French table with tests; money formatting (2,760 DH / 2 760 DH); keypad input in centimes
+- SwiftData store in the App Group: entries, categories, settings; default categories
+- BudgetCalculator with tests: payday periods, money in / spent / left, category left / over / paid, not planned
+- Onboarding: payday, money in, plan your month
+- Home: left to spend, quick actions, categories, previous periods
+- Add sheet: expense and money in with keypad, chips, date and shop
+- Category detail: left this period, entries, edit budget, add from the category
+- Activity list by day; edit and delete with Undo everywhere
+- Settings: payday, categories and budgets, privacy, version
+- Demo month and UI-test screenshots (en/fr)
 
-## Done since
-- Design canvas (8 screens, Wise-style) and the "Bztam" design system approved
-- Apple Watch app removed from v1
-- SPEC.md updated with every feature: receipts, screenshots, PDFs, AI features, recurring, Ask Bztam, dart tracker, iCloud sync, export
-
-## Next
-- First TestFlight run (needs secrets, the App Store Connect app record and the App Group, see `docs/SETUP.md`)
-- Milestone 1: core money (design system, data, budget math, onboarding, Home, add entries)
+## Not yet working on purpose
+- Scan and Screenshot quick actions show "Coming in the next update" (Milestone 2)
+- Insights is a placeholder (Milestone 4)
 
 ## Blockers
-None in code. The App Group must be created and ticked on the identifiers by hand (see `docs/SETUP.md`).
+- TestFlight: Apple answers 401 "credentials are missing or invalid" for the API key. Check the four repo secrets (see docs/SETUP.md, "If the TestFlight workflow fails").
 
 ## How to test
-Builds are uploaded to TestFlight at the end of each milestone. Install the TestFlight app on your iPhone and accept the invite for `Bztam`.
+Once the secrets are fixed, run Actions -> TestFlight -> Run workflow, then install from the TestFlight app.
