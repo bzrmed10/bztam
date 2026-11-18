@@ -8,11 +8,19 @@ struct CategoriesEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
+    @Query private var entries: [Entry]
+    @Query private var settingsRows: [AppSettings]
     @State private var editing: BudgetCategory?
     @State private var adding = false
     @State private var editMode: EditMode = .inactive
 
     private var planned: Centimes { categories.reduce(0) { $0 + $1.budget } }
+
+    private var suggestions: [BudgetSuggestion] {
+        let payday = settingsRows.first?.payday ?? 1
+        return Advice.budgetSuggestions(categories: categories.map(BudgetSnapshot.value), entries: BudgetSnapshot.values(entries),
+                                        current: BudgetCalculator.period(containing: .now, payday: payday), payday: payday)
+    }
 
     var body: some View {
         List {
@@ -36,6 +44,21 @@ struct CategoriesEditorView: View {
                     Spacer()
                     Text(Money.format(planned)).font(.bzAmount)
                 }
+                if !suggestions.isEmpty {
+                    HStack(spacing: 12) {
+                        Image(systemName: "sparkles").font(.system(size: 16, weight: .semibold))
+                        Text(L10n.t("Budgets suggested from your last months")).font(.system(size: 14, weight: .semibold))
+                        Spacer(minLength: 4)
+                        Button(L10n.t("Use all")) { apply(suggestions) }
+                            .font(.system(size: 14, weight: .bold))
+                            .padding(.horizontal, 14)
+                            .frame(height: 36)
+                            .background(Theme.Colors.brand, in: Capsule())
+                            .buttonStyle(.plain)
+                    }
+                    .padding(12)
+                    .background(Theme.Colors.brandTint, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
+                }
                 if income > 0 {
                     HStack {
                         Text(L10n.t("Not planned yet")).font(.system(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
@@ -55,7 +78,10 @@ struct CategoriesEditorView: View {
                         IconCircle(symbol: c.symbol, size: 44)
                         VStack(alignment: .leading, spacing: 2) {
                             Text(c.displayName).font(.bzBodyStrong)
-                            if c.isFixed {
+                            if let s = suggestions.first(where: { $0.categoryID == c.id }) {
+                                Text(L10n.t("Suggested: %@", Money.format(s.amount)))
+                                    .font(.system(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.link)
+                            } else if c.isFixed {
                                 Text(L10n.t("Planned first")).font(.system(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.positive)
                             }
                         }
@@ -92,6 +118,11 @@ struct CategoriesEditorView: View {
         .environment(\.editMode, $editMode)
         .sheet(item: $editing) { c in CategoryEditSheet(category: c) }
         .sheet(isPresented: $adding) { CategoryEditSheet(category: nil, nextOrder: (categories.map(\.order).max() ?? 0) + 1) }
+    }
+
+    private func apply(_ list: [BudgetSuggestion]) {
+        for s in list { categories.first { $0.id == s.categoryID }?.budget = s.amount }
+        try? context.save()
     }
 
     private func move(from source: IndexSet, to destination: Int) {
