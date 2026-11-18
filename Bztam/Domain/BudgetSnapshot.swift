@@ -50,6 +50,9 @@ enum DateText {
         return f.string(from: p.start) + " – " + f.string(from: p.lastDay())
     }
 
+    /// "25 Nov"
+    static func short(_ date: Date) -> String { formatter("d MMM").string(from: date) }
+
     /// "Today", "Yesterday" or "12 Nov".
     static func day(_ date: Date, calendar: Calendar = .current) -> String {
         if calendar.isDateInToday(date) { return L10n.t("Today") }

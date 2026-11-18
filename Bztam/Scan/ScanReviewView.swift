@@ -164,6 +164,7 @@ struct ScanReviewView: View {
         if let image = draft.images.first { entry.attachmentName = AttachmentStore.save(image) }
         context.insert(entry)
         try? context.save()
+        BudgetAlerts.afterAdding(entry, context: context)
         UINotificationFeedbackGenerator().notificationOccurred(.success)
         dismiss()
     }

@@ -192,8 +192,11 @@ struct AddEntryView: View {
             e.category = category
             e.incomeSource = incomeSource
         } else {
-            context.insert(Entry(kind: kind, amount: amount.centimes, date: date, merchant: kind == .expense ? text : "",
-                                 note: kind == .income ? text : "", category: category, incomeSource: incomeSource))
+            let entry = Entry(kind: kind, amount: amount.centimes, date: date, merchant: kind == .expense ? text : "",
+                              note: kind == .income ? text : "", category: category, incomeSource: incomeSource)
+            context.insert(entry)
+            try? context.save()
+            BudgetAlerts.afterAdding(entry, context: context)
         }
         try? context.save()
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
