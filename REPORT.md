@@ -1,9 +1,9 @@
 # Bztam — Progress report
 
-Last updated: 2026-11-17
+Last updated: 2026-11-18
 
 ## Status
-Milestone 0 (foundation) complete in code. Waiting for the first TestFlight run.
+Milestone 0 and the design are done. Full roadmap (Milestones 1–10) written in ROADMAP.md. Next: Milestone 1, core money.
 
 ## Done
 - M0.1 README, repo connected, push access verified
@@ -12,6 +12,11 @@ Milestone 0 (foundation) complete in code. Waiting for the first TestFlight run.
 - M0.4 CI: build, unit tests, iPhone and watch screenshots on every push. First run: green.
 - M0.5 TestFlight workflow (manual or on tag): temporary signing via the App Store Connect API, archive, upload. Not run yet.
 - M0.6 Setup guide in `docs/SETUP.md`
+
+## Done since
+- Design canvas (8 screens, Wise-style) and the "Bztam" design system approved
+- Apple Watch app removed from v1
+- SPEC.md updated with every feature: receipts, screenshots, PDFs, AI features, recurring, Ask Bztam, dart tracker, iCloud sync, export
 
 ## Next
 - First TestFlight run (needs secrets, the App Store Connect app record and the App Group, see `docs/SETUP.md`)
