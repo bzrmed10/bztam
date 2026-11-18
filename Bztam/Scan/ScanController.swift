@@ -27,6 +27,30 @@ final class ScanController {
         isReading = false
         draft = ScanDraft(images: images, source: source, receipt: receipt)
     }
+
+    /// A PDF bill: embedded text first, text recognition for scanned pages.
+    func read(pdf url: URL, source: EntrySource) async -> Bool {
+        isReading = true
+        guard let result = await PDFImporter.read(url), !result.pages.isEmpty else {
+            isReading = false
+            return false
+        }
+        let receipt = ReceiptParser.parse(lines: result.lines)
+        isReading = false
+        draft = ScanDraft(images: result.pages, source: source, receipt: receipt)
+        return true
+    }
+
+    /// Opens the oldest file shared from another app, if any, and removes it from the inbox.
+    func openNextShared() async {
+        guard draft == nil, !isReading, let url = ShareInbox.pending().first else { return }
+        defer { ShareInbox.remove(url) }
+        if url.pathExtension.lowercased() == "pdf" {
+            _ = await read(pdf: url, source: .share)
+        } else if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+            await read([image], source: .share)
+        }
+    }
 }
 
 /// "Reading…" card shown while text recognition runs.

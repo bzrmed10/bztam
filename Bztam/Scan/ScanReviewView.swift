@@ -6,6 +6,7 @@ import UIKit
 struct ScanReviewView: View {
     let draft: ScanDraft
     let onRetake: () -> Void
+    var onDone: () -> Void = {}
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
@@ -104,11 +105,13 @@ struct ScanReviewView: View {
                         .disabled(!canSave)
                         .opacity(canSave ? 1 : 0.5)
                         .accessibilityIdentifier("scan.save")
-                    Button(draft.source == .camera ? L10n.t("Retake photo") : L10n.t("Choose another image")) {
-                        dismiss()
-                        onRetake()
+                    if draft.source == .camera || draft.source == .screenshot {
+                        Button(draft.source == .camera ? L10n.t("Retake photo") : L10n.t("Choose another image")) {
+                            dismiss()
+                            onRetake()
+                        }
+                        .buttonStyle(.pillSecondary)
                     }
-                    .buttonStyle(.pillSecondary)
                 }
                 .padding(.top, 8)
             }
@@ -125,6 +128,7 @@ struct ScanReviewView: View {
             ImageViewer(image: draft.images.first)
         }
         .onAppear(perform: load)
+        .onDisappear(perform: onDone)
     }
 
     private func row<Content: View>(_ label: String, @ViewBuilder content: () -> Content) -> some View {

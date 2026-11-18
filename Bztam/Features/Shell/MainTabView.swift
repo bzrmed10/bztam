@@ -1,6 +1,7 @@
 import PhotosUI
 import SwiftUI
 import UIKit
+import UniformTypeIdentifiers
 
 enum AppTab: String, CaseIterable, Identifiable {
     case home, activity, insights, settings
@@ -26,7 +27,7 @@ enum AppTab: String, CaseIterable, Identifiable {
 }
 
 /// How a receipt comes in.
-enum ScanKind { case camera, screenshot }
+enum ScanKind { case camera, screenshot, pdf }
 
 /// What the Add sheet opens with.
 struct AddRequest: Identifiable, Equatable {
@@ -46,6 +47,8 @@ struct MainTabView: View {
     @State private var showPhotos = false
     @State private var photoItem: PhotosPickerItem?
     @State private var noCamera = false
+    @State private var showFiles = false
+    @State private var unreadablePDF = false
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
@@ -84,6 +87,8 @@ struct MainTabView: View {
         .sheet(item: Bindable(scanner).draft) { draft in
             ScanReviewView(draft: draft, onRetake: {
                 after { startScan(draft.source == .camera ? .camera : .screenshot) }
+            }, onDone: {
+                after { Task { await scanner.openNextShared() } }
             })
         }
         .fullScreenCover(isPresented: $showCamera) {
@@ -94,6 +99,17 @@ struct MainTabView: View {
             .ignoresSafeArea()
         }
         .photosPicker(isPresented: $showPhotos, selection: $photoItem, matching: .images)
+        .fileImporter(isPresented: $showFiles, allowedContentTypes: [.pdf]) { result in
+            guard case .success(let url) = result else { return }
+            Task {
+                let access = url.startAccessingSecurityScopedResource()
+                defer { if access { url.stopAccessingSecurityScopedResource() } }
+                if await !scanner.read(pdf: url, source: .share) { unreadablePDF = true }
+            }
+        }
+        .alert(L10n.t("Can't read this PDF"), isPresented: $unreadablePDF) {
+            Button(L10n.t("Cancel"), role: .cancel) {}
+        }
         .onChange(of: photoItem) { _, item in
             guard let item else { return }
             Task {
@@ -113,13 +129,22 @@ struct MainTabView: View {
             if scanner.isReading { ReadingOverlay() }
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active { Task { await watcher.check() } }
+            if phase == .active {
+                Task {
+                    await scanner.openNextShared()
+                    await watcher.check()
+                }
+            }
         }
         .task {
             if LaunchOptions.openScreen == "add" { addRequest = AddRequest() }
             if LaunchOptions.openScreen == "scan" {
                 await scanner.read([DemoReceipt.image()], source: .camera)
             }
+            if LaunchOptions.openScreen == "pdf", let url = DemoBill.writeTemporaryPDF() {
+                _ = await scanner.read(pdf: url, source: .share)
+            }
+            await scanner.openNextShared()
             await watcher.check()
         }
     }
@@ -132,6 +157,8 @@ extension MainTabView {
             if DocumentScannerView.isAvailable { showCamera = true } else { noCamera = true }
         case .screenshot:
             showPhotos = true
+        case .pdf:
+            showFiles = true
         }
     }
 
