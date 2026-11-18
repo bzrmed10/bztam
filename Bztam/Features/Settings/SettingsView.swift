@@ -1,11 +1,14 @@
 import SwiftData
 import SwiftUI
+import UIKit
 
 /// Settings: payday, categories and budgets, privacy, about. More arrives in Milestone 4.
 struct SettingsView: View {
     @Environment(\.modelContext) private var context
     @Query private var settingsRows: [AppSettings]
     @State private var showPlan = false
+    @AppStorage(ScreenshotWatcher.enabledKey) private var suggestScreenshots = false
+    @State private var photosDenied = false
 
     private var version: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
@@ -41,11 +44,36 @@ struct SettingsView: View {
                         .buttonStyle(.plain)
                     }
 
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(L10n.t("Receipts")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                        Toggle(isOn: Binding(get: { suggestScreenshots }, set: { on in
+                            if on {
+                                Task {
+                                    let ok = await ScreenshotWatcher.requestAccess()
+                                    suggestScreenshots = ok
+                                    photosDenied = !ok
+                                }
+                            } else {
+                                suggestScreenshots = false
+                            }
+                        })) {
+                            HStack(spacing: Theme.Space.m) {
+                                IconCircle(symbol: "photo.on.rectangle", size: 44)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(L10n.t("Offer new screenshots")).font(.bzBodyStrong)
+                                    Text(L10n.t("When you open Bztam after screenshotting a bill")).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
+                                }
+                            }
+                        }
+                        .tint(Theme.Colors.positive)
+                        .frame(minHeight: Theme.Size.row)
+                    }
+
                     VStack(alignment: .leading, spacing: 8) {
                         Text(L10n.t("Privacy")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
                         VStack(alignment: .leading, spacing: 4) {
                             Text(L10n.t("Your data stays on this iPhone")).font(.system(size: 15, weight: .bold))
-                            Text(L10n.t("No account, no bank connection, no ads."))
+                            Text(L10n.t("No account, no bank connection, no ads. Receipts are read on your phone."))
                                 .font(.system(size: 14)).foregroundStyle(Theme.Colors.inkMuted)
                         }
                         .padding(16)
@@ -69,6 +97,14 @@ struct SettingsView: View {
             }
             .background(Theme.Colors.canvas)
             .toolbar(.hidden, for: .navigationBar)
+            .alert(L10n.t("Photo access is off"), isPresented: $photosDenied) {
+                Button(L10n.t("Open Settings")) {
+                    if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                }
+                Button(L10n.t("Cancel"), role: .cancel) {}
+            } message: {
+                Text(L10n.t("Allow Bztam to see your photos in the Settings app to get new screenshots offered."))
+            }
             .sheet(isPresented: $showPlan) {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
