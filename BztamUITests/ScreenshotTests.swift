@@ -1,5 +1,6 @@
 import XCTest
 
+/// Captures the main screens with demo data in English and French. CI saves them to the ci-screenshots branch.
 final class ScreenshotTests: XCTestCase {
     override func setUp() { continueAfterFailure = false }
 
@@ -10,11 +11,44 @@ final class ScreenshotTests: XCTestCase {
         try? png.write(to: URL(fileURLWithPath: dir).appendingPathComponent("\(name).png"))
     }
 
-    func testLaunch() {
+    private func launch(_ lang: String, _ extra: [String] = []) -> XCUIApplication {
         let app = XCUIApplication()
+        app.launchArguments = ["-appLanguage", lang] + extra
         app.launch()
-        XCTAssertTrue(app.otherElements["placeholder"].waitForExistence(timeout: 10)
-                      || app.staticTexts["Bztam"].waitForExistence(timeout: 5))
-        save("01-launch")
+        return app
     }
+
+    private func capture(_ lang: String) {
+        var app = launch(lang, ["-demoData"])
+        XCTAssertTrue(app.staticTexts["home.left"].waitForExistence(timeout: 15))
+        sleep(1)
+        save("\(lang)-01-home")
+
+        app.buttons["tab.activity"].tap()
+        sleep(1)
+        save("\(lang)-03-activity")
+        app.buttons["tab.settings"].tap()
+        sleep(1)
+        save("\(lang)-05-settings")
+        app.terminate()
+
+        app = launch(lang, ["-demoData", "-openScreen", "add"])
+        XCTAssertTrue(app.buttons["add.save"].waitForExistence(timeout: 15))
+        sleep(1)
+        save("\(lang)-02-add")
+        app.terminate()
+
+        app = launch(lang, ["-demoData", "-openScreen", "category"])
+        sleep(3)
+        save("\(lang)-04-category")
+        app.terminate()
+
+        app = launch(lang, ["-freshStart"])
+        XCTAssertTrue(app.buttons["onboarding.continue"].waitForExistence(timeout: 15))
+        save("\(lang)-06-onboarding-payday")
+        app.terminate()
+    }
+
+    func testScreenshotsEnglish() { capture("en") }
+    func testScreenshotsFrench() { capture("fr") }
 }
