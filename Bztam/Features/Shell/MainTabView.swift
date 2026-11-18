@@ -139,6 +139,7 @@ struct MainTabView: View {
             if phase == .active {
                 if !LaunchOptions.demoData { RecurringEngine.run(in: context) }
                 refreshSubscription()
+                DartActions.scheduleReminders(context: context)
                 Task {
                     await scanner.openNextShared()
                     await watcher.check()
@@ -150,6 +151,7 @@ struct MainTabView: View {
             refreshSubscription()
             if LaunchOptions.openScreen == "add" { addRequest = AddRequest() }
             if LaunchOptions.openScreen == "ask" { tab = .insights; asking = true }
+            if LaunchOptions.openScreen == "dart" { tab = .settings }
             if LaunchOptions.openScreen == "scan" {
                 await scanner.read([DemoReceipt.image()], source: .camera)
             }
@@ -186,7 +188,7 @@ extension MainTabView {
         let rules = (try? context.fetch(FetchDescriptor<RecurringRule>())) ?? []
         var excluded = SubscriptionDetector.dismissed
         for rule in rules where rule.isActive { excluded.insert(CategoryMemory.key(rule.merchant)) }
-        let records = entries.filter { $0.recurringID == nil }.map { EntryRecord($0) }
+        let records = entries.filter { $0.recurringID == nil && $0.dartID == nil }.map { EntryRecord($0) }
         subscription = SubscriptionDetector.candidates(records, excluding: excluded).first
     }
 
