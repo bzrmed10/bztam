@@ -83,6 +83,9 @@ enum QuickEntryParser {
         ("goingout", ["CINEMA", "SORTIE", "FILM", "CONCERT", "MATCH", "NETFLIX", "SPOTIFY", "BAR", "CLUB"])
     ]
 
+    /// Keywords per category key, for Ask.
+    static var categoryKeywords: [String: [String]] { Dictionary(keywords, uniquingKeysWith: +) }
+
     private static let incomeWords: [String: IncomeSource] = [
         "SALAIRE": .salary, "SALARY": .salary, "KHLAS": .salary, "LKHLAS": .salary, "KHLASS": .salary, "PAIE": .salary,
         "FREELANCE": .freelance, "RENTREE": .other, "INCOME": .other
