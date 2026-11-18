@@ -3,7 +3,19 @@
 Last updated: 2026-11-18 (evening)
 
 ## Status
-Milestones 1–4 (core money, scanning, share extension and PDFs, Activity/Insights/alerts/lock/Settings) are built and CI is green. TestFlight is blocked by the App Store Connect API key (401).
+Milestones 1–5 (core money, scanning, share extension and PDFs, Activity/Insights/alerts/lock/Settings, smart features) are built and CI is green. TestFlight is blocked by the App Store Connect API key (401).
+
+## Done in Milestone 5
+- Category memory: a shop goes to the category you chose for it last time (scan, Type it, Siri, typing the shop name)
+- Apple Intelligence (on supported iPhones, on device) fills what the receipt rules missed; every value must appear in the receipt text, or it is thrown away
+- Duplicate warning: same amount, same shop, same or next day → "Already added?"
+- Type it: "taxi 20", "café 38", "khlst 50 f l9hwa", "+8000 salaire" fill the form (French, English, Darija in Latin letters)
+- Say it: microphone in the Add sheet (on-device speech recognition, French or English)
+- Siri / Shortcuts: "Add an expense in Bztam" asks the amount and what for, guesses the category
+- Monthly recap on Insights (days left, biggest increase, mostly on weekends, biggest expense) and pace warnings ("At this pace, Going out runs out around 18 Nov") on Home and Insights
+- Budget suggestions from the last 2–3 months in the categories editor ("Use all")
+- Add sheet: top part scrolls, keypad and button stay at the bottom
+- Tests: Type it phrases, memory, duplicates, AI safety net, pace, weekend share, suggestions
 
 ## Done in Milestone 4
 - Activity: search by shop, note, category or amount; filter chips (All, Expenses, Money in, Category)

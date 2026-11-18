@@ -50,7 +50,7 @@ struct AddEntryView: View {
     private var canSave: Bool { amount.centimes > 0 }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 18) {
+        VStack(alignment: .leading, spacing: 0) {
             HStack {
                 CircleIconButton(symbol: "xmark", label: L10n.t("Close")) { dismiss() }
                 Spacer()
@@ -60,7 +60,10 @@ struct AddEntryView: View {
                 Spacer()
                 Color.clear.frame(width: 44, height: 44)
             }
+            .padding(.bottom, 12)
 
+            ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
             ScreenTitle(text: title)
 
             if editing == nil {
@@ -146,9 +149,12 @@ struct AddEntryView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
             }
+            }
+            .padding(.bottom, 12)
+            }
+            .scrollDismissesKeyboard(.interactively)
 
-            Spacer(minLength: 0)
-
+            VStack(spacing: 10) {
             KeypadView { amount.press($0) }
 
             Button(editing == nil ? title : L10n.t("Save")) { checkThenSave() }
@@ -166,6 +172,9 @@ struct AddEntryView: View {
                 .foregroundStyle(Theme.Colors.negative)
                 .frame(maxWidth: .infinity, minHeight: 44)
             }
+            }
+            .padding(.top, 8)
+            .overlay(alignment: .top) { Rectangle().fill(Theme.Colors.line).frame(height: 1).padding(.horizontal, -Theme.Space.l) }
         }
         .padding(.horizontal, Theme.Space.l)
         .padding(.top, Theme.Space.m)

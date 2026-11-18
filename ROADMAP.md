@@ -49,15 +49,15 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [ ] M4.6 TestFlight build 4 (CI green; waits for the API key fix)
 
 ## Milestone 5 — Smart (on-device AI) → TestFlight 5
-- [ ] M5.1 Merchant → category memory (learns from choices)
-- [ ] M5.2 Foundation Models receipt extraction and category guess when available (rules stay the fallback)
-- [ ] M5.3 Duplicate warning
-- [ ] M5.4 Type it: "taxi 20", "café 38", Darija in Latin letters → expense draft (parser + tests)
-- [ ] M5.5 Say it: dictation (fr/en) into the same parser
-- [ ] M5.6 Siri / Shortcuts: add an expense with App Intents
-- [ ] M5.7 Monthly recap text and pace warnings
-- [ ] M5.8 Budget suggestions from the last 2–3 periods
-- [ ] M5.9 TestFlight build 5
+- [x] M5.1 Merchant → category memory (learns from choices)
+- [x] M5.2 Foundation Models receipt extraction and category guess when available (rules stay the fallback)
+- [x] M5.3 Duplicate warning
+- [x] M5.4 Type it: "taxi 20", "café 38", Darija in Latin letters → expense draft (parser + tests)
+- [x] M5.5 Say it: dictation (fr/en) into the same parser
+- [x] M5.6 Siri / Shortcuts: add an expense with App Intents
+- [x] M5.7 Monthly recap text and pace warnings
+- [x] M5.8 Budget suggestions from the last 2–3 periods
+- [ ] M5.9 TestFlight build 5 (CI green; waits for the API key fix)
 
 ## Milestone 6 — Recurring and planning → TestFlight 6
 - [ ] M6.1 Recurring entries (rent, salary, subscriptions, bills): model, auto-add on their day, edit once or all
