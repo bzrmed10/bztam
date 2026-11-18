@@ -3,7 +3,15 @@
 Last updated: 2026-11-18 (evening)
 
 ## Status
-Milestones 1 (core money), 2 (scan receipts and screenshots) and 3 (share extension and PDF bills) are built and CI is green. TestFlight is blocked by the App Store Connect API key (401).
+Milestones 1–4 (core money, scanning, share extension and PDFs, Activity/Insights/alerts/lock/Settings) are built and CI is green. TestFlight is blocked by the App Store Connect API key (401).
+
+## Done in Milestone 4
+- Activity: search by shop, note, category or amount; filter chips (All, Expenses, Money in, Category)
+- Insights: donut by category with percentages, money in vs spent, comparison with the previous month and the categories that changed most; browse earlier months
+- Budget alerts: a notification at 80% and at 100% of a category's budget, once per month (Settings toggle, on by default)
+- Face ID / passcode lock when Bztam opens or comes back (Settings toggle, confirmed with Face ID)
+- Settings: payday, currency (DH, €, $), categories editor (add, rename, icon, budget, planned first, reorder, archive), language (phone, English, Français) applied instantly, version
+- Tests: Insights numbers, alert thresholds; demo data now has a previous month
 
 ## Done in Milestone 3
 - "Share to Bztam" from any app (Photos, Mail, WhatsApp, Files, a biller's app): the image or PDF goes to the App Group inbox; Bztam opens the review screen the next time it opens
@@ -35,7 +43,6 @@ Milestones 1 (core money), 2 (scan receipts and screenshots) and 3 (share extens
 - Demo month and UI-test screenshots (en/fr)
 
 ## Not yet working on purpose
-- Insights is a placeholder (Milestone 4)
 
 ## Blockers
 - TestFlight: Apple answers 401 "credentials are missing or invalid" for the API key. Check the four repo secrets (see docs/SETUP.md, "If the TestFlight workflow fails").

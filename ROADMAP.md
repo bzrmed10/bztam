@@ -41,12 +41,12 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [ ] M3.3 TestFlight build 3 (CI green; waits for the API key fix)
 
 ## Milestone 4 — Activity, Insights, safety → TestFlight 4
-- [ ] M4.1 Activity: entries by day, search, filter chips
-- [ ] M4.2 Insights: donut by category, in vs out, vs previous period
-- [ ] M4.3 Category alerts at 80% and 100% (local notifications)
-- [ ] M4.4 Face ID lock
-- [ ] M4.5 Settings: payday, currency, categories editor (add, rename, icon, reorder, archive), language, about
-- [ ] M4.6 TestFlight build 4
+- [x] M4.1 Activity: entries by day, search, filter chips
+- [x] M4.2 Insights: donut by category, in vs out, vs previous period
+- [x] M4.3 Category alerts at 80% and 100% (local notifications)
+- [x] M4.4 Face ID lock
+- [x] M4.5 Settings: payday, currency, categories editor (add, rename, icon, reorder, archive), language, about
+- [ ] M4.6 TestFlight build 4 (CI green; waits for the API key fix)
 
 ## Milestone 5 — Smart (on-device AI) → TestFlight 5
 - [ ] M5.1 Merchant → category memory (learns from choices)
