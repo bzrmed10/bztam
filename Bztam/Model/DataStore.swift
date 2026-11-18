@@ -97,6 +97,18 @@ enum DataStore {
             context.insert(Entry(kind: .expense, amount: amount, date: date, merchant: merchant,
                                  category: byKey[key], source: source))
         }
+        // The previous period, so Insights has something to compare with.
+        let previous = BudgetCalculator.period(period, offset: -1, payday: 25, calendar: cal)
+        func prev(_ offset: Int) -> Date { cal.date(byAdding: .day, value: offset, to: previous.start) ?? previous.start }
+        context.insert(Entry(kind: .income, amount: 800_000, date: prev(0), incomeSource: .salary))
+        let earlier: [(String, Centimes, String, Int)] = [
+            ("rent", 300_000, "Rent", 0), ("courses", 97_000, "Marjane", 6), ("food", 54_000, "Glovo", 9),
+            ("transport", 26_000, "Petit taxi", 12), ("bills", 30_000, "Lydec", 14), ("phone", 20_000, "Inwi", 15),
+            ("goingout", 34_000, "Megarama", 20)
+        ]
+        for (key, amount, merchant, offset) in earlier {
+            context.insert(Entry(kind: .expense, amount: amount, date: prev(offset), merchant: merchant, category: byKey[key]))
+        }
         try? context.save()
     }
 }
