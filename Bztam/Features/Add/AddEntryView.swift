@@ -60,8 +60,9 @@ struct AddEntryView: View {
 
             if let onScan, kind == .expense {
                 HStack(spacing: 8) {
-                    scanButton(L10n.t("Scan receipt"), symbol: "camera", fill: Theme.Colors.brandTint) { onScan(.camera) }
+                    scanButton(L10n.t("Scan"), symbol: "camera", fill: Theme.Colors.brandTint) { onScan(.camera) }
                     scanButton(L10n.t("Screenshot"), symbol: "photo", fill: Theme.Colors.surface) { onScan(.screenshot) }
+                    scanButton(L10n.t("PDF"), symbol: "doc", fill: Theme.Colors.surface) { onScan(.pdf) }
                 }
             } else if let name = editing?.attachmentName {
                 Button { showReceipt = true } label: {
@@ -148,7 +149,9 @@ struct AddEntryView: View {
     private func scanButton(_ title: String, symbol: String, fill: Color, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Label(title, systemImage: symbol)
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: 14, weight: .semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
                 .foregroundStyle(Theme.Colors.ink)
                 .frame(maxWidth: .infinity, minHeight: 48)
                 .background(fill, in: Capsule())
