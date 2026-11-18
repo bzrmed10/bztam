@@ -68,3 +68,10 @@ Once the secrets are fixed, run Actions -> TestFlight -> Run workflow, then inst
 - Subscription detection: a shop paid at a similar amount in at least 3 of the last 4 months shows "Netflix every month?" on Home. Yes makes it a rule; Dismiss hides it for good.
 - Move money: Category → Move money gives to or takes from another category for the current period only.
 - Tests: RecurringTests (dates, month end, leap years, detection rules). CI is green and the screenshots are checked.
+
+## Milestone 7: Ask Bztam
+- Insights → "Ask about your money" opens Ask Bztam. Type or say a question in English, French or Darija (Latin letters).
+- Understands: how much spent, money in, what's left (overall or per category), how many times, biggest expense, where most money went; for this or last period, this or last week, today, yesterday, this year, or since the start; filtered by a category or a shop you've paid.
+- Keyword rules answer first. When Apple Intelligence is on, the on-device model only fills what the rules missed, and every value it returns is checked. The model never sees or writes numbers: all amounts come from `AskEngine`.
+- Each answer shows how the question was understood (chips) and the entries behind it.
+- Tests: AskTests (parsing in three languages, every answer type, model merge checks). CI is green and the screenshots are checked.

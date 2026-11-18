@@ -66,9 +66,9 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [ ] M6.4 TestFlight build 6 (waiting for the API key secrets and App Group)
 
 ## Milestone 7 — Ask Bztam → TestFlight 7
-- [ ] M7.1 Query functions over entries (by merchant, category, period, kind) + tests
-- [ ] M7.2 Ask screen: questions answered by the on-device model calling those functions; numbers always from code
-- [ ] M7.3 TestFlight build 7
+- [x] M7.1 Query functions over entries (by merchant, category, period, kind) + tests
+- [x] M7.2 Ask screen: questions answered by the on-device model calling those functions; numbers always from code
+- [ ] M7.3 TestFlight build 7 (waiting for the API key secrets and App Group)
 
 ## Milestone 8 — Dart (tontine) tracker → TestFlight 8
 - [ ] M8.1 Dart model: members, monthly amount, turn order, start month

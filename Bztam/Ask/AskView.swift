@@ -100,7 +100,10 @@ struct AskView: View {
             Button(L10n.t("OK"), role: .cancel) {}
         }
         .task {
-            if let q = UserDefaults.standard.string(forKey: "askQuestion"), LaunchOptions.demoData { submit(q) }
+            // The test runner escapes spaces in launch arguments ("ce\\ mois").
+            if let q = UserDefaults.standard.string(forKey: "askQuestion"), LaunchOptions.demoData {
+                submit(q.replacingOccurrences(of: "\\", with: ""))
+            }
         }
     }
 
