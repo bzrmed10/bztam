@@ -13,6 +13,7 @@ struct SettingsView: View {
     @AppStorage(BudgetAlerts.enabledKey) private var budgetAlerts = true
     @AppStorage(AppLock.enabledKey) private var faceIDLock = false
     @AppStorage(L10n.storageKey) private var language = AppLanguage.system.rawValue
+    @AppStorage(Appearance.storageKey) private var appearance = Appearance.system.rawValue
     @AppStorage(Money.currencyKey) private var currency = Currency.mad.rawValue
     @State private var photosDenied = false
     @State private var showCategories = false
@@ -146,6 +147,15 @@ struct SettingsView: View {
                         } label: {
                             SettingsRow(symbol: "globe", title: L10n.t("Language"),
                                         value: (AppLanguage(rawValue: language) ?? .system).nativeName)
+                        }
+                        .buttonStyle(.plain)
+                        Menu {
+                            Picker(L10n.t("Appearance"), selection: $appearance) {
+                                ForEach(Appearance.allCases) { Text($0.title).tag($0.rawValue) }
+                            }
+                        } label: {
+                            SettingsRow(symbol: "circle.lefthalf.filled", title: L10n.t("Appearance"),
+                                        value: (Appearance(rawValue: appearance) ?? .system).title)
                         }
                         .buttonStyle(.plain)
                         SettingsRow(symbol: "info.circle", title: L10n.t("About Bztam"),

@@ -119,6 +119,7 @@ struct AskView: View {
                 Image(systemName: speech.isListening ? "stop.fill" : "mic")
                     .font(.system(size: 16, weight: .semibold))
                     .frame(width: 40, height: 40)
+                    .foregroundStyle(speech.isListening ? Theme.Colors.onBrand : Theme.Colors.ink)
                     .background(speech.isListening ? Theme.Colors.brand : Theme.Colors.canvas, in: Circle())
             }
             .buttonStyle(.plain)
@@ -127,6 +128,7 @@ struct AskView: View {
                 Image(systemName: "arrow.up")
                     .font(.system(size: 16, weight: .bold))
                     .frame(width: 40, height: 40)
+                    .foregroundStyle(Theme.Colors.onBrand)
                     .background(Theme.Colors.brand, in: Circle())
             }
             .buttonStyle(.plain)

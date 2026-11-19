@@ -46,7 +46,7 @@ struct LockView: View {
     var body: some View {
         VStack(spacing: 20) {
             Spacer()
-            IconCircle(symbol: "lock.fill", size: 72, fill: Theme.Colors.brand)
+            IconCircle(symbol: "lock.fill", size: 72, fill: Theme.Colors.brand, tint: Theme.Colors.onBrand)
             Text(L10n.t("Bztam is locked")).font(.bzTitleXL)
             Text(L10n.t("Use Face ID or your passcode to open it.")).font(.bzBody).foregroundStyle(Theme.Colors.inkMuted)
                 .multilineTextAlignment(.center)

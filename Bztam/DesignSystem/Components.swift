@@ -8,7 +8,7 @@ struct PillButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.system(size: 16, weight: .bold))
-            .foregroundStyle(Theme.Colors.ink)
+            .foregroundStyle(kind == .primary ? Theme.Colors.onBrand : Theme.Colors.ink)
             .frame(maxWidth: .infinity, minHeight: Theme.Size.button)
             .background(kind == .primary ? Theme.Colors.brand : Theme.Colors.surface, in: Capsule())
             .opacity(configuration.isPressed ? 0.75 : 1)
@@ -83,7 +83,7 @@ struct Chip: View {
         Button(action: action) {
             Text(title)
                 .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(selected ? Color.white : Theme.Colors.ink)
+                .foregroundStyle(selected ? Theme.Colors.onInk : Theme.Colors.ink)
                 .padding(.horizontal, 14)
                 .frame(height: 36)
                 .background(selected ? Theme.Colors.ink : Theme.Colors.surface, in: Capsule())

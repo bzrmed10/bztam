@@ -41,6 +41,21 @@ final class ScreenshotTests: XCTestCase {
         }
         app.terminate()
 
+        // Dark mode
+        app = launch(lang, ["-demoData", "-appearance", "dark"])
+        XCTAssertTrue(app.staticTexts["home.left"].waitForExistence(timeout: 15))
+        sleep(1)
+        save("\(lang)-13-home-dark")
+        app.buttons["tab.insights"].tap()
+        sleep(2)
+        save("\(lang)-14-insights-dark")
+        app.terminate()
+        app = launch(lang, ["-demoData", "-appearance", "dark", "-openScreen", "add"])
+        XCTAssertTrue(app.buttons["add.save"].waitForExistence(timeout: 15))
+        sleep(1)
+        save("\(lang)-15-add-dark")
+        app.terminate()
+
         app = launch(lang, ["-demoData", "-openScreen", "add"])
         XCTAssertTrue(app.buttons["add.save"].waitForExistence(timeout: 15))
         sleep(1)

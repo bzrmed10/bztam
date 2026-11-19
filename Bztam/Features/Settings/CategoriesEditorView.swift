@@ -53,6 +53,7 @@ struct CategoriesEditorView: View {
                             .font(.system(size: 14, weight: .bold))
                             .padding(.horizontal, 14)
                             .frame(height: 36)
+                            .foregroundStyle(Theme.Colors.onBrand)
                             .background(Theme.Colors.brand, in: Capsule())
                             .buttonStyle(.plain)
                     }
@@ -181,7 +182,8 @@ struct CategoryEditSheet: View {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 6), spacing: 8) {
                     ForEach(Self.symbols, id: \.self) { s in
                         Button { symbol = s } label: {
-                            IconCircle(symbol: s, size: 48, fill: s == symbol ? Theme.Colors.brand : Theme.Colors.surface)
+                            IconCircle(symbol: s, size: 48, fill: s == symbol ? Theme.Colors.brand : Theme.Colors.surface,
+                                       tint: s == symbol ? Theme.Colors.onBrand : Theme.Colors.ink)
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel(s)

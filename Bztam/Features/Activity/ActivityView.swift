@@ -58,7 +58,7 @@ struct ActivityView: View {
                 Button(action: onAdd) {
                     Image(systemName: "plus")
                         .font(.system(size: 18, weight: .bold))
-                        .foregroundStyle(Theme.Colors.ink)
+                        .foregroundStyle(Theme.Colors.onBrand)
                         .frame(width: 44, height: 44)
                         .background(Theme.Colors.brand, in: Circle())
                 }
@@ -104,7 +104,7 @@ struct ActivityView: View {
                                     Image(systemName: "chevron.down").font(.system(size: 11, weight: .bold))
                                 }
                                 .font(.system(size: 14, weight: .semibold))
-                                .foregroundStyle(isCategoryFilter ? Color.white : Theme.Colors.ink)
+                                .foregroundStyle(isCategoryFilter ? Theme.Colors.onInk : Theme.Colors.ink)
                                 .padding(.horizontal, 14)
                                 .frame(height: 36)
                                 .background(isCategoryFilter ? Theme.Colors.ink : Theme.Colors.surface, in: Capsule())

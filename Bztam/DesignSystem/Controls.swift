@@ -53,7 +53,7 @@ struct SegmentedPill<Value: Hashable>: View {
                 } label: {
                     Text(option.1)
                         .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(on ? Color.white : Theme.Colors.inkMuted)
+                        .foregroundStyle(on ? Theme.Colors.onInk : Theme.Colors.inkMuted)
                         .frame(maxWidth: .infinity, minHeight: 36)
                         .background(on ? Theme.Colors.ink : Color.clear, in: Capsule())
                         .contentShape(Capsule())

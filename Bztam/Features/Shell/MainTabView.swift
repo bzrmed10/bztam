@@ -236,6 +236,7 @@ struct BZTabBar: View {
                         Image(systemName: tab.symbol)
                             .font(.system(size: 18, weight: active ? .semibold : .regular))
                             .frame(width: 56, height: 32)
+                            .foregroundStyle(active ? Theme.Colors.onBrand : Theme.Colors.ink)
                             .background(active ? Theme.Colors.brand : Color.clear, in: Capsule())
                         Text(tab.title)
                             .font(.system(size: 12, weight: active ? .bold : .medium))

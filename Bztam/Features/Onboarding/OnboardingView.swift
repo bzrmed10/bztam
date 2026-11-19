@@ -55,7 +55,7 @@ struct OnboardingView: View {
                     } label: {
                         Text("\(day)")
                             .font(.system(size: 16, weight: .semibold).monospacedDigit())
-                            .foregroundStyle(day == payday ? Color.white : Theme.Colors.ink)
+                            .foregroundStyle(day == payday ? Theme.Colors.onInk : Theme.Colors.ink)
                             .frame(maxWidth: .infinity, minHeight: 44)
                             .background(day == payday ? Theme.Colors.ink : Theme.Colors.surface, in: Circle())
                     }

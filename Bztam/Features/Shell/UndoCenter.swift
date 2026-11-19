@@ -46,7 +46,7 @@ struct UndoToast: View {
         }
         .padding(.horizontal, 20)
         .frame(height: 52)
-        .background(Theme.Colors.ink, in: Capsule())
+        .background(Theme.Colors.toast, in: Capsule())
         .accessibilityElement(children: .contain)
     }
 }

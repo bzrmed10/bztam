@@ -87,7 +87,7 @@ struct ScreenshotSuggestionCard: View {
             Spacer(minLength: 4)
             Button(L10n.t("Add"), action: onAdd)
                 .font(.system(size: 14, weight: .bold))
-                .foregroundStyle(Theme.Colors.ink)
+                .foregroundStyle(Theme.Colors.onBrand)
                 .padding(.horizontal, 14)
                 .frame(height: 36)
                 .background(Theme.Colors.brand, in: Capsule())

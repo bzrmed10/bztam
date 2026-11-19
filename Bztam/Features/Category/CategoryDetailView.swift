@@ -68,7 +68,7 @@ struct CategoryDetailView: View {
                     } label: {
                         Image(systemName: "plus")
                             .font(.system(size: 16, weight: .bold))
-                            .foregroundStyle(Theme.Colors.ink)
+                            .foregroundStyle(Theme.Colors.onBrand)
                             .frame(width: 36, height: 36)
                             .background(Theme.Colors.brand, in: Circle())
                     }

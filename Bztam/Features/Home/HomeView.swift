@@ -150,7 +150,7 @@ private struct QuickAction: View {
             VStack(spacing: 8) {
                 Image(systemName: symbol)
                     .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(Theme.Colors.ink)
+                    .foregroundStyle(highlighted ? Theme.Colors.onBrand : Theme.Colors.ink)
                     .frame(width: Theme.Size.quickAction, height: Theme.Size.quickAction)
                     .background(highlighted ? Theme.Colors.brand : Theme.Colors.surface, in: Circle())
                 Text(title)

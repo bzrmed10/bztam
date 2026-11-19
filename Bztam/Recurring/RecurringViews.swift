@@ -180,6 +180,7 @@ struct SubscriptionCard: View {
                 .font(.system(size: 14, weight: .bold))
                 .padding(.horizontal, 14)
                 .frame(height: 36)
+                .foregroundStyle(Theme.Colors.onBrand)
                 .background(Theme.Colors.brand, in: Capsule())
                 .buttonStyle(.plain)
             Button(action: onDismiss) {

@@ -81,10 +81,17 @@ private struct ShareCard: View {
     private static let fr = Locale.preferredLanguages.first?.hasPrefix("fr") == true
     private func t(_ en: String, _ fr: String) -> String { Self.fr ? fr : en }
 
-    private let ink = Color(red: 0x14 / 255, green: 0x29 / 255, blue: 0x0B / 255)
-    private let lime = Color(red: 0xA6 / 255, green: 0xE3 / 255, blue: 0x6F / 255)
-    private let surface = Color(red: 0xEE / 255, green: 0xF2 / 255, blue: 0xEA / 255)
-    private let muted = Color(red: 0x58 / 255, green: 0x64 / 255, blue: 0x52 / 255)
+    @Environment(\.colorScheme) private var scheme
+    private var dark: Bool { scheme == .dark }
+    private func rgb(_ hex: UInt32) -> Color {
+        Color(red: Double((hex >> 16) & 0xFF) / 255, green: Double((hex >> 8) & 0xFF) / 255, blue: Double(hex & 0xFF) / 255)
+    }
+    private var ink: Color { rgb(dark ? 0xE9F2E3 : 0x14290B) }
+    private var lime: Color { rgb(0xA6E36F) }
+    private var onLime: Color { rgb(0x14290B) }
+    private var surface: Color { rgb(dark ? 0x1D261A : 0xEEF2EA) }
+    private var muted: Color { rgb(dark ? 0x9DAA95 : 0x586452) }
+    private var card: Color { rgb(dark ? 0x0F140D : 0xFFFFFF) }
 
     var body: some View {
         VStack {
@@ -97,6 +104,7 @@ private struct ShareCard: View {
                 case .saved:
                     Image(systemName: "checkmark")
                         .font(.system(size: 26, weight: .bold))
+                        .foregroundStyle(onLime)
                         .frame(width: 64, height: 64)
                         .background(lime, in: Circle())
                     Text(t("Sent to Bztam", "Envoyé à Bztam")).font(.system(size: 22, weight: .heavy))
@@ -115,6 +123,7 @@ private struct ShareCard: View {
                     Text(t("Done", "OK"))
                         .font(.system(size: 16, weight: .bold))
                         .frame(maxWidth: .infinity, minHeight: 56)
+                        .foregroundStyle(model.state == .failed ? ink : onLime)
                         .background(model.state == .failed ? surface : lime, in: Capsule())
                 }
                 .buttonStyle(.plain)
@@ -124,7 +133,7 @@ private struct ShareCard: View {
             .foregroundStyle(ink)
             .padding(24)
             .frame(maxWidth: .infinity)
-            .background(.white, in: RoundedRectangle(cornerRadius: 28))
+            .background(card, in: RoundedRectangle(cornerRadius: 28))
             .padding(16)
         }
         .background(Color.black.opacity(0.2).ignoresSafeArea())

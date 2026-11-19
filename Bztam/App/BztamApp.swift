@@ -44,6 +44,7 @@ struct RootView: View {
     @Query private var settingsRows: [AppSettings]
     @AppStorage(L10n.storageKey) private var language = AppLanguage.system.rawValue
     @AppStorage(Money.currencyKey) private var currency = Currency.mad.rawValue
+    @AppStorage(Appearance.storageKey) private var appearance = Appearance.system.rawValue
     @State private var lock = AppLock()
 
     var body: some View {
@@ -65,6 +66,7 @@ struct RootView: View {
             }
         }
         .background(Theme.Colors.canvas)
+        .preferredColorScheme((Appearance(rawValue: appearance) ?? .system).scheme)
         .onAppear {
             if settingsRows.isEmpty { _ = DataStore.settings(in: context) }
         }

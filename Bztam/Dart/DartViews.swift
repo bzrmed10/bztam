@@ -19,6 +19,7 @@ struct DartListView: View {
                         Button(L10n.t("New dart")) { creating = true }
                             .font(.system(size: 14, weight: .semibold))
                             .padding(.horizontal, 16).frame(height: 40)
+                            .foregroundStyle(Theme.Colors.onBrand)
                             .background(Theme.Colors.brand, in: Capsule())
                             .buttonStyle(.plain)
                             .accessibilityIdentifier("dart.new")
@@ -226,6 +227,7 @@ struct DartDetailView: View {
                     Text("\(r + 1)")
                         .font(.system(size: 15, weight: .bold))
                         .frame(width: 36, height: 36)
+                        .foregroundStyle(r == current ? Theme.Colors.onBrand : Theme.Colors.ink)
                         .background(r == current ? Theme.Colors.brand : Theme.Colors.surface, in: Circle())
                     VStack(alignment: .leading, spacing: 2) {
                         Text(dart.displayName(collector)).font(.bzBodyStrong)
@@ -321,6 +323,7 @@ struct DartEditSheet: View {
                         Button { addMember() } label: {
                             Image(systemName: "plus").font(.system(size: 15, weight: .bold))
                                 .frame(width: 36, height: 36)
+                                .foregroundStyle(Theme.Colors.onBrand)
                                 .background(Theme.Colors.brand, in: Circle())
                         }
                         .buttonStyle(.plain)
@@ -393,6 +396,7 @@ struct DartEditSheet: View {
             Text("\(index + 1)")
                 .font(.system(size: 14, weight: .bold))
                 .frame(width: 32, height: 32)
+                .foregroundStyle(m.isMe ? Theme.Colors.onBrand : Theme.Colors.ink)
                 .background(m.isMe ? Theme.Colors.brand : Theme.Colors.surface, in: Circle())
             Text(m.isMe ? L10n.t("You") : m.name).font(.bzBodyStrong).lineLimit(1)
             Spacer()
@@ -491,6 +495,7 @@ struct DartCard: View {
                 .font(.system(size: 14, weight: .bold))
                 .padding(.horizontal, 14)
                 .frame(height: 36)
+                .foregroundStyle(Theme.Colors.onBrand)
                 .background(Theme.Colors.brand, in: Capsule())
                 .buttonStyle(.plain)
                 .accessibilityIdentifier("home.dart")

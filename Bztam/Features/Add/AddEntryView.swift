@@ -80,7 +80,7 @@ struct AddEntryView: View {
                     } label: {
                         Image(systemName: speech.isListening ? "stop.fill" : "mic")
                             .font(.system(size: 15, weight: .bold))
-                            .foregroundStyle(Theme.Colors.ink)
+                            .foregroundStyle(speech.isListening ? Theme.Colors.onBrand : Theme.Colors.ink)
                             .frame(width: 36, height: 36)
                             .background(speech.isListening ? Theme.Colors.brand : Theme.Colors.canvas, in: Circle())
                     }
