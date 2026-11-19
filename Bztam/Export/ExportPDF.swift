@@ -1,7 +1,6 @@
 import UIKit
 
 /// A one-file monthly report: totals, categories against their budgets, then every entry. A4, light, readable on paper.
-@MainActor
 enum ExportPDF {
     struct CategoryLine: Sendable {
         var name: String
@@ -9,14 +8,14 @@ enum ExportPDF {
         var budget: Centimes
     }
 
-    private static let page = CGRect(x: 0, y: 0, width: 595, height: 842)
-    private static let margin: CGFloat = 44
-    private static let ink = UIColor(red: 0x14 / 255, green: 0x29 / 255, blue: 0x0B / 255, alpha: 1)
-    private static let muted = UIColor(red: 0x58 / 255, green: 0x64 / 255, blue: 0x52 / 255, alpha: 1)
-    private static let positive = UIColor(red: 0x2F / 255, green: 0x7A / 255, blue: 0x2B / 255, alpha: 1)
-    private static let negative = UIColor(red: 0xB3 / 255, green: 0x26 / 255, blue: 0x1E / 255, alpha: 1)
-    private static let lime = UIColor(red: 0xA6 / 255, green: 0xE3 / 255, blue: 0x6F / 255, alpha: 1)
-    private static let line = UIColor(red: 0xDD / 255, green: 0xE5 / 255, blue: 0xD6 / 255, alpha: 1)
+    private nonisolated static let page = CGRect(x: 0, y: 0, width: 595, height: 842)
+    private nonisolated static let margin: CGFloat = 44
+    private nonisolated static let ink = UIColor(red: 0x14 / 255, green: 0x29 / 255, blue: 0x0B / 255, alpha: 1)
+    private nonisolated static let muted = UIColor(red: 0x58 / 255, green: 0x64 / 255, blue: 0x52 / 255, alpha: 1)
+    private nonisolated static let positive = UIColor(red: 0x2F / 255, green: 0x7A / 255, blue: 0x2B / 255, alpha: 1)
+    private nonisolated static let negative = UIColor(red: 0xB3 / 255, green: 0x26 / 255, blue: 0x1E / 255, alpha: 1)
+    private nonisolated static let lime = UIColor(red: 0xA6 / 255, green: 0xE3 / 255, blue: 0x6F / 255, alpha: 1)
+    private nonisolated static let line = UIColor(red: 0xDD / 255, green: 0xE5 / 255, blue: 0xD6 / 255, alpha: 1)
 
     static func make(subtitle: String, moneyIn: Centimes, spent: Centimes, categories: [CategoryLine], rows: [ExportRow]) -> Data {
         let renderer = UIGraphicsPDFRenderer(bounds: page, format: {
