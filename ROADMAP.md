@@ -96,3 +96,9 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - Monetization (free, or Pro with StoreKit 2)
 - Cloud AI for hard receipts and Darija
 - Arabic / Darija interface, Apple Watch app, widgets
+
+## Milestone 11 — Split with friends
+- [x] M11.1 Friends list, equal split from a ticket or the Add sheet, bank-style counting (paybacks come back into the category)
+- [x] M11.2 Balances (Home card, Friends screen), paying back in full or in part, forget, WhatsApp messages, reminders
+- [x] M11.3 Ask Bztam "who owes me", iCloud schema, website section, App Store texts
+- [ ] M11.4 TestFlight build, Deploy Schema Changes in CloudKit Console
