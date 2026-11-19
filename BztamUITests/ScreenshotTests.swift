@@ -33,6 +33,12 @@ final class ScreenshotTests: XCTestCase {
         app.buttons["tab.settings"].tap()
         sleep(1)
         save("\(lang)-05-settings")
+        app.swipeUp()
+        if app.buttons["settings.export"].waitForExistence(timeout: 5) {
+            app.buttons["settings.export"].tap()
+            sleep(1)
+            save("\(lang)-12-export")
+        }
         app.terminate()
 
         app = launch(lang, ["-demoData", "-openScreen", "add"])

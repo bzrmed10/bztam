@@ -1,3 +1,4 @@
+import CloudKit
 import SwiftData
 import SwiftUI
 import UIKit
@@ -16,6 +17,10 @@ struct SettingsView: View {
     @State private var photosDenied = false
     @State private var showCategories = false
     @State private var showRecurring = false
+    @State private var showExport = false
+    @State private var restartNeeded = false
+    @State private var cloudStatus: CKAccountStatus = .couldNotDetermine
+    @AppStorage(CloudSync.enabledKey) private var iCloudSync = true
     @State private var showDart = LaunchOptions.openScreen == "dart"
     @Query private var darts: [Dart]
     @Query(filter: #Predicate<RecurringRule> { $0.isActive }) private var rules: [RecurringRule]
@@ -97,6 +102,19 @@ struct SettingsView: View {
                                   }))
                     }
 
+                    section(L10n.t("Data")) {
+                        ToggleRow(symbol: "icloud", title: L10n.t("iCloud sync"), detail: cloudDetail,
+                                  isOn: Binding(get: { iCloudSync }, set: { on in
+                                      iCloudSync = on
+                                      restartNeeded = on != CloudSync.isActive
+                                  }))
+                        Button { showExport = true } label: {
+                            SettingsRow(symbol: "square.and.arrow.up", title: L10n.t("Export"), value: L10n.t("PDF report or CSV for spreadsheets"))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("settings.export")
+                    }
+
                     section(L10n.t("Privacy")) {
                         ToggleRow(symbol: "faceid", title: L10n.t("Lock with Face ID"),
                                   detail: L10n.t("Asks for Face ID or your passcode when Bztam opens"),
@@ -107,8 +125,11 @@ struct SettingsView: View {
                                       }
                                   }))
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(L10n.t("Your data stays on this iPhone")).font(.system(size: 15, weight: .bold))
-                            Text(L10n.t("No account, no bank connection, no ads. Receipts are read on your phone."))
+                            Text(CloudSync.isActive ? L10n.t("Your data stays yours") : L10n.t("Your data stays on this iPhone"))
+                                .font(.system(size: 15, weight: .bold))
+                            Text(CloudSync.isActive
+                                 ? L10n.t("No Bztam account, no bank connection, no ads. Receipts are read on your phone, and sync goes to your own iCloud.")
+                                 : L10n.t("No account, no bank connection, no ads. Receipts are read on your phone."))
                                 .font(.system(size: 14)).foregroundStyle(Theme.Colors.inkMuted)
                         }
                         .padding(16)
@@ -147,11 +168,26 @@ struct SettingsView: View {
                 Text(L10n.t("Allow Bztam to see your photos in the Settings app to get new screenshots offered."))
             }
             .sheet(isPresented: $showRecurring) { RecurringListView() }
+            .sheet(isPresented: $showExport) { ExportView() }
+            .alert(L10n.t("Restart Bztam to apply"), isPresented: $restartNeeded) {
+                Button(L10n.t("OK"), role: .cancel) {}
+            } message: {
+                Text(L10n.t("Close Bztam from the app switcher and open it again."))
+            }
+            .task { cloudStatus = await CloudSync.accountStatus() }
             .sheet(isPresented: $showDart) { DartListView() }
             .sheet(isPresented: $showCategories) {
                 CategoriesEditorView(income: settings?.expectedIncome ?? 0)
             }
         }
+    }
+
+    private var cloudDetail: String {
+        if !CloudSync.supported { return L10n.t("Not available on this device") }
+        if iCloudSync && cloudStatus == .noAccount { return L10n.t("Sign in to iCloud in the Settings app to sync") }
+        if iCloudSync != CloudSync.isActive { return L10n.t("Applies when Bztam opens again") }
+        return iCloudSync ? L10n.t("Your data on all your iPhones. Receipt photos stay on this one.")
+                          : L10n.t("Off: your data is only on this iPhone")
     }
 
     private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
