@@ -109,6 +109,18 @@ struct SettingsView: View {
                                       iCloudSync = on
                                       restartNeeded = on != CloudSync.isActive
                                   }))
+                        if CloudSync.isActive, let error = SyncMonitor.shared.lastError {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Label(L10n.t("iCloud sync isn't working yet"), systemImage: "exclamationmark.icloud")
+                                    .font(.system(size: 14, weight: .semibold)).foregroundStyle(Theme.Colors.negative)
+                                Text(error).font(.system(size: 11).monospaced()).foregroundStyle(Theme.Colors.inkMuted).lineLimit(6)
+                                Button(L10n.t("Copy details")) { UIPasteboard.general.string = error }
+                                    .font(.system(size: 14, weight: .semibold)).foregroundStyle(Theme.Colors.link)
+                            }
+                            .padding(12)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
+                        }
                         Button { showExport = true } label: {
                             SettingsRow(symbol: "square.and.arrow.up", title: L10n.t("Export"), value: L10n.t("PDF report or CSV for spreadsheets"))
                         }
@@ -196,6 +208,9 @@ struct SettingsView: View {
         if !CloudSync.supported { return L10n.t("Not available on this device") }
         if iCloudSync && cloudStatus == .noAccount { return L10n.t("Sign in to iCloud in the Settings app to sync") }
         if iCloudSync != CloudSync.isActive { return L10n.t("Applies when Bztam opens again") }
+        if let synced = SyncMonitor.shared.lastSuccess {
+            return L10n.t("Synced %@", synced.formatted(.relative(presentation: .named)))
+        }
         return iCloudSync ? L10n.t("Your data on all your iPhones. Receipt photos stay on this one.")
                           : L10n.t("Off: your data is only on this iPhone")
     }

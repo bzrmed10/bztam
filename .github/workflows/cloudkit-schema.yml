@@ -1,0 +1,39 @@
+name: CloudKit schema
+
+# Puts cloudkit/Bztam.ckdb into the Development environment of iCloud.com.bzrmed.bztam.
+# Then deploy it once by hand: CloudKit Console -> Bztam container -> Deploy Schema Changes (cktool cannot push to Production).
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "validate = check only, import = write to Development, export = show both environments"
+        type: choice
+        options: [validate, import, export]
+        default: import
+
+jobs:
+  schema:
+    runs-on: macos-15
+    env:
+      CK_TOKEN: ${{ secrets.CK_MANAGEMENT_TOKEN }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      CONTAINER: iCloud.com.bzrmed.bztam
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check secrets
+        run: |
+          [ -n "$CK_TOKEN" ] || { echo "::error::Missing repository secret CK_MANAGEMENT_TOKEN (CloudKit Console -> Settings -> Tokens & Keys -> New Management Token)"; exit 1; }
+          [ -n "$APPLE_TEAM_ID" ] || { echo "::error::Missing repository secret APPLE_TEAM_ID"; exit 1; }
+      - name: Validate
+        run: xcrun cktool validate-schema --token "$CK_TOKEN" --team-id "$APPLE_TEAM_ID" --container-id "$CONTAINER" --environment development --file cloudkit/Bztam.ckdb
+      - name: Import into Development
+        if: inputs.mode == 'import'
+        run: xcrun cktool import-schema --token "$CK_TOKEN" --team-id "$APPLE_TEAM_ID" --container-id "$CONTAINER" --environment development --file cloudkit/Bztam.ckdb
+      - name: Export both environments
+        if: inputs.mode != 'validate'
+        run: |
+          for env in development production; do
+            echo "::group::$env"
+            xcrun cktool export-schema --token "$CK_TOKEN" --team-id "$APPLE_TEAM_ID" --container-id "$CONTAINER" --environment $env --output-file "$env.ckdb" && cat "$env.ckdb"
+            echo "::endgroup::"
+          done

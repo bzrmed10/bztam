@@ -29,6 +29,7 @@ enum DataStore {
                 let cloud = ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .private(CloudSync.containerID))
                 if let container = try? ModelContainer(for: schema, configurations: cloud) {
                     CloudSync.isActive = true
+                    SyncMonitor.shared.start()
                     return container
                 }
             }

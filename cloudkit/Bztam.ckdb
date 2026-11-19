@@ -1,0 +1,132 @@
+DEFINE SCHEMA
+
+    RECORD TYPE CD_Entry (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE QUERYABLE,
+        CD_amount                    INT64,
+        CD_attachmentName            STRING,
+        CD_category                  STRING,
+        CD_createdAt                 TIMESTAMP,
+        CD_dartID                    STRING,
+        CD_dartRound                 INT64,
+        CD_date                      TIMESTAMP,
+        CD_entityName                STRING,
+        CD_id                        STRING,
+        CD_incomeSourceRaw           STRING,
+        CD_kindRaw                   STRING,
+        CD_merchant                  STRING,
+        CD_note                      STRING,
+        CD_recurringID               STRING,
+        CD_sourceRaw                 STRING,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE CD_BudgetCategory (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE QUERYABLE,
+        CD_budget                    INT64,
+        CD_entityName                STRING,
+        CD_id                        STRING,
+        CD_isArchived                INT64,
+        CD_isFixed                   INT64,
+        CD_key                       STRING,
+        CD_name                      STRING,
+        CD_order                     INT64,
+        CD_periodAdjustments         BYTES,
+        CD_periodAdjustments_ckAsset ASSET,
+        CD_symbol                    STRING,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE CD_AppSettings (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE QUERYABLE,
+        CD_createdAt                 TIMESTAMP,
+        CD_entityName                STRING,
+        CD_expectedIncome            INT64,
+        CD_onboardingDone            INT64,
+        CD_payday                    INT64,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE CD_RecurringRule (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE QUERYABLE,
+        CD_amount                    INT64,
+        CD_category                  STRING,
+        CD_entityName                STRING,
+        CD_frequencyRaw              STRING,
+        CD_id                        STRING,
+        CD_incomeSourceRaw           STRING,
+        CD_isActive                  INT64,
+        CD_kindRaw                   STRING,
+        CD_lastGenerated             TIMESTAMP,
+        CD_merchant                  STRING,
+        CD_note                      STRING,
+        CD_startDate                 TIMESTAMP,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE CD_Dart (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE QUERYABLE,
+        CD_amount                    INT64,
+        CD_categoryKey               STRING,
+        CD_createdAt                 TIMESTAMP,
+        CD_entityName                STRING,
+        CD_id                        STRING,
+        CD_meIndex                   INT64,
+        CD_memberNames               BYTES,
+        CD_memberNames_ckAsset       ASSET,
+        CD_name                      STRING,
+        CD_paid                      BYTES,
+        CD_paid_ckAsset              ASSET,
+        CD_received                  BYTES,
+        CD_received_ckAsset          ASSET,
+        CD_reminders                 INT64,
+        CD_startDate                 TIMESTAMP,
+        CD_tracksMoney               INT64,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE Users (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE QUERYABLE,
+        roles                        LIST<INT64>,
+        GRANT WRITE TO "_creator",
+        GRANT READ TO "_world"
+    );
