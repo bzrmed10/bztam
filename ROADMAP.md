@@ -83,13 +83,16 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [ ] M9.3 TestFlight build 9 (waiting for the API key secrets, App Group and iCloud container)
 
 ## Milestone 10 — App Store readiness
-- [ ] M10.1 Privacy manifests, permission strings (en/fr: camera, photos, speech, notifications, Face ID), encryption flag
+- [x] M10.1 Dark mode (Settings → Appearance: Automatic, Light, Dark)
 - [x] M10.2 Final app icon (Wallet, with dark and tinted versions)
-- [ ] M10.3 Website: privacy, terms, support (Netlify)
-- [ ] M10.4 Metadata en + fr (+ primary locale), screenshots, metadata workflow
-- [ ] M10.5 Submit for review
+- [x] M10.3 Privacy manifests, permission strings (en/fr), encryption flag
+- [x] M10.4 iCloud schema file + workflow + sync status in Settings (needs CK_MANAGEMENT_TOKEN, then Deploy in CloudKit Console)
+- [x] M10.5 Website: home, privacy, terms, support, en + fr (needs Netlify + support email)
+- [x] M10.6 App Store texts en + fr
+- [ ] M10.7 Framed store screenshots + metadata upload workflow
+- [ ] M10.8 TestFlight build 6, then submit for review
 
 ## Not decided / later
 - Monetization (free, or Pro with StoreKit 2)
 - Cloud AI for hard receipts and Darija
-- Dark mode, Arabic / Darija interface, Apple Watch app, widgets
+- Arabic / Darija interface, Apple Watch app, widgets
