@@ -31,7 +31,8 @@ struct SplitFlowTests {
     }
 
     @Test func youPaidThenFriendsPayBackLikeARefund() throws {
-        let context = DataStore.makeContainer(inMemory: true).mainContext
+        let container = DataStore.makeContainer(inMemory: true)
+        let context = container.mainContext
         let out = BudgetCategory(key: "goingout", name: "Going out", symbol: "sparkles", budget: 60_000, order: 1)
         context.insert(out)
         let karim = Friend(name: "Karim"), sara = Friend(name: "Sara"), omar = Friend(name: "Omar")
@@ -61,7 +62,8 @@ struct SplitFlowTests {
     }
 
     @Test func friendPaidNothingLeavesUntilYouPayBack() throws {
-        let context = DataStore.makeContainer(inMemory: true).mainContext
+        let container = DataStore.makeContainer(inMemory: true)
+        let context = container.mainContext
         let out = BudgetCategory(key: "goingout", name: "Going out", symbol: "sparkles", budget: 60_000, order: 1)
         context.insert(out)
         let sara = Friend(name: "Sara"), nadia = Friend(name: "Nadia")
