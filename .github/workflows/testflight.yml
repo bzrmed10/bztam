@@ -44,8 +44,9 @@ jobs:
       - name: Write App Store Connect API key
         run: |
           mkdir -p "$RUNNER_TEMP/keys"
-          printf '%s\n' "$ASC_KEY_P8" > "$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8"
-          echo "ASC_KEY_PATH=$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8" >> "$GITHUB_ENV"
+          # Windows Notepad copies can carry \r; xcodebuild needs a clean file too.
+          printf '%s\n' "$ASC_KEY_P8" | tr -d '\r' > "$RUNNER_TEMP/keys/AuthKey.p8"
+          echo "ASC_KEY_PATH=$RUNNER_TEMP/keys/AuthKey.p8" >> "$GITHUB_ENV"
 
       - name: Generate Xcode project
         run: xcodegen generate
@@ -116,11 +117,13 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p ~/private_keys
-          cp "$ASC_KEY_PATH" ~/private_keys/
+          KEY_ID="$(printf '%s' "$ASC_KEY_ID" | tr -d '[:space:]')"
+          ISSUER_ID="$(printf '%s' "$ASC_ISSUER_ID" | tr -d '[:space:]')"
+          cp "$ASC_KEY_PATH" ~/private_keys/"AuthKey_${KEY_ID}.p8"
           xcrun altool --upload-app --type ios \
             --file build/export/Bztam.ipa \
-            --apiKey "$ASC_KEY_ID" \
-            --apiIssuer "$ASC_ISSUER_ID" 2>&1 | tee build/upload.log
+            --apiKey "$KEY_ID" \
+            --apiIssuer "$ISSUER_ID" 2>&1 | tee build/upload.log
           grep -q "UPLOAD SUCCEEDED" build/upload.log
 
       - name: Upload logs

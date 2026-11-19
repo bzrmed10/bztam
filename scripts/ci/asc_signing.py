@@ -30,21 +30,51 @@ WORK = pathlib.Path(os.environ.get("RUNNER_TEMP", "/tmp")) / "signing"
 STATE = WORK / "state.json"
 
 
+KEY_ID = os.environ.get("ASC_KEY_ID", "").strip()
+ISSUER_ID = os.environ.get("ASC_ISSUER_ID", "").strip()
+# "team" keys (Users and Access -> Integrations -> Team Keys) carry the issuer;
+# "individual" keys carry sub=user instead. Tried in that order on the first 401.
+KEY_KIND = ["team"]
+
+
 def token() -> str:
-    key = pathlib.Path(os.environ["ASC_KEY_PATH"]).read_text()
+    key = pathlib.Path(os.environ["ASC_KEY_PATH"]).read_text().strip() + "\n"
     now = int(time.time())
-    return jwt.encode(
-        {"iss": os.environ["ASC_ISSUER_ID"], "iat": now, "exp": now + 900, "aud": "appstoreconnect-v1"},
-        key,
-        algorithm="ES256",
-        headers={"kid": os.environ["ASC_KEY_ID"], "typ": "JWT"},
-    )
+    claims = {"iat": now, "exp": now + 900, "aud": "appstoreconnect-v1"}
+    if KEY_KIND[0] == "team":
+        claims["iss"] = ISSUER_ID
+    else:
+        claims["sub"] = "user"
+    return jwt.encode(claims, key, algorithm="ES256", headers={"kid": KEY_ID, "typ": "JWT"})
+
+
+def diagnose() -> None:
+    """Explains a 401 without printing any secret."""
+    import re
+    key = pathlib.Path(os.environ["ASC_KEY_PATH"]).read_text()
+    print("::group::API key check (no secret values are shown)")
+    print(f"Key ID: {len(KEY_ID)} characters, " + ("looks right" if re.fullmatch(r"[A-Z0-9]{10}", KEY_ID) else "should be 10 capital letters/digits"))
+    print("Issuer ID: " + ("looks right" if re.fullmatch(r"[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}", ISSUER_ID) else "should look like 69a6de8e-xxxx-xxxx-xxxx-xxxxxxxxxxxx"))
+    print("Raw secrets had extra spaces/newlines: " + str(os.environ.get("ASC_KEY_ID", "") != KEY_ID or os.environ.get("ASC_ISSUER_ID", "") != ISSUER_ID))
+    print("Key file has BEGIN/END PRIVATE KEY lines: " + str("BEGIN PRIVATE KEY" in key and "END PRIVATE KEY" in key))
+    print("Apple refused the key both as a Team key and as an Individual key. Check that the Key ID and Issuer ID")
+    print("belong to this .p8, that the key is not revoked, and that it has the Admin role.")
+    print("::endgroup::")
 
 
 def call(method: str, path: str, ok=(200, 201, 204), **kwargs):
     resp = requests.request(
         method, API + path, headers={"Authorization": "Bearer " + token()}, timeout=60, **kwargs
     )
+    if resp.status_code == 401 and KEY_KIND[0] == "team":
+        KEY_KIND[0] = "individual"
+        resp = requests.request(
+            method, API + path, headers={"Authorization": "Bearer " + token()}, timeout=60, **kwargs
+        )
+        if resp.status_code != 401:
+            print("Using the API key as an Individual key.")
+    if resp.status_code == 401:
+        diagnose()
     if resp.status_code not in ok:
         raise RuntimeError(f"{method} {path} -> {resp.status_code}: {resp.text[:800]}")
     return resp.json() if resp.content else {}
