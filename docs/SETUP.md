@@ -11,6 +11,10 @@
    - developer.apple.com -> Certificates, Identifiers & Profiles -> Identifiers -> **+** -> App Groups -> `group.com.bzrmed.bztam`.
    - The first TestFlight run registers `com.bzrmed.bztam.share` and turns on the App Groups capability for the app and the share extension.
    - Then open the identifiers `com.bzrmed.bztam` and `com.bzrmed.bztam.share`, App Groups -> **Configure** -> tick `group.com.bzrmed.bztam` -> Save. The API cannot do this step. Run the TestFlight workflow again afterwards.
+4. **iCloud container** (needed for iCloud sync, from Milestone 9):
+   - developer.apple.com -> Identifiers -> **+** -> iCloud Containers -> description `Bztam`, identifier `iCloud.com.bzrmed.bztam`.
+   - Open the identifier `com.bzrmed.bztam`: tick **iCloud** (with CloudKit) and **Push Notifications** if they aren't on yet. Next to iCloud, **Configure** -> tick `iCloud.com.bzrmed.bztam` -> Save. The API turns the capabilities on but cannot pick the container.
+   - Builds use the CloudKit **Development** environment for now. Before the App Store release: CloudKit Console (icloud.developer.apple.com) -> Bztam container -> **Deploy Schema Changes** to Production, then switch `com.apple.developer.icloud-container-environment` to Production in project.yml.
 
 ## Getting a build on your iPhone
 1. GitHub -> **Actions** -> **TestFlight** -> **Run workflow** (branch `main`). Takes about 10-20 minutes.
@@ -27,7 +31,7 @@ Each TestFlight run (`scripts/ci/asc_signing.py`) creates a temporary Apple Dist
 ## If the TestFlight workflow fails
 - **"Missing repository secret"**: add the secret named in the error.
 - **API errors 401/403**: the API key role is too low or the key was revoked. Use a key with the **Admin** role.
-- **App Group or entitlement errors**: do step 3 above (tick the App Group on both identifiers), then run again.
+- **App Group, iCloud or entitlement errors**: do steps 3 and 4 above, then run again.
 - **Build uploaded but not visible**: wait for processing, and check your email for a notice from App Store Connect.
 - **"90721 Certificate Revoked"**: another TestFlight run (Inly or Bztam) started while this build was processing. Run the workflow again.
 - Logs from each run are attached as the `testflight-logs` artifact.

@@ -84,3 +84,10 @@ Once the secrets are fixed, run Actions -> TestFlight -> Run workflow, then inst
 - Reminders: a notification at 9:00 on the next turn days, rescheduled when the app opens or a dart changes.
 - Dart payments are left out of subscription detection.
 - Tests: DartTests (turn dates with month ends, status over time, payments and totals, reminder dates). CI is green and the screenshots are checked.
+
+## Milestone 9: Data
+- iCloud sync (Settings → Data, on by default): the store is mirrored to your private iCloud (CloudKit). Apple keeps it; Bztam has no server. Turning it on or off applies the next time Bztam opens. Receipt photos stay on the iPhone that took them.
+- A second iPhone makes its own settings and default categories before iCloud data arrives, and two iPhones can both add the same recurring entry. Bztam folds these together after each sync (one settings row, one category per built-in key with all entries moved onto it, one recurring entry per rule and day).
+- Export (Settings → Data → Export): a PDF report (totals, categories against budgets, every entry) or a CSV (semicolons and decimal commas in French, commas and points in English, opens correctly in Excel) for this period, last period, this year or everything, shared with the system share sheet.
+- Signing: the TestFlight workflow now turns on iCloud and Push Notifications for the app ID. Creating the iCloud container and ticking it is a one-time manual step (docs/SETUP.md, step 4).
+- Tests: ExportTests (CSV in both formats, decimals, quoting, file names, multi-page PDF) and CloudMergeTests (merging on an in-memory store). CI is green and the screenshots are checked.

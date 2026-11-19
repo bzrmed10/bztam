@@ -78,9 +78,9 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [ ] M8.5 TestFlight build 8 (waiting for the API key secrets and App Group)
 
 ## Milestone 9 — Data → TestFlight 9
-- [ ] M9.1 iCloud sync (SwiftData + CloudKit private database)
-- [ ] M9.2 Export CSV and PDF (period or all)
-- [ ] M9.3 TestFlight build 9
+- [x] M9.1 iCloud sync (SwiftData + CloudKit private database)
+- [x] M9.2 Export CSV and PDF (period or all)
+- [ ] M9.3 TestFlight build 9 (waiting for the API key secrets, App Group and iCloud container)
 
 ## Milestone 10 — App Store readiness
 - [ ] M10.1 Privacy manifests, permission strings (en/fr: camera, photos, speech, notifications, Face ID), encryption flag

@@ -181,7 +181,7 @@ enum Strings {
  "It disappears from Home. Its past expenses stay in Activity.": "Elle disparaît de l'accueil. Ses dépenses passées restent dans Activité.",
  "It looks like a bill. Add it?": "On dirait une facture. L'ajouter ?",
  "Language": "Langue",
- "Last period": "Période précédente",
+ "Last period": "Mois précédent",
  "Later turn": "Tour plus tard",
  "Left": "Reste",
  "Left to spend": "Reste à dépenser",
