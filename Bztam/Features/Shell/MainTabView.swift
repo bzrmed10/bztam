@@ -197,7 +197,7 @@ extension MainTabView {
         let rules = (try? context.fetch(FetchDescriptor<RecurringRule>())) ?? []
         var excluded = SubscriptionDetector.dismissed
         for rule in rules where rule.isActive { excluded.insert(CategoryMemory.key(rule.merchant)) }
-        let records = entries.filter { $0.recurringID == nil && $0.dartID == nil }.map { EntryRecord($0) }
+        let records = entries.filter { $0.recurringID == nil && $0.dartID == nil && $0.splitID == nil }.map { EntryRecord($0) }
         subscription = SubscriptionDetector.candidates(records, excluding: excluded).first
     }
 

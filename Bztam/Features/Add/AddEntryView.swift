@@ -28,6 +28,7 @@ struct AddEntryView: View {
     @State private var speech = SpeechInput()
     @State private var duplicate: EntryRecord?
     @State private var repeatFrequency: Frequency?
+    @State private var splitting: SplitDraft?
 
     init(request: AddRequest, onScan: ((ScanKind) -> Void)? = nil) {
         editing = nil
@@ -171,6 +172,29 @@ struct AddEntryView: View {
                     .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
                 }
                 .accessibilityIdentifier("add.repeat")
+
+                if kind == .expense {
+                    Button {
+                        splitting = SplitDraft(amount: amount.centimes, merchant: merchant.trimmingCharacters(in: .whitespacesAndNewlines),
+                                               date: date, categoryID: categoryID)
+                    } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: "person.2").font(.system(size: 15, weight: .semibold))
+                            Text(L10n.t("Split with friends")).font(.system(size: 15, weight: .semibold))
+                            Spacer()
+                            Image(systemName: "chevron.right").font(.system(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                        }
+                        .foregroundStyle(Theme.Colors.ink)
+                        .padding(.horizontal, 16)
+                        .frame(height: 48)
+                        .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("add.split")
+                }
+            } else if editing?.splitID != nil {
+                Label(L10n.t("Part of a split with friends. Balances are in Friends."), systemImage: "person.2")
+                    .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
             } else if editing?.recurringID != nil {
                 Label(L10n.t("Repeats automatically. Change it in Settings → Recurring."), systemImage: "arrow.triangle.2.circlepath")
                     .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
@@ -209,6 +233,9 @@ struct AddEntryView: View {
         .background(Theme.Colors.canvas)
         .presentationDetents([.large])
         .presentationCornerRadius(Theme.Radius.large)
+        .sheet(item: $splitting) { d in
+            SplitSheet(draft: d) { dismiss() }
+        }
         .onAppear(perform: load)
         .onChange(of: speech.transcript) { _, text in quickText = text }
         .onChange(of: speech.isListening) { was, now in
@@ -282,7 +309,7 @@ struct AddEntryView: View {
         kind = initialKind
         categoryID = initialCategoryID
         if let e = editing {
-            amount = AmountInput(centimes: e.amount)
+            amount = AmountInput(centimes: abs(e.amount))
             incomeSource = e.incomeSource
             date = e.date
             merchant = e.merchant.isEmpty ? e.note : e.merchant
@@ -302,7 +329,8 @@ struct AddEntryView: View {
         let text = merchant.trimmingCharacters(in: .whitespacesAndNewlines)
         if let e = editing {
             e.kind = kind
-            e.amount = amount.centimes
+            // A friend paying back is stored negative (a refund); keep the sign.
+            e.amount = e.amount < 0 ? -amount.centimes : amount.centimes
             e.date = date
             e.merchant = kind == .expense ? text : ""
             e.note = kind == .income ? text : ""

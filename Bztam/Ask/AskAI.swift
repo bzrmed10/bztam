@@ -7,7 +7,7 @@ import FoundationModels
 struct AIAskFields {
     @Guide(description: "true if the question is about the user's money, spending, income or budget; false otherwise.")
     var isAboutMoney: Bool
-    @Guide(description: "One of: spent (total spent), earned (money received), left (what's left to spend), count (how many expenses or times), biggest (largest single expense), top (category where most money went).")
+    @Guide(description: "One of: spent (total spent), earned (money received), left (what's left to spend), count (how many expenses or times), biggest (largest single expense), top (category where most money went), owed (who owes the user or whom the user owes, from split bills).")
     var metric: String
     @Guide(description: "One of: thisPeriod (this month, the default), lastPeriod (last month), thisWeek, lastWeek, today, yesterday, thisYear, all (since the start).")
     var range: String

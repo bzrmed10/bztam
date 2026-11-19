@@ -17,6 +17,11 @@ struct HomeView: View {
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
     @Query private var settingsRows: [AppSettings]
     @Query private var darts: [Dart]
+    // Watched so the friends card refreshes after a split or a payback.
+    @Query private var splitShares: [SplitShare]
+    @State private var showFriends = LaunchOptions.openScreen == "friends"
+    @State private var splitDemo: SplitDraft? = LaunchOptions.openScreen == "split"
+        ? SplitDraft(amount: 60_000, merchant: "Café Clock") : nil
     @Environment(\.modelContext) private var context
     @State private var offset = 0
     @State private var path = NavigationPath()
@@ -58,6 +63,14 @@ struct HomeView: View {
                             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         }
                     }
+                    if offset == 0, !splitShares.isEmpty {
+                        let balances = SplitActions.balances(context: context)
+                        let owed = balances.reduce(0) { $0 + $1.owesYou }
+                        let owe = balances.reduce(0) { $0 + $1.youOwe }
+                        if owed > 0 || owe > 0 {
+                            FriendsCard(owed: owed, owe: owe) { showFriends = true }
+                        }
+                    }
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
                             SectionTitle(text: L10n.t("Categories"))
@@ -80,6 +93,8 @@ struct HomeView: View {
             }
             .background(Theme.Colors.canvas)
             .toolbar(.hidden, for: .navigationBar)
+            .sheet(isPresented: $showFriends) { FriendsView() }
+            .sheet(item: $splitDemo) { SplitSheet(draft: $0) }
             .navigationDestination(for: BudgetCategory.self) { category in
                 CategoryDetailView(category: category, period: period, onAdd: onAdd)
             }

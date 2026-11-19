@@ -44,6 +44,9 @@ final class Entry {
     /// Set when the entry is a dart payment or a collected pot.
     var dartID: UUID?
     var dartRound: Int = -1
+    /// Set when the entry comes from a split bill: the bill you paid, a friend paying back (negative amount,
+    /// a refund into the category), or you paying a friend back.
+    var splitID: UUID?
     var createdAt: Date = Date()
     var category: BudgetCategory?
 

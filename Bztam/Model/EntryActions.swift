@@ -59,9 +59,11 @@ struct EntryRow: View {
                 }
             }
             Spacer(minLength: 8)
-            Text(Money.format(entry.amount, sign: entry.kind == .income))
+            // A friend paying back is a negative expense (a refund into the category): show it as money coming back.
+            let back = entry.kind == .expense && entry.amount < 0
+            Text(Money.format(back ? -entry.amount : entry.amount, sign: entry.kind == .income || back))
                 .font(.bzAmount)
-                .foregroundStyle(entry.kind == .income ? Theme.Colors.positive : Theme.Colors.ink)
+                .foregroundStyle(entry.kind == .income || back ? Theme.Colors.positive : Theme.Colors.ink)
         }
         .frame(minHeight: Theme.Size.row)
         .contentShape(Rectangle())

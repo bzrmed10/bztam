@@ -55,6 +55,13 @@ struct CategoryDetailView: View {
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)
                         Text(detail(status)).font(.system(size: 15, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                        let back = SplitActions.comingBack(categoryID: category.id, in: period, context: context)
+                        if back > 0 {
+                            Label(L10n.t("%@ coming back from friends", Money.format(back)), systemImage: "arrow.uturn.backward")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(Theme.Colors.positive)
+                                .padding(.top, 2)
+                        }
                     }
                     if status.budget > 0 {
                         ProgressPill(value: status.progress, fill: heroColor(status) == Theme.Colors.negative ? Theme.Colors.negative : Theme.Colors.ink)

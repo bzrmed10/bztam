@@ -3,7 +3,7 @@ import SwiftData
 
 /// Builds the SwiftData container and seeds data.
 enum DataStore {
-    static let schema = Schema([Entry.self, BudgetCategory.self, AppSettings.self, RecurringRule.self, Dart.self])
+    static let schema = Schema([Entry.self, BudgetCategory.self, AppSettings.self, RecurringRule.self, Dart.self, Friend.self, SplitBill.self, SplitShare.self])
 
     /// The one container of the app process, shared with Siri / Shortcuts.
     @MainActor static let shared: ModelContainer = makeContainer(inMemory: LaunchOptions.demoData || LaunchOptions.freshStart)
@@ -124,6 +124,19 @@ enum DataStore {
         dart.paid = (0..<5).map { DartPlan.key(round: 0, member: $0) } + [0, 1, 3].map { DartPlan.key(round: 1, member: $0) }
         dart.reminders = false
         context.insert(dart)
+
+        // Friends and two split bills: you paid dinner for four (Karim already paid back), Sara paid a pizza.
+        let karim = Friend(name: "Karim"), sara = Friend(name: "Sara"), omar = Friend(name: "Omar"), nadia = Friend(name: "Nadia")
+        for f in [karim, sara, omar, nadia] { context.insert(f) }
+        try? context.save()
+        let alerts = UserDefaults.standard.object(forKey: BudgetAlerts.enabledKey)
+        UserDefaults.standard.set(false, forKey: BudgetAlerts.enabledKey)
+        SplitActions.create(merchant: "Café Clock", total: 60_000, date: daysAgo(2), category: byKey["goingout"],
+                            payer: nil, friends: [karim, sara, omar], includesMe: true, remind: false, context: context)
+        SplitActions.friendPaidBack(karim, amount: 15_000, context: context, now: daysAgo(1))
+        SplitActions.create(merchant: "Pizza Hut", total: 32_000, date: daysAgo(5), category: byKey["goingout"],
+                            payer: sara, friends: [sara, nadia], includesMe: true, remind: false, context: context)
+        UserDefaults.standard.set(alerts, forKey: BudgetAlerts.enabledKey)
 
         // The previous period, so Insights has something to compare with.
         let previous = BudgetCalculator.period(period, offset: -1, payday: 25, calendar: cal)

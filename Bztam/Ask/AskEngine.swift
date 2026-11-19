@@ -16,6 +16,8 @@ struct AskQuery: Equatable, Sendable {
         case biggest
         /// The category where most money went.
         case top
+        /// Who owes you and whom you owe (split bills).
+        case owed
     }
 
     enum Range: String, CaseIterable, Sendable {
@@ -43,6 +45,9 @@ struct AskContext: Sendable {
     var records: [EntryRecord]
     var categories: [AskCategory]
     var payday: Int
+    /// Split balances: friends who owe you, and friends you owe.
+    var owedToMe: [AskDebt] = []
+    var iOwe: [AskDebt] = []
     var now: Date = .now
     var calendar: Calendar = .current
 
@@ -59,6 +64,11 @@ struct AskContext: Sendable {
         return counts.sorted { $0.value != $1.value ? $0.value > $1.value : $0.key < $1.key }
             .map { AskMerchant(key: $0.key, name: names[$0.key] ?? $0.key) }
     }
+}
+
+struct AskDebt: Sendable, Equatable {
+    var name: String
+    var amount: Centimes
 }
 
 struct AskMerchant: Sendable, Equatable {
@@ -89,6 +99,8 @@ enum AskParser {
     }
 
     private static let metricPhrases: [(AskQuery.Metric, [String])] = [
+        (.owed, ["OWES ME", "OWE ME", "WHO OWES", "I OWE", "DO I OWE", "ME DOIT", "ME DOIVENT", "JE DOIS", "DOIS JE", "QUI ME DOIT",
+                 "KAYSALNI", "KAYSAL LIYA", "KAYSALO LIYA", "KANSAL", "KANSALO", "SALNI", "SAL LIYA", "KHASSO YRED", "KHASSHOM YRDO"]),
         (.count, ["HOW MANY", "HOW OFTEN", "COMBIEN DE FOIS", "NOMBRE DE", "CH7AL MN MRA", "CHHAL MN MRA", "CHHAL DYAL MRAT", "MRAT"]),
         (.biggest, ["BIGGEST", "LARGEST", "MOST EXPENSIVE", "PLUS GROSSE", "PLUS GROS", "PLUS GRANDE", "PLUS GRAND", "PLUS CHERE",
                     "PLUS CHER", "KBIRA", "KBIR", "AKBAR"]),
@@ -223,12 +235,29 @@ enum AskEngine {
         case .count: L10n.t("How many")
         case .biggest: L10n.t("Biggest")
         case .top: L10n.t("Top category")
+        case .owed: L10n.t("Friends")
         }
     }
 
     static func help() -> AskAnswer {
         AskAnswer(amount: nil, sentence: L10n.t("I answer questions about your money, like how much you spent on food this month or what's left."),
                   understood: [], entries: [], isHelp: true)
+    }
+
+    private static func owed(_ context: AskContext) -> AskAnswer {
+        let them = context.owedToMe.filter { $0.amount > 0 }.sorted { $0.amount > $1.amount }
+        let me = context.iOwe.filter { $0.amount > 0 }.sorted { $0.amount > $1.amount }
+        guard !them.isEmpty || !me.isEmpty else {
+            return AskAnswer(amount: nil, sentence: L10n.t("Nobody owes you anything, and you owe nobody."),
+                             understood: [metricText(.owed)], entries: [])
+        }
+        func list(_ d: [AskDebt]) -> String { ListFormatter.localizedString(byJoining: d.map { "\($0.name) \(Money.format($0.amount))" }) }
+        var parts: [String] = []
+        if !them.isEmpty { parts.append(L10n.t("Owed to you: %@.", list(them))) }
+        if !me.isEmpty { parts.append(L10n.t("You owe: %@.", list(me))) }
+        let total = them.reduce(0) { $0 + $1.amount }
+        return AskAnswer(amount: them.isEmpty ? nil : total, sentence: parts.joined(separator: " "),
+                         understood: [metricText(.owed)], entries: [])
     }
 
     static func answer(_ q: AskQuery, context: AskContext) -> AskAnswer {
@@ -244,12 +273,14 @@ enum AskEngine {
 
         let inRange = context.records.filter { period.contains($0.date) }
         let expenses = inRange.filter { r in
-            r.kind == .expense
+            r.kind == .expense && r.amount > 0
                 && (category == nil || r.categoryID == category?.id)
                 && (q.merchant == nil || CategoryMemory.key(r.merchant) == q.merchant)
         }
         let spent = expenses.reduce(0) { $0 + $1.amount }
         let newest = Array(expenses.sorted { $0.date > $1.date }.prefix(5))
+
+        if q.metric == .owed { return owed(context) }
 
         var understood = [metricText(q.metric)]
         if q.metric != .earned, q.metric != .top {

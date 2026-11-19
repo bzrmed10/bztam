@@ -19,7 +19,7 @@ enum BudgetAlerts {
     /// Call after adding an expense. Sends at most one notification per threshold, category and period.
     @MainActor
     static func afterAdding(_ entry: Entry, context: ModelContext) {
-        guard isEnabled, entry.kind == .expense, let category = entry.category else { return }
+        guard isEnabled, entry.kind == .expense, entry.amount > 0, let category = entry.category else { return }
         let payday = DataStore.settings(in: context).payday
         let period = BudgetCalculator.period(containing: .now, payday: payday)
         let budget = category.budget(in: period)
@@ -27,6 +27,8 @@ enum BudgetAlerts {
         let all = (try? context.fetch(FetchDescriptor<Entry>())) ?? []
         let after = all.filter { $0.kind == .expense && $0.category?.id == category.id && period.contains($0.date) }
             .reduce(0) { $0 + $1.amount }
+            // Money friends still owe you for this category is coming back: don't alert on it.
+            - SplitActions.comingBack(categoryID: category.id, in: period, context: context)
         let before = after - entry.amount
         guard let top = crossed(before: before, after: after, budget: budget).last else { return }
 

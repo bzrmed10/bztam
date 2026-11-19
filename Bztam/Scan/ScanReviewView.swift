@@ -22,6 +22,7 @@ struct ScanReviewView: View {
     @State private var editingAmount = false
     @State private var showImage = false
     @State private var loaded = false
+    @State private var splitting: SplitDraft?
 
     private var canSave: Bool { amount.centimes > 0 }
 
@@ -107,6 +108,16 @@ struct ScanReviewView: View {
                         .disabled(!canSave)
                         .opacity(canSave ? 1 : 0.5)
                         .accessibilityIdentifier("scan.save")
+                    Button {
+                        splitting = SplitDraft(amount: amount.centimes,
+                                               merchant: merchant.trimmingCharacters(in: .whitespacesAndNewlines),
+                                               date: date, categoryID: categoryID)
+                    } label: {
+                        Label(L10n.t("Split with friends"), systemImage: "person.2")
+                    }
+                    .buttonStyle(.pillSecondary)
+                    .disabled(!canSave)
+                    .accessibilityIdentifier("scan.split")
                     if draft.source == .camera || draft.source == .screenshot {
                         Button(draft.source == .camera ? L10n.t("Retake photo") : L10n.t("Choose another image")) {
                             dismiss()
@@ -131,6 +142,9 @@ struct ScanReviewView: View {
         }
         .onAppear(perform: load)
         .onDisappear(perform: onDone)
+        .sheet(item: $splitting) { d in
+            SplitSheet(draft: d) { dismiss() }
+        }
         .alert(L10n.t("Already added?"), isPresented: Binding(get: { duplicate != nil }, set: { if !$0 { duplicate = nil } })) {
             Button(L10n.t("Add anyway")) { save() }
             Button(L10n.t("Cancel"), role: .cancel) {}

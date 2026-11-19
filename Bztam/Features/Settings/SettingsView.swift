@@ -23,6 +23,8 @@ struct SettingsView: View {
     @State private var cloudStatus: CKAccountStatus = .couldNotDetermine
     @AppStorage(CloudSync.enabledKey) private var iCloudSync = true
     @State private var showDart = LaunchOptions.openScreen == "dart"
+    @State private var showFriends = false
+    @Query private var friendRows: [Friend]
     @Query private var darts: [Dart]
     @Query(filter: #Predicate<RecurringRule> { $0.isActive }) private var rules: [RecurringRule]
 
@@ -83,6 +85,13 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("settings.dart")
+
+                        Button { showFriends = true } label: {
+                            SettingsRow(symbol: "person.2", title: L10n.t("Friends"),
+                                        value: friendRows.isEmpty ? L10n.t("Split bills with friends") : L10n.t("%d friends", friendRows.count))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("settings.friends")
                     }
 
                     section(L10n.t("Alerts")) {
@@ -198,6 +207,7 @@ struct SettingsView: View {
             }
             .task { cloudStatus = await CloudSync.accountStatus() }
             .sheet(isPresented: $showDart) { DartListView() }
+            .sheet(isPresented: $showFriends) { FriendsView() }
             .sheet(isPresented: $showCategories) {
                 CategoriesEditorView(income: settings?.expectedIncome ?? 0)
             }

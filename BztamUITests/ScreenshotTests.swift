@@ -103,6 +103,20 @@ final class ScreenshotTests: XCTestCase {
         save("\(lang)-07-scan-review")
         app.terminate()
 
+        // Split with friends
+        app = launch(lang, ["-demoData", "-openScreen", "friends"])
+        sleep(3)
+        save("\(lang)-24-friends")
+        app.terminate()
+        app = launch(lang, ["-demoData", "-openScreen", "split"])
+        sleep(3)
+        save("\(lang)-25-split")
+        app.terminate()
+        app = launch(lang, ["-demoData", "-appearance", "dark", "-openScreen", "friends"])
+        sleep(3)
+        save("\(lang)-26-friends-dark")
+        app.terminate()
+
         // Dark versions for the website
         app = launch(lang, ["-demoData", "-appearance", "dark", "-openScreen", "ask", "-askQuestion", question])
         XCTAssertTrue(app.staticTexts["ask.amount"].waitForExistence(timeout: 30))

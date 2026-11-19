@@ -4,6 +4,7 @@ import SwiftUI
 /// Ask Bztam: questions about your money, answered on the phone. Numbers always come from `AskEngine`.
 struct AskView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @Query private var entries: [Entry]
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
     @Query private var settingsRows: [AppSettings]
@@ -17,9 +18,12 @@ struct AskView: View {
 
     private var context: AskContext {
         let period = BudgetCalculator.period(containing: .now, payday: payday)
+        let balances = SplitActions.balances(context: modelContext)
         return AskContext(records: entries.map { EntryRecord($0) },
                           categories: categories.map { AskCategory(id: $0.id, key: $0.key, name: $0.displayName, budget: $0.budget(in: period)) },
-                          payday: payday)
+                          payday: payday,
+                          owedToMe: balances.map { AskDebt(name: $0.name, amount: $0.owesYou) },
+                          iOwe: balances.map { AskDebt(name: $0.name, amount: $0.youOwe) })
     }
 
     private var suggestions: [String] {
@@ -32,6 +36,9 @@ struct AskView: View {
         }
         list.append(L10n.t("Where did most of my money go?"))
         list.append(L10n.t("Biggest expense this year?"))
+        if !SplitActions.balances(context: modelContext).filter({ $0.owesYou > 0 || $0.youOwe > 0 }).isEmpty {
+            list.insert(L10n.t("Who owes me?"), at: 2)
+        }
         return list
     }
 

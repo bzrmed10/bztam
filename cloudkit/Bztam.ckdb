@@ -22,6 +22,7 @@ DEFINE SCHEMA
         CD_note                      STRING,
         CD_recurringID               STRING,
         CD_sourceRaw                 STRING,
+        CD_splitID                   STRING,
         GRANT WRITE TO "_creator",
         GRANT CREATE TO "_icloud",
         GRANT READ TO "_world"
@@ -114,6 +115,64 @@ DEFINE SCHEMA
         CD_reminders                 INT64,
         CD_startDate                 TIMESTAMP,
         CD_tracksMoney               INT64,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE CD_Friend (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE QUERYABLE,
+        CD_createdAt                 TIMESTAMP,
+        CD_entityName                STRING,
+        CD_id                        STRING,
+        CD_name                      STRING,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE CD_SplitBill (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE QUERYABLE,
+        CD_categoryID                STRING,
+        CD_createdAt                 TIMESTAMP,
+        CD_date                      TIMESTAMP,
+        CD_entityName                STRING,
+        CD_id                        STRING,
+        CD_includesMe                INT64,
+        CD_memberIDs                 BYTES,
+        CD_memberIDs_ckAsset         ASSET,
+        CD_merchant                  STRING,
+        CD_payerID                   STRING,
+        CD_total                     INT64,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE CD_SplitShare (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE QUERYABLE,
+        CD_amount                    INT64,
+        CD_billID                    STRING,
+        CD_entityName                STRING,
+        CD_friendID                  STRING,
+        CD_id                        STRING,
+        CD_lastSettledAt             TIMESTAMP,
+        CD_settled                   INT64,
         GRANT WRITE TO "_creator",
         GRANT CREATE TO "_icloud",
         GRANT READ TO "_world"
