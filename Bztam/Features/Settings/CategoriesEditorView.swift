@@ -70,6 +70,7 @@ struct CategoriesEditorView: View {
             }
             .padding(.top, Theme.Space.m)
             .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets(top: 0, leading: Theme.Space.l, bottom: 8, trailing: Theme.Space.l))
             .moveDisabled(true)
 
@@ -96,6 +97,7 @@ struct CategoriesEditorView: View {
                 }
                 .buttonStyle(.plain)
                 .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets(top: 0, leading: Theme.Space.l, bottom: 0, trailing: Theme.Space.l))
             }
             .onMove(perform: move)
@@ -109,6 +111,7 @@ struct CategoriesEditorView: View {
             }
             .buttonStyle(.plain)
             .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets(top: 16, leading: Theme.Space.l, bottom: 16, trailing: Theme.Space.l))
             .moveDisabled(true)
         }

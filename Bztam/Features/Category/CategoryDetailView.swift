@@ -78,17 +78,20 @@ struct CategoryDetailView: View {
             }
             .padding(.top, Theme.Space.m)
             .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets(top: 0, leading: Theme.Space.l, bottom: 8, trailing: Theme.Space.l))
 
             if entries.isEmpty {
                 EmptyState(symbol: category.symbol, title: L10n.t("Nothing spent yet"),
                            message: L10n.t("Expenses in this category show up here."))
                     .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
             } else {
                 ForEach(entries) { entry in
                     Button { editing = entry } label: { EntryRow(entry: entry, showsDate: true) }
                         .buttonStyle(.plain)
                         .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
                         .listRowInsets(EdgeInsets(top: 0, leading: Theme.Space.l, bottom: 0, trailing: Theme.Space.l))
                         .swipeActions {
                             Button(L10n.t("Delete"), role: .destructive) {

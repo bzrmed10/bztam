@@ -22,17 +22,20 @@ struct RecurringListView: View {
             }
             .padding(.top, Theme.Space.m)
             .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets(top: 0, leading: Theme.Space.l, bottom: 8, trailing: Theme.Space.l))
 
             if active.isEmpty {
                 EmptyState(symbol: "arrow.triangle.2.circlepath", title: L10n.t("Nothing recurring yet"),
                            message: L10n.t("Rent, salary and subscriptions you repeat show up here."))
                     .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
             }
             ForEach(active) { rule in
                 Button { editing = rule } label: { RecurringRow(rule: rule) }
                     .buttonStyle(.plain)
                     .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets(top: 0, leading: Theme.Space.l, bottom: 0, trailing: Theme.Space.l))
             }
         }

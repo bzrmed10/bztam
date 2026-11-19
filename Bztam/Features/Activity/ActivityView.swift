@@ -67,6 +67,7 @@ struct ActivityView: View {
             }
             .padding(.top, Theme.Space.m)
             .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets(top: 0, leading: Theme.Space.l, bottom: 8, trailing: Theme.Space.l))
 
             if !entries.isEmpty {
@@ -113,6 +114,7 @@ struct ActivityView: View {
                     }
                 }
                 .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets(top: 0, leading: Theme.Space.l, bottom: 8, trailing: Theme.Space.l))
             }
 
@@ -120,10 +122,12 @@ struct ActivityView: View {
                 EmptyState(symbol: "list.bullet", title: L10n.t("No entries yet"),
                            message: L10n.t("Expenses and money in you add show up here."))
                     .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
             } else if filtered.isEmpty {
                 EmptyState(symbol: "magnifyingglass", title: L10n.t("Nothing found"),
                            message: L10n.t("Try another word or filter."))
                     .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
             }
 
             ForEach(days, id: \.0) { day, items in
@@ -132,6 +136,7 @@ struct ActivityView: View {
                         Button { editing = entry } label: { EntryRow(entry: entry) }
                             .buttonStyle(.plain)
                             .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
                             .listRowInsets(EdgeInsets(top: 0, leading: Theme.Space.l, bottom: 0, trailing: Theme.Space.l))
                             .swipeActions {
                                 Button(L10n.t("Delete"), role: .destructive) {
