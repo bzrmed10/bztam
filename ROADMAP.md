@@ -84,7 +84,7 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 
 ## Milestone 10 — App Store readiness
 - [ ] M10.1 Privacy manifests, permission strings (en/fr: camera, photos, speech, notifications, Face ID), encryption flag
-- [ ] M10.2 Final app icon
+- [x] M10.2 Final app icon (Wallet, with dark and tinted versions)
 - [ ] M10.3 Website: privacy, terms, support (Netlify)
 - [ ] M10.4 Metadata en + fr (+ primary locale), screenshots, metadata workflow
 - [ ] M10.5 Submit for review
