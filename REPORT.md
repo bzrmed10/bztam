@@ -75,3 +75,12 @@ Once the secrets are fixed, run Actions -> TestFlight -> Run workflow, then inst
 - Keyword rules answer first. When Apple Intelligence is on, the on-device model only fills what the rules missed, and every value it returns is checked. The model never sees or writes numbers: all amounts come from `AskEngine`.
 - Each answer shows how the question was understood (chips) and the entries behind it.
 - Tests: AskTests (parsing in three languages, every answer type, model merge checks). CI is green and the screenshots are checked.
+
+## Milestone 8: Dart (tontine)
+- Settings → Dart: create a dart with a name, what each person pays a month, the first turn date, and the members in turn order (you included, moved with up/down).
+- Detail: the pot per turn, this turn (who collects, tick who paid), your totals (paid so far, your turn date or what you collected), and every turn with its date.
+- Ticking yourself adds an expense in the category you chose; on your turn, "I collected" adds the pot as money in. Unticking removes it. This can be turned off per dart.
+- Home shows a card when you owe this turn ("Pay 1,000 DH for Family") or when it's your turn to collect, with a one-tap button.
+- Reminders: a notification at 9:00 on the next turn days, rescheduled when the app opens or a dart changes.
+- Dart payments are left out of subscription detection.
+- Tests: DartTests (turn dates with month ends, status over time, payments and totals, reminder dates). CI is green and the screenshots are checked.

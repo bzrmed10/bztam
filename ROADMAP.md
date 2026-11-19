@@ -71,11 +71,11 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [ ] M7.3 TestFlight build 7 (waiting for the API key secrets and App Group)
 
 ## Milestone 8 — Dart (tontine) tracker → TestFlight 8
-- [ ] M8.1 Dart model: members, monthly amount, turn order, start month
-- [ ] M8.2 Dart screens: list, detail (this month: who paid, whose turn), create/edit
-- [ ] M8.3 Link to money: paying creates an expense, receiving creates money in
-- [ ] M8.4 Reminders (local notifications)
-- [ ] M8.5 TestFlight build 8
+- [x] M8.1 Dart model: members, monthly amount, turn order, start month
+- [x] M8.2 Dart screens: list, detail (this month: who paid, whose turn), create/edit
+- [x] M8.3 Link to money: paying creates an expense, receiving creates money in
+- [x] M8.4 Reminders (local notifications)
+- [ ] M8.5 TestFlight build 8 (waiting for the API key secrets and App Group)
 
 ## Milestone 9 — Data → TestFlight 9
 - [ ] M9.1 iCloud sync (SwiftData + CloudKit private database)
