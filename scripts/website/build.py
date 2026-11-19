@@ -56,7 +56,7 @@ T = {
 "en": {
     "title": "Bztam: budget and receipts for iPhone",
     "desc": "See what came in, what you spent and what's left in every category. Snap receipts, share bills, ask questions. Private, on your iPhone.",
-    "nav": [("#how", "How it works"), ("#ask", "Ask Bztam"), ("#dart", "Dart"), ("#features", "Features"), ("#privacy", "Privacy")],
+    "nav": [("#how", "How it works"), ("#ask", "Ask Bztam"), ("#split", "Split"), ("#dart", "Dart"), ("#features", "Features"), ("#privacy", "Privacy")],
     "other": ("fr/", "FR"), "soon": "Coming soon",
     "chip": ("New", "For iPhone · English and Français"),
     "h1": 'Know what\'s<br><span class="hl">left to spend.</span>',
@@ -65,7 +65,7 @@ T = {
     "notes": ["No account", "No bank connection", "No ads"],
     "tag_a": ("Receipt added", "Marjane · 245.50 DH"), "tag_b": ("+8,000 DH in", "Salary · this period"),
     "facts": ["Money left per category", "Receipt scanning", "Screenshots and PDF bills", "Type it or say it", "Ask Bztam",
-              "Dart tracker", "Recurring entries", "Subscription detection", "PDF and CSV export", "iCloud sync", "Face ID lock",
+              "Split with friends", "Dart tracker", "Recurring entries", "Subscription detection", "PDF and CSV export", "iCloud sync", "Face ID lock",
               "Dark mode", "English and French"],
     "story_eye": "How it works", "story_h": "Three seconds<br>per expense.",
     "story_lead": "Adding money should never feel like bookkeeping. Bztam reads what you give it and puts it in the right place.",
@@ -83,6 +83,12 @@ T = {
     "ask_lead": "Ask about your money the way you'd say it. Bztam understands English, French and Darija written in Latin letters.",
     "qs": [("EN", "How much did I spend on food last month?"), ("FR", "Combien il me reste ?"), ("DARIJA", "ch7al sreft f taxi had simana"), ("EN", "Biggest expense this year?")],
     "ask_note": "Answered on your iPhone. Every number comes from your own entries, never from a guess.",
+    "split_eye": "Split with friends", "split_h": "Who owes what,<br>sorted.",
+    "split_lead": "Out with friends and one person pays? Scan the ticket, pick who was there, and Bztam splits it equally and keeps track until everyone has paid back.",
+    "split_points": [("receipt", "From a ticket or by hand", "Scan the bill or type the total, then choose friends from your own list."),
+                     ("share", "Send it on WhatsApp", "One tap sends everyone their share."),
+                     ("wallet", "Counted like your bank", "When you pay, the whole bill leaves your money; paybacks come back into the same category."),
+                     ("bell", "Balances and reminders", "See who owes you and whom you owe, and get a reminder after 3 days.")],
     "dart_eye": "Dart (tontine)", "dart_h": "Your dart,<br>finally organized.",
     "dart_lead": "Everyone pays the same each month and one person collects the pot, in turn. Bztam keeps track so nobody has to remember.",
     "dart_points": [("people", "Members in turn order", "Tick who paid this turn, see who collects next."),
@@ -112,7 +118,7 @@ T = {
 "fr": {
     "title": "Bztam : budget et tickets pour iPhone",
     "desc": "Voyez ce qui est rentré, ce que vous avez dépensé et ce qu'il reste dans chaque catégorie. Tickets, factures, questions. Privé, sur votre iPhone.",
-    "nav": [("#how", "Fonctionnement"), ("#ask", "Demander"), ("#dart", "Dart"), ("#features", "Fonctions"), ("#privacy", "Confidentialité")],
+    "nav": [("#how", "Fonctionnement"), ("#ask", "Demander"), ("#split", "Partager"), ("#dart", "Dart"), ("#features", "Fonctions"), ("#privacy", "Confidentialité")],
     "other": ("../", "EN"), "soon": "Bientôt",
     "chip": ("Nouveau", "Pour iPhone · Français et English"),
     "h1": 'Sachez ce qu\'il<br><span class="hl">vous reste.</span>',
@@ -121,7 +127,7 @@ T = {
     "notes": ["Pas de compte", "Pas de banque", "Pas de pub"],
     "tag_a": ("Ticket ajouté", "Marjane · 245,50 DH"), "tag_b": ("+8 000 DH rentrés", "Salaire · cette période"),
     "facts": ["Le reste par catégorie", "Scan des tickets", "Captures et factures PDF", "Tapez-le ou dites-le", "Demander à Bztam",
-              "Suivi de dart", "Entrées récurrentes", "Abonnements repérés", "Export PDF et CSV", "Synchro iCloud", "Verrouillage Face ID",
+              "Partage entre amis", "Suivi de dart", "Entrées récurrentes", "Abonnements repérés", "Export PDF et CSV", "Synchro iCloud", "Verrouillage Face ID",
               "Mode sombre", "Français et anglais"],
     "story_eye": "Fonctionnement", "story_h": "Trois secondes<br>par dépense.",
     "story_lead": "Noter son argent ne devrait jamais ressembler à de la comptabilité. Bztam lit ce que vous lui donnez et le range au bon endroit.",
@@ -139,6 +145,12 @@ T = {
     "ask_lead": "Posez vos questions comme vous les diriez. Bztam comprend le français, l'anglais et la darija en lettres latines.",
     "qs": [("FR", "Combien j'ai dépensé en restos le mois dernier ?"), ("FR", "Combien il me reste ?"), ("DARIJA", "ch7al sreft f taxi had simana"), ("EN", "Biggest expense this year?")],
     "ask_note": "Réponses calculées sur votre iPhone. Chaque chiffre vient de vos propres entrées, jamais d'une supposition.",
+    "split_eye": "Partage entre amis", "split_h": "Qui doit quoi,<br>c'est réglé.",
+    "split_lead": "Sortie entre amis et une seule personne paie ? Scannez le ticket, choisissez qui était là, et Bztam partage à parts égales et suit tout jusqu'à ce que chacun ait remboursé.",
+    "split_points": [("receipt", "Depuis un ticket ou à la main", "Scannez l'addition ou tapez le total, puis choisissez vos amis dans votre liste."),
+                     ("share", "Envoyez-le sur WhatsApp", "En un geste, chacun reçoit sa part."),
+                     ("wallet", "Compté comme votre banque", "Quand vous payez, toute l'addition sort de votre argent ; les remboursements reviennent dans la même catégorie."),
+                     ("bell", "Soldes et rappels", "Voyez qui vous doit et à qui vous devez, avec un rappel après 3 jours.")],
     "dart_eye": "Dart (tontine)", "dart_h": "Votre dart,<br>enfin organisée.",
     "dart_lead": "Chacun paie le même montant chaque mois et une personne encaisse le tout, à tour de rôle. Bztam suit tout pour que personne n'ait à s'en souvenir.",
     "dart_points": [("people", "Membres dans l'ordre des tours", "Cochez qui a payé, voyez qui encaisse ensuite."),
@@ -234,6 +246,7 @@ def home(lang):
         </article>"""
     sticky_imgs = "".join(shot(lang, s[0], s[1], lazy=i > 0, cls="on" if i == 0 else "").replace('class="lt', f'data-i="{i}" class="lt').replace('class="dk', f'data-i="{i}" class="dk') for i, s in enumerate(t["steps"]))
     qs = "".join(f'<div class="q"><small>{l}</small>{q}</div>' for l, q in t["qs"])
+    sp = "".join(f'<li><span class="ic">{ic(i)}</span><div><b>{b}</b><span>{x}</span></div></li>' for i, b, x in t["split_points"])
     dp = "".join(f'<li><span class="ic">{ic(i)}</span><div><b>{b}</b><span>{s}</span></div></li>' for i, b, s in t["dart_points"])
     c = t["cards"]
     pv = "".join(f"<div>{ic(i)}{s}</div>" for i, s in t["pv"])
@@ -290,7 +303,19 @@ def home(lang):
   </div>
 </section>
 
-<section class="sec" id="dart">
+<section class="sec" id="split">
+  <div class="wrap split">
+    <div class="rv">
+      <span class="eyebrow">{t['split_eye']}</span>
+      <h2 style="margin:16px 0 18px">{t['split_h']}</h2>
+      <p class="lead">{t['split_lead']}</p>
+      <ul class="ticks">{sp}</ul>
+    </div>
+    <div class="media rv" style="--d:2"><div class="halo"></div>{device(lang, 'friends', t['split_eye'])}</div>
+  </div>
+</section>
+
+<section class="sec" id="dart" style="background:var(--surface-2)">
   <div class="wrap split rev">
     <div class="rv">
       <span class="eyebrow">{t['dart_eye']}</span>

@@ -24,6 +24,8 @@ SCREENS = {
     "ask": ("10-ask", "22-ask-dark"),
     "dart": ("11-dart", "23-dart-dark"),
     "export": ("12-export", None),
+    "friends": ("24-friends", "26-friends-dark"),
+    "split": ("25-split", None),
 }
 
 for lang in ("en", "fr"):

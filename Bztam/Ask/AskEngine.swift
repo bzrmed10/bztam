@@ -295,6 +295,8 @@ enum AskEngine {
         }
 
         switch q.metric {
+        case .owed:
+            return owed(context)
         case .spent:
             guard !expenses.isEmpty else { return nothing() }
             let amount = Money.format(spent)
