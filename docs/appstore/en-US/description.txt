@@ -1,0 +1,36 @@
+Bztam ("wallet" in Darija) shows you three things at a glance: what came in, what you spent, and what's left in each category.
+
+ADD EXPENSES IN SECONDS
+• Snap a receipt: the amount, shop and date are read on your iPhone.
+• Share a screenshot or a PDF bill from any app.
+• Type "taxi 20" or just say it.
+• Bztam remembers the category you pick for each shop and warns you about duplicates.
+
+BUDGETS THAT FOLLOW YOUR PAYDAY
+• Your month starts on your payday, not on the 1st.
+• Money left per category, with a pace warning before you overspend.
+• Move money between categories for one month.
+• Budget suggestions from your last months.
+
+RENT, SALARY AND SUBSCRIPTIONS
+• Repeat any entry every week, month or year.
+• Bztam spots shops you pay every month and offers to add them automatically.
+
+ASK BZTAM
+• "How much did I spend on food last month?"
+• "What's left?" "Biggest expense this year?"
+• Ask in English, French or Darija. Every number comes from your own entries.
+
+YOUR DART (TONTINE)
+• Members in turn order, who paid this turn, whose turn it is to collect.
+• Reminders on each turn day, and payments added to your money.
+
+INSIGHTS AND EXPORT
+• Where your money goes, money in vs. out, this period vs. the last.
+• Export a PDF report or a CSV for Excel and Numbers.
+
+PRIVATE BY DESIGN
+• No account, no bank connection, no ads, no tracking.
+• Receipts, voice and questions are processed on your iPhone.
+• Optional iCloud sync to your own iCloud. Face ID lock.
+• Dark mode, English and French.

@@ -1,0 +1,36 @@
+Bztam (« portefeuille » en darija) vous montre trois choses d'un coup d'œil : ce qui est rentré, ce que vous avez dépensé et ce qu'il reste dans chaque catégorie.
+
+AJOUTEZ VOS DÉPENSES EN QUELQUES SECONDES
+• Prenez un ticket en photo : montant, magasin et date sont lus sur votre iPhone.
+• Partagez une capture d'écran ou une facture PDF depuis n'importe quelle app.
+• Tapez « taxi 20 » ou dites-le simplement.
+• Bztam retient la catégorie choisie pour chaque magasin et vous prévient des doublons.
+
+DES BUDGETS QUI SUIVENT VOTRE JOUR DE PAIE
+• Votre mois commence le jour de votre paie, pas le 1er.
+• Le reste par catégorie, avec une alerte de rythme avant de trop dépenser.
+• Déplacez de l'argent entre catégories pour un mois.
+• Des budgets suggérés à partir de vos derniers mois.
+
+LOYER, SALAIRE ET ABONNEMENTS
+• Répétez une entrée chaque semaine, mois ou année.
+• Bztam repère les magasins payés chaque mois et propose de les ajouter automatiquement.
+
+DEMANDEZ À BZTAM
+• « Combien j'ai dépensé en restos le mois dernier ? »
+• « Combien il me reste ? » « Plus grosse dépense cette année ? »
+• En français, anglais ou darija. Chaque chiffre vient de vos propres entrées.
+
+VOTRE DART (TONTINE)
+• Les membres dans l'ordre des tours, qui a payé, à qui c'est d'encaisser.
+• Des rappels chaque jour de tour, et les paiements ajoutés à votre argent.
+
+ANALYSES ET EXPORT
+• Où va votre argent, rentrées et sorties, cette période et la précédente.
+• Exportez un rapport PDF ou un CSV pour Excel et Numbers.
+
+PRIVÉ PAR CONCEPTION
+• Pas de compte, pas de connexion bancaire, pas de pub, pas de pistage.
+• Tickets, voix et questions traités sur votre iPhone.
+• Synchro iCloud facultative vers votre propre iCloud. Verrouillage Face ID.
+• Mode sombre, français et anglais.

@@ -1,0 +1,1 @@
+expense,tracker,spending,scanner,money,dirham,tontine,dart,bills,savings,finance,salary,morocco
