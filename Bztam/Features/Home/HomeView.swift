@@ -76,7 +76,7 @@ struct HomeView: View {
                 }
                 .padding(.horizontal, Theme.Space.l)
                 .padding(.top, Theme.Space.m)
-                .padding(.bottom, Theme.Space.l)
+                .padding(.bottom, Theme.Space.l + Theme.Size.tabBarSpace)
             }
             .background(Theme.Colors.canvas)
             .toolbar(.hidden, for: .navigationBar)

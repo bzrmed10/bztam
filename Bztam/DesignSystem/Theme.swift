@@ -52,6 +52,8 @@ enum Theme {
         static let quickAction: CGFloat = 56
         static let button: CGFloat = 56
         static let row: CGFloat = 64
+        /// Bottom room on tab pages so the last row can scroll above the floating tab bar.
+        static let tabBarSpace: CGFloat = 84
     }
 }
 

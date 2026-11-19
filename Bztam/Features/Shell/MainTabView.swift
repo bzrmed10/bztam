@@ -71,7 +71,9 @@ struct MainTabView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .safeAreaInset(edge: .bottom, spacing: 0) {
+        // An overlay, not a safe-area inset: pages inside a NavigationStack ignore the inset on iOS 26,
+        // so each tab page adds `Theme.Size.tabBarSpace` at the end of its own scroll content instead.
+        .overlay(alignment: .bottom) {
             VStack(spacing: 0) {
                 if let message = undo.message {
                     UndoToast(message: message) { undo.performUndo() }

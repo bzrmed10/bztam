@@ -100,6 +100,11 @@ struct CategoryDetailView: View {
                         }
                 }
             }
+            // Room to scroll the last row above the floating tab bar.
+            Color.clear.frame(height: Theme.Size.tabBarSpace)
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+                .accessibilityHidden(true)
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)

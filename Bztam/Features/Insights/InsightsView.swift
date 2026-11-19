@@ -67,7 +67,7 @@ struct InsightsView: View {
             }
             .padding(.horizontal, Theme.Space.l)
             .padding(.top, Theme.Space.m)
-            .padding(.bottom, Theme.Space.l)
+            .padding(.bottom, Theme.Space.l + Theme.Size.tabBarSpace)
             .foregroundStyle(Theme.Colors.ink)
         }
         .background(Theme.Colors.canvas)
