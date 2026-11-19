@@ -92,9 +92,13 @@ def bundle_id_resource(identifier: str) -> str:
 
 
 # Capabilities the App IDs need. Turning one on here is enough for the profile to carry it;
-# App Group membership itself still has to be ticked once in the developer portal.
+# App Group membership and the iCloud container still have to be ticked once in the developer portal.
 CAPABILITIES = {
-    "com.bzrmed.bztam": [("APP_GROUPS", None)],
+    "com.bzrmed.bztam": [
+        ("APP_GROUPS", None),
+        ("ICLOUD", [{"key": "ICLOUD_VERSION", "options": [{"key": "XCODE_6"}]}]),
+        ("PUSH_NOTIFICATIONS", None),
+    ],
     "com.bzrmed.bztam.share": [("APP_GROUPS", None)],
 }
 

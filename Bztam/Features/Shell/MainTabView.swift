@@ -1,3 +1,5 @@
+import Combine
+import CoreData
 import PhotosUI
 import SwiftData
 import SwiftUI
@@ -135,8 +137,13 @@ struct MainTabView: View {
         .overlay {
             if scanner.isReading { ReadingOverlay() }
         }
+        // iCloud brought in data from another iPhone: fold duplicate settings and categories together.
+        .onReceive(NotificationCenter.default.publisher(for: .NSPersistentStoreRemoteChange).receive(on: RunLoop.main)) { _ in
+            if CloudSync.isActive && CloudSync.mergeDuplicates(in: context) > 0 { refreshSubscription() }
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
+                if CloudSync.isActive { CloudSync.mergeDuplicates(in: context) }
                 if !LaunchOptions.demoData { RecurringEngine.run(in: context) }
                 refreshSubscription()
                 DartActions.scheduleReminders(context: context)

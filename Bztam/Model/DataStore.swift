@@ -10,6 +10,7 @@ enum DataStore {
 
     /// The store lives in the App Group so the share extension can add entries later.
     /// Falls back to the app's own folder when the group is unavailable (unsigned simulator builds).
+    /// With iCloud sync on, the same store is mirrored to the user's private CloudKit database.
     @MainActor
     static func makeContainer(inMemory: Bool) -> ModelContainer {
         do {
@@ -23,8 +24,17 @@ enum DataStore {
                 folder = URL.applicationSupportDirectory
                 try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
             }
-            let config = ModelConfiguration(schema: schema, url: folder.appendingPathComponent("Bztam.store"))
-            return try ModelContainer(for: schema, configurations: config)
+            let url = folder.appendingPathComponent("Bztam.store")
+            if CloudSync.supported && CloudSync.wanted {
+                let cloud = ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .private(CloudSync.containerID))
+                if let container = try? ModelContainer(for: schema, configurations: cloud) {
+                    CloudSync.isActive = true
+                    return container
+                }
+            }
+            // `.none` matters: the default would turn CloudKit on by itself whenever the entitlement is present.
+            let local = ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .none)
+            return try ModelContainer(for: schema, configurations: local)
         } catch {
             // A broken store must never stop the app from opening: start in memory and keep going.
             return try! ModelContainer(for: schema, configurations: ModelConfiguration(schema: schema, isStoredInMemoryOnly: true))

@@ -39,6 +39,8 @@ targets:
             CFBundleURLSchemes:
               - bztam
         ITSAppUsesNonExemptEncryption: false
+        UIBackgroundModes:
+          - remote-notification
         NSCameraUsageDescription: Bztam uses the camera to scan your receipts. The text is read on your iPhone.
         NSPhotoLibraryUsageDescription: Bztam looks at your newest screenshot to offer adding bills. Nothing leaves your iPhone.
         NSFaceIDUsageDescription: Bztam uses Face ID to keep your money private when you turn on the lock.
@@ -49,6 +51,13 @@ targets:
       properties:
         com.apple.security.application-groups:
           - group.com.bzrmed.bztam
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.bzrmed.bztam
+        com.apple.developer.icloud-services:
+          - CloudKit
+        # Development until the CloudKit schema is deployed to Production (App Store milestone).
+        com.apple.developer.icloud-container-environment: Development
+        aps-environment: production
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.bzrmed.bztam
