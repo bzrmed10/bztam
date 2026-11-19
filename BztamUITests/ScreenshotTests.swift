@@ -33,6 +33,17 @@ final class ScreenshotTests: XCTestCase {
         app.buttons["tab.settings"].tap()
         sleep(1)
         save("\(lang)-05-settings")
+        // Bottom of the longest pages: the last row must sit above the floating tab bar.
+        for _ in 0..<4 { app.swipeUp() }
+        sleep(1)
+        save("\(lang)-18-settings-bottom")
+        app.buttons["tab.home"].tap()
+        sleep(1)
+        for _ in 0..<4 { app.swipeUp() }
+        sleep(1)
+        save("\(lang)-19-home-bottom")
+        app.buttons["tab.settings"].tap()
+        sleep(1)
         app.swipeUp()
         if app.buttons["settings.export"].waitForExistence(timeout: 5) {
             app.buttons["settings.export"].tap()
