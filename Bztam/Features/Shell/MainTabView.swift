@@ -222,37 +222,49 @@ extension MainTabView {
 }
 
 /// Flat tab bar: icon in a lime pill when active, label below.
+/// Floating Liquid Glass tab bar (iOS 26). Content scrolls underneath; the selected tab sits in a lime bubble
+/// that slides between tabs. With Reduce Transparency on, iOS shows the glass as a solid surface.
 struct BZTabBar: View {
     @Binding var selection: AppTab
+    @Namespace private var bubble
 
     var body: some View {
         HStack(spacing: 0) {
             ForEach(AppTab.allCases) { tab in
                 let active = tab == selection
                 Button {
-                    selection = tab
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) { selection = tab }
                 } label: {
-                    VStack(spacing: 4) {
+                    VStack(spacing: 2) {
                         Image(systemName: tab.symbol)
                             .font(.system(size: 18, weight: active ? .semibold : .regular))
-                            .frame(width: 56, height: 32)
-                            .foregroundStyle(active ? Theme.Colors.onBrand : Theme.Colors.ink)
-                            .background(active ? Theme.Colors.brand : Color.clear, in: Capsule())
+                            .frame(height: 24)
                         Text(tab.title)
-                            .font(.system(size: 12, weight: active ? .bold : .medium))
+                            .font(.system(size: 11, weight: active ? .bold : .medium))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
                     }
-                    .foregroundStyle(active ? Theme.Colors.ink : Theme.Colors.inkMuted)
-                    .frame(maxWidth: .infinity)
-                    .contentShape(Rectangle())
+                    .foregroundStyle(active ? Theme.Colors.onBrand : Theme.Colors.ink)
+                    .frame(maxWidth: .infinity, minHeight: 52)
+                    .background {
+                        if active {
+                            Capsule()
+                                .fill(Theme.Colors.brand)
+                                .matchedGeometryEffect(id: "bubble", in: bubble)
+                        }
+                    }
+                    .contentShape(Capsule())
                 }
                 .buttonStyle(.plain)
                 .accessibilityAddTraits(active ? .isSelected : [])
                 .accessibilityIdentifier("tab.\(tab.rawValue)")
             }
         }
-        .padding(.top, 8)
-        .padding(.bottom, 4)
-        .background(Theme.Colors.canvas)
-        .overlay(alignment: .top) { Rectangle().fill(Theme.Colors.line).frame(height: 1) }
+        .padding(5)
+        .glassEffect(.regular.interactive(), in: .capsule)
+        .padding(.horizontal, Theme.Space.l)
+        .padding(.top, 6)
+        .padding(.bottom, 2)
+        .sensoryFeedback(.selection, trigger: selection)
     }
 }
