@@ -58,6 +58,7 @@ struct ProgressPill: View {
     var value: Double
     var height: CGFloat = 8
     var fill: Color = Theme.Colors.ink
+    @State private var appeared = false
 
     var body: some View {
         GeometryReader { geo in
@@ -65,11 +66,15 @@ struct ProgressPill: View {
                 Capsule().fill(Theme.Colors.surface)
                 Capsule()
                     .fill(fill)
-                    .frame(width: max(0, min(1, value)) * geo.size.width)
+                    .frame(width: (appeared ? max(0, min(1, value)) : 0) * geo.size.width)
             }
         }
         .frame(height: height)
         .accessibilityHidden(true)
+        .animation(.spring(response: 0.7, dampingFraction: 0.85), value: value)
+        .onAppear {
+            withAnimation(.spring(response: 0.9, dampingFraction: 0.85).delay(0.1)) { appeared = true }
+        }
     }
 }
 

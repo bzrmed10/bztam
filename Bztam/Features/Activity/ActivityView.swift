@@ -170,6 +170,7 @@ struct ActivityView: View {
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
+        .animation(.snappy, value: entries.count)
         .scrollDismissesKeyboard(.immediately)
         .background(Theme.Colors.canvas)
         .statusBarFade()

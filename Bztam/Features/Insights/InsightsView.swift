@@ -4,6 +4,7 @@ import SwiftUI
 
 /// Where the money went, money in vs out, and how this period compares with the previous one.
 struct InsightsView: View {
+    @State private var chartShown = false
     var onAsk: () -> Void = {}
     @Query private var entries: [Entry]
     @Query private var allCategories: [BudgetCategory]
@@ -89,6 +90,10 @@ struct InsightsView: View {
                     }
                     .chartLegend(.hidden)
                     .frame(width: 136, height: 136)
+                    .rotationEffect(.degrees(chartShown ? 0 : -120))
+                    .scaleEffect(chartShown ? 1 : 0.7)
+                    .opacity(chartShown ? 1 : 0)
+                    .onAppear { withAnimation(.spring(response: 0.8, dampingFraction: 0.8).delay(0.15)) { chartShown = true } }
                     .overlay {
                         VStack(spacing: 0) {
                             Text(Money.format(total, symbol: false)).font(.system(size: 20, weight: .heavy).monospacedDigit())

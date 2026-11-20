@@ -80,6 +80,7 @@ struct AddEntryView: View {
                         Task { await speech.toggle() }
                     } label: {
                         Image(systemName: speech.isListening ? "stop.fill" : "mic")
+                            .symbolEffect(.pulse, isActive: speech.isListening)
                             .font(.system(size: 15, weight: .bold))
                             .foregroundStyle(speech.isListening ? Theme.Colors.onBrand : Theme.Colors.ink)
                             .frame(width: 36, height: 36)
@@ -349,9 +350,19 @@ struct AddEntryView: View {
             }
             try? context.save()
             BudgetAlerts.afterAdding(entry, context: context)
+            let ctx = context
+            let ruleID = entry.recurringID
+            undo.show(L10n.t("Added %@", Money.format(entry.amount, privacy: kind == .income ? .income : .any)), success: true) {
+                if let ruleID {
+                    let rules = (try? ctx.fetch(FetchDescriptor<RecurringRule>())) ?? []
+                    for r in rules where r.id == ruleID { ctx.delete(r) }
+                }
+                ctx.delete(entry)
+                try? ctx.save()
+            }
         }
         try? context.save()
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
         dismiss()
     }
 }

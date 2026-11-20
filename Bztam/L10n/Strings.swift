@@ -76,6 +76,7 @@ enum Strings {
  "Add to my money": "Ajouter à mon argent",
  "Add your first expense": "Ajouter votre première dépense",
  "Add your first friend": "Ajoutez votre premier ami",
+ "Added %@": "%@ ajoutés",
  "Added %@ to %@.": "%@ ajoutés à %@.",
  "Added automatically on their day. To add one, choose Repeat when you add an expense or money in.": "Ajoutés automatiquement le jour prévu. Pour en créer un, choisissez Répéter en ajoutant une dépense ou une rentrée.",
  "Alerts": "Alertes",

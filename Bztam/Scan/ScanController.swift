@@ -53,13 +53,29 @@ final class ScanController {
     }
 }
 
-/// "Reading…" card shown while text recognition runs.
+/// "Reading…" card shown while text recognition runs: a receipt with a lime line scanning down it.
 struct ReadingOverlay: View {
+    @State private var down = false
+
     var body: some View {
         ZStack {
             Color.black.opacity(0.25).ignoresSafeArea()
             VStack(spacing: 14) {
-                ProgressView().controlSize(.large).tint(Theme.Colors.ink)
+                ZStack(alignment: .top) {
+                    RoundedRectangle(cornerRadius: 10).fill(Theme.Colors.surface).frame(width: 64, height: 84)
+                    VStack(alignment: .leading, spacing: 7) {
+                        ForEach(0..<5, id: \.self) { i in
+                            Capsule().fill(Theme.Colors.line).frame(width: i == 4 ? 26 : 40, height: 5)
+                        }
+                    }
+                    .padding(.top, 14)
+                    Capsule().fill(Theme.Colors.brand).frame(width: 76, height: 4)
+                        .shadow(color: Theme.Colors.brand.opacity(0.7), radius: 6)
+                        .offset(y: down ? 80 : 0)
+                }
+                .frame(width: 76, height: 84)
+                .onAppear { withAnimation(.easeInOut(duration: 1.1).repeatForever(autoreverses: true)) { down = true } }
+                .accessibilityHidden(true)
                 Text(L10n.t("Reading the receipt…")).font(.bzBodyStrong).foregroundStyle(Theme.Colors.ink)
             }
             .padding(28)

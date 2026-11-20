@@ -18,6 +18,7 @@ struct HomeView: View {
     @Query private var settingsRows: [AppSettings]
     @Query private var darts: [Dart]
     @AppStorage(Money.hiddenKey) private var amountsHidden = false
+    @Namespace private var zoom
     // Watched so the friends card refreshes after a split or a payback.
     @Query private var splitShares: [SplitShare]
     @State private var showFriends = LaunchOptions.openScreen == "friends"
@@ -45,7 +46,9 @@ struct HomeView: View {
                     hero(summary)
                     quickActions
                     if offset == 0 {
-                        ForYouRow(cards: forYouCards(categories: categories))
+                        let cards = forYouCards(categories: categories)
+                        ForYouRow(cards: cards)
+                            .animation(.spring(response: 0.45, dampingFraction: 0.85), value: cards.map(\.id))
                     }
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
@@ -58,6 +61,7 @@ struct HomeView: View {
                         ForEach(lines) { line in
                             NavigationLink(value: line.category) {
                                 CategoryRow(line: line)
+                                    .matchedTransitionSource(id: line.category.id, in: zoom)
                             }
                             .buttonStyle(.plain)
                         }
@@ -74,6 +78,7 @@ struct HomeView: View {
             .sheet(item: $splitDemo) { SplitSheet(draft: $0) }
             .navigationDestination(for: BudgetCategory.self) { category in
                 CategoryDetailView(category: category, period: period, onAdd: onAdd)
+                    .navigationTransition(.zoom(sourceID: category.id, in: zoom))
             }
             .onAppear {
                 if LaunchOptions.openScreen == "category", let first = lines.first {
@@ -151,6 +156,8 @@ struct HomeView: View {
             .foregroundStyle(Theme.Colors.ink)
 
             Text(Money.format(s.left, privacy: .income))
+                .contentTransition(.numericText(value: Double(s.left)))
+                .animation(.snappy, value: s.left)
                 .font(.bzAmountHero)
                 .tracking(-1.2)
                 .foregroundStyle(s.left < 0 ? Theme.Colors.negative : Theme.Colors.ink)

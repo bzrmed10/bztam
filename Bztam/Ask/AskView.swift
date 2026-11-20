@@ -124,6 +124,7 @@ struct AskView: View {
                 .accessibilityIdentifier("ask.field")
             Button { Task { await speech.toggle() } } label: {
                 Image(systemName: speech.isListening ? "stop.fill" : "mic")
+                    .symbolEffect(.pulse, isActive: speech.isListening)
                     .font(.system(size: 16, weight: .semibold))
                     .frame(width: 40, height: 40)
                     .foregroundStyle(speech.isListening ? Theme.Colors.onBrand : Theme.Colors.ink)

@@ -76,7 +76,7 @@ struct MainTabView: View {
         .overlay(alignment: .bottom) {
             VStack(spacing: 0) {
                 if let message = undo.message {
-                    UndoToast(message: message) { undo.performUndo() }
+                    UndoToast(message: message, success: undo.success) { undo.performUndo() }
                         .padding(.horizontal, Theme.Space.l)
                         .padding(.bottom, Theme.Space.s)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -240,6 +240,7 @@ struct BZTabBar: View {
                     VStack(spacing: 2) {
                         Image(systemName: tab.symbol)
                             .font(.system(size: 18, weight: active ? .semibold : .regular))
+                            .symbolEffect(.bounce, value: active)
                             .frame(height: 24)
                         Text(tab.title)
                             .font(.system(size: 11, weight: active ? .bold : .medium))
