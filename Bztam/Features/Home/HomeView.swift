@@ -44,33 +44,8 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 28) {
                     hero(summary)
                     quickActions
-                    if let suggestion, offset == 0 {
-                        ScreenshotSuggestionCard(image: suggestion, onAdd: onSuggestionAdd, onDismiss: onSuggestionDismiss)
-                    } else if let subscription, offset == 0 {
-                        SubscriptionCard(candidate: subscription, onYes: { onSubscriptionYes(subscription) },
-                                         onDismiss: { onSubscriptionDismiss(subscription) })
-                    } else if offset == 0, let warning = Advice.paceWarnings(categories: categories.map { BudgetSnapshot.value($0, period: period) },
-                                                                             entries: BudgetSnapshot.values(entries), period: period).first,
-                              let category = categories.first(where: { $0.id == warning.categoryID }) {
-                        PaceCard(text: L10n.t("At this pace, %@ runs out around %@.", category.displayName, DateText.short(warning.runOut)))
-                    }
-                    if offset == 0, let due = DartActions.due(darts) {
-                        DartCard(dart: due.dart, collect: due.collect) {
-                            if due.collect {
-                                DartActions.toggleReceived(due.dart, context: context)
-                            } else if case .round(let r) = due.dart.plan.status() {
-                                DartActions.togglePaid(due.dart, member: due.dart.meIndex, round: r, context: context)
-                            }
-                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                        }
-                    }
-                    if offset == 0, !splitShares.isEmpty {
-                        let balances = SplitActions.balances(context: context)
-                        let owed = balances.reduce(0) { $0 + $1.owesYou }
-                        let owe = balances.reduce(0) { $0 + $1.youOwe }
-                        if owed > 0 || owe > 0 {
-                            FriendsCard(owed: owed, owe: owe) { showFriends = true }
-                        }
+                    if offset == 0 {
+                        ForYouRow(cards: forYouCards(categories: categories))
                     }
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
@@ -93,6 +68,7 @@ struct HomeView: View {
                 .padding(.bottom, Theme.Space.l + Theme.Size.tabBarSpace)
             }
             .background(Theme.Colors.canvas)
+            .statusBarFade()
             .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $showFriends) { FriendsView() }
             .sheet(item: $splitDemo) { SplitSheet(draft: $0) }
@@ -105,6 +81,45 @@ struct HomeView: View {
                 }
             }
         }
+    }
+
+    /// Everything that needs you now, one card at a time.
+    private func forYouCards(categories: [BudgetCategory]) -> [ForYouCard] {
+        var cards: [ForYouCard] = []
+        if let suggestion {
+            cards.append(ForYouCard(id: "screenshot", view: AnyView(
+                ScreenshotSuggestionCard(image: suggestion, onAdd: onSuggestionAdd, onDismiss: onSuggestionDismiss))))
+        }
+        if let due = DartActions.due(darts) {
+            cards.append(ForYouCard(id: "dart", view: AnyView(DartCard(dart: due.dart, collect: due.collect) {
+                if due.collect {
+                    DartActions.toggleReceived(due.dart, context: context)
+                } else if case .round(let r) = due.dart.plan.status() {
+                    DartActions.togglePaid(due.dart, member: due.dart.meIndex, round: r, context: context)
+                }
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            })))
+        }
+        if !splitShares.isEmpty {
+            let balances = SplitActions.balances(context: context)
+            let owed = balances.reduce(0) { $0 + $1.owesYou }
+            let owe = balances.reduce(0) { $0 + $1.youOwe }
+            if owed > 0 || owe > 0 {
+                cards.append(ForYouCard(id: "friends", view: AnyView(FriendsCard(owed: owed, owe: owe) { showFriends = true })))
+            }
+        }
+        if let subscription {
+            cards.append(ForYouCard(id: "subscription", view: AnyView(
+                SubscriptionCard(candidate: subscription, onYes: { onSubscriptionYes(subscription) },
+                                 onDismiss: { onSubscriptionDismiss(subscription) }))))
+        }
+        if let warning = Advice.paceWarnings(categories: categories.map { BudgetSnapshot.value($0, period: period) },
+                                             entries: BudgetSnapshot.values(entries), period: period).first,
+           let category = categories.first(where: { $0.id == warning.categoryID }) {
+            cards.append(ForYouCard(id: "pace", view: AnyView(
+                PaceCard(text: L10n.t("At this pace, %@ runs out around %@.", category.displayName, DateText.short(warning.runOut))))))
+        }
+        return cards
     }
 
     private func hero(_ s: PeriodSummary) -> some View {

@@ -90,7 +90,8 @@ struct CategoryDetailView: View {
 
             if entries.isEmpty {
                 EmptyState(symbol: category.symbol, title: L10n.t("Nothing spent yet"),
-                           message: L10n.t("Expenses in this category show up here."))
+                           message: L10n.t("Expenses in this category show up here."),
+                           actionTitle: L10n.t("Add an expense"), action: { onAdd(AddRequest(kind: .expense, categoryID: category.id)) })
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
             } else {
@@ -116,6 +117,7 @@ struct CategoryDetailView: View {
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(Theme.Colors.canvas)
+        .statusBarFade()
         .toolbar(.hidden, for: .navigationBar)
         .sheet(isPresented: $editingBudget) {
             BudgetEditSheet(category: category)

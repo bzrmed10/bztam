@@ -195,6 +195,7 @@ struct SettingsView: View {
                 .foregroundStyle(Theme.Colors.ink)
             }
             .background(Theme.Colors.canvas)
+            .statusBarFade()
             .toolbar(.hidden, for: .navigationBar)
             .alert(L10n.t("Photo access is off"), isPresented: $photosDenied) {
                 Button(L10n.t("Open Settings")) {

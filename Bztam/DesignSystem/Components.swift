@@ -153,21 +153,115 @@ struct SectionTitle: View {
 }
 
 /// Centered empty state with an icon circle and two lines.
+/// A calm empty screen: a small fanned stack of cards with the symbol, one line of title,
+/// one of help, and an optional next step.
 struct EmptyState: View {
     let symbol: String
     let title: String
     let message: String
+    var actionTitle: String? = nil
+    var action: (() -> Void)? = nil
+    @State private var float = false
 
     var body: some View {
-        VStack(spacing: 12) {
-            IconCircle(symbol: symbol, size: 64)
-            Text(title).font(.bzBodyStrong).foregroundStyle(Theme.Colors.ink)
+        VStack(spacing: 14) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 20).fill(Theme.Colors.line.opacity(0.6))
+                    .frame(width: 84, height: 64).rotationEffect(.degrees(-10)).offset(x: -16, y: 6)
+                RoundedRectangle(cornerRadius: 20).fill(Theme.Colors.brandTint)
+                    .frame(width: 84, height: 64).rotationEffect(.degrees(8)).offset(x: 16, y: 4)
+                RoundedRectangle(cornerRadius: 22).fill(Theme.Colors.surface)
+                    .overlay(RoundedRectangle(cornerRadius: 22).stroke(Theme.Colors.line, lineWidth: 1))
+                    .frame(width: 92, height: 72)
+                    .overlay(Image(systemName: symbol).font(.system(size: 28, weight: .semibold)).foregroundStyle(Theme.Colors.ink))
+                    .offset(y: float ? -4 : 0)
+            }
+            .frame(height: 96)
+            .accessibilityHidden(true)
+            Text(title).font(.system(size: 20, weight: .bold)).foregroundStyle(Theme.Colors.ink)
+                .multilineTextAlignment(.center)
             Text(message)
                 .font(.bzCaption)
                 .foregroundStyle(Theme.Colors.inkMuted)
                 .multilineTextAlignment(.center)
+                .frame(maxWidth: 300)
+            if let actionTitle, let action {
+                Button(actionTitle, action: action)
+                    .font(.system(size: 15, weight: .bold))
+                    .padding(.horizontal, 22)
+                    .frame(height: 44)
+                    .background(Theme.Colors.brand, in: Capsule())
+                    .foregroundStyle(Theme.Colors.onBrand)
+                    .buttonStyle(.plain)
+                    .padding(.top, 4)
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, Theme.Space.xl)
+        .onAppear {
+            withAnimation(.easeInOut(duration: 2.4).repeatForever(autoreverses: true)) { float = true }
+        }
+    }
+}
+
+/// Softens the top edge so content doesn't run sharply under the clock and battery.
+struct StatusBarFade: ViewModifier {
+    func body(content: Content) -> some View {
+        content.overlay(alignment: .top) {
+            GeometryReader { g in
+                LinearGradient(colors: [Theme.Colors.canvas, Theme.Colors.canvas.opacity(0.85), Theme.Colors.canvas.opacity(0)],
+                               startPoint: .top, endPoint: .bottom)
+                    .frame(height: g.safeAreaInsets.top + 14)
+                    .ignoresSafeArea(edges: .top)
+            }
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+        }
+    }
+}
+
+extension View {
+    func statusBarFade() -> some View { modifier(StatusBarFade()) }
+}
+
+/// Home's "For you" row: one card at a time, swipe for the next, with small dots.
+struct ForYouCard: Identifiable {
+    let id: String
+    let view: AnyView
+}
+
+struct ForYouRow: View {
+    let cards: [ForYouCard]
+    @State private var current: String?
+
+    var body: some View {
+        if cards.count == 1, let only = cards.first {
+            only.view.transition(.move(edge: .trailing).combined(with: .opacity))
+        } else if !cards.isEmpty {
+            VStack(spacing: 10) {
+                ScrollView(.horizontal) {
+                    HStack(alignment: .top, spacing: 12) {
+                        ForEach(cards) { card in
+                            card.view.containerRelativeFrame(.horizontal).id(card.id)
+                        }
+                    }
+                    .scrollTargetLayout()
+                }
+                .scrollIndicators(.hidden)
+                .scrollTargetBehavior(.viewAligned)
+                .scrollPosition(id: $current)
+                .scrollClipDisabled()
+                HStack(spacing: 6) {
+                    ForEach(cards) { card in
+                        Capsule()
+                            .fill((current ?? cards.first?.id) == card.id ? Theme.Colors.ink : Theme.Colors.line)
+                            .frame(width: (current ?? cards.first?.id) == card.id ? 18 : 6, height: 6)
+                    }
+                }
+                .animation(.spring(response: 0.35, dampingFraction: 0.8), value: current)
+                .accessibilityHidden(true)
+            }
+            .transition(.opacity)
+        }
     }
 }

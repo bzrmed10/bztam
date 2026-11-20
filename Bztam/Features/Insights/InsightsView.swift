@@ -71,6 +71,7 @@ struct InsightsView: View {
             .foregroundStyle(Theme.Colors.ink)
         }
         .background(Theme.Colors.canvas)
+        .statusBarFade()
     }
 
     @ViewBuilder

@@ -120,7 +120,8 @@ struct ActivityView: View {
 
             if entries.isEmpty {
                 EmptyState(symbol: "list.bullet", title: L10n.t("No entries yet"),
-                           message: L10n.t("Expenses and money in you add show up here."))
+                           message: L10n.t("Scan a receipt, share a bill or type \"taxi 20\". Everything you add shows up here."),
+                           actionTitle: L10n.t("Add your first expense"), action: onAdd)
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
             } else if filtered.isEmpty {
@@ -171,6 +172,7 @@ struct ActivityView: View {
         .scrollContentBackground(.hidden)
         .scrollDismissesKeyboard(.immediately)
         .background(Theme.Colors.canvas)
+        .statusBarFade()
         .sheet(item: $editing) { entry in
             AddEntryView(editing: entry).environment(undo)
         }
