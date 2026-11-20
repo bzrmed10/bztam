@@ -10,6 +10,7 @@ DES BUDGETS QUI SUIVENT VOTRE JOUR DE PAIE
 • Votre mois commence le jour de votre paie, pas le 1er.
 • Le reste par catégorie, avec une alerte de rythme avant de trop dépenser.
 • Déplacez de l'argent entre catégories pour un mois.
+• Un premier plan en une minute : répondez à quelques questions et Bztam propose vos budgets.
 • Des budgets suggérés à partir de vos derniers mois.
 
 LOYER, SALAIRE ET ABONNEMENTS
@@ -31,6 +32,14 @@ VOTRE DART (TONTINE)
 • Les membres dans l'ordre des tours, qui a payé, à qui c'est d'encaisser.
 • Des rappels chaque jour de tour, et les paiements ajoutés à votre argent.
 
+WIDGETS ET BOUTON ACTION
+• Voyez ce qu'il reste sur l'écran d'accueil et l'écran verrouillé.
+• Ajoutez une dépense ou scannez un ticket depuis le Centre de contrôle ou le bouton Action.
+
+BZTAM VEILLE POUR VOUS
+• Un récap de la semaine chaque lundi.
+• Une alerte quand une facture ou une catégorie dépasse nettement l'habitude.
+
 ANALYSES ET EXPORT
 • Où va votre argent, rentrées et sorties, cette période et la précédente.
 • Exportez un rapport PDF ou un CSV pour Excel et Numbers.
@@ -38,5 +47,7 @@ ANALYSES ET EXPORT
 PRIVÉ PAR CONCEPTION
 • Pas de compte, pas de connexion bancaire, pas de pub, pas de pistage.
 • Tickets, voix et questions traités sur votre iPhone.
+• Mode discret : un geste masque les montants, ou seulement vos rentrées.
 • Synchro iCloud facultative vers votre propre iCloud. Verrouillage Face ID.
-• Mode sombre, français et anglais.
+• Dirham, euro, dollar, livre, dollar canadien, franc suisse, riyal et dirham des Émirats.
+• Mode sombre, français, anglais et arabe.

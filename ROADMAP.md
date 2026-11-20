@@ -95,10 +95,21 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 ## Not decided / later
 - Monetization (free, or Pro with StoreKit 2)
 - Cloud AI for hard receipts and Darija
-- Arabic / Darija interface, Apple Watch app, widgets
+- Darija interface, Apple Watch app (not planned)
 
 ## Milestone 11 — Split with friends
 - [x] M11.1 Friends list, equal split from a ticket or the Add sheet, bank-style counting (paybacks come back into the category)
 - [x] M11.2 Balances (Home card, Friends screen), paying back in full or in part, forget, WhatsApp messages, reminders
 - [x] M11.3 Ask Bztam "who owes me", iCloud schema, website section, App Store texts
-- [ ] M11.4 TestFlight build, Deploy Schema Changes in CloudKit Console
+- [x] M11.4 Deploy Schema Changes in CloudKit Console
+
+## Milestone 12 — Polish, widgets, Arabic
+- [x] M12.1 Privacy mode (eye on Home, hide on open, hide only money in, app-switcher cover), new currencies (EUR, USD, GBP, CAD, CHF, SAR, AED)
+- [x] M12.2 "For you" row on Home, status bar fade, empty states with an action
+- [x] M12.3 Animations (added toast with undo, filling bars, number roll, zoom into categories, scanning line)
+- [x] M12.4 New onboarding with a suggested budget plan (BudgetPlanner)
+- [x] M12.5 Weekly recap and unusual spending alerts
+- [x] M12.6 Widgets (Home and Lock Screen), Control Center and Action button controls
+- [x] M12.7 Arabic interface (right to left)
+- [x] M12.8 Website (Arabic site, widgets section, new features), App Store texts
+- [ ] M12.9 TestFlight build (tick the App Group on com.bzrmed.bztam.widgets first)

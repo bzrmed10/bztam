@@ -91,3 +91,15 @@ Once the secrets are fixed, run Actions -> TestFlight -> Run workflow, then inst
 - Export (Settings → Data → Export): a PDF report (totals, categories against budgets, every entry) or a CSV (semicolons and decimal commas in French, commas and points in English, opens correctly in Excel) for this period, last period, this year or everything, shared with the system share sheet.
 - Signing: the TestFlight workflow now turns on iCloud and Push Notifications for the app ID. Creating the iCloud container and ticking it is a one-time manual step (docs/SETUP.md, step 4).
 - Tests: ExportTests (CSV in both formats, decimals, quoting, file names, multi-page PDF) and CloudMergeTests (merging on an in-memory store). CI is green and the screenshots are checked.
+
+## Milestone 12: Polish, widgets, Arabic
+- Privacy mode: the eye on Home hides amounts as "••••". Settings → Privacy can hide them each time Bztam opens, or hide only money in (salary, money left, insights). The app switcher shows a cover instead of your numbers. Widgets follow the same settings.
+- Currencies: dirham, euro, dollar, pound, Canadian dollar, Swiss franc, Saudi riyal, UAE dirham. In English, €, $, £ go before the number.
+- Home: a "For you" row pages through the cards (screenshot, subscription, friends, dart, unusual spending, weekly recap, pace). A soft fade under the status bar on long pages. Empty lists show a small illustration and an action. No category colors, as decided.
+- Animations: an "Added" toast with undo and a haptic, bars that fill in, the money left rolls when it changes, categories zoom open, a scanning line while reading a receipt, a pulsing microphone.
+- Onboarding: a short tour, then payday, income, fixed bills and three lifestyle questions. `BudgetPlanner` suggests budgets and savings that fit the income; "Just track first" keeps only the bills.
+- Weekly recap (Monday 9:00 notification and Home card) and unusual spending: a category well above the same days of the last 3 periods, or a bill well above its usual amount.
+- Widgets: Left to spend (small, medium, Lock Screen). Controls "Add expense" and "Scan receipt" for Control Center, Lock Screen and the Action button.
+- Arabic: the whole interface (495 strings) right to left, Arabic speech recognition, Arabic questions in Ask Bztam. Amounts stay as one left-to-right piece inside Arabic sentences.
+- Website: an Arabic site (bztam/ar), a widgets section, privacy mode, recap and alerts, languages. App Store texts updated.
+- Tests: BudgetPlannerTests, RecapTests, currency placement, Arabic coverage and placeholders.

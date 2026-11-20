@@ -10,6 +10,7 @@ BUDGETS THAT FOLLOW YOUR PAYDAY
 • Your month starts on your payday, not on the 1st.
 • Money left per category, with a pace warning before you overspend.
 • Move money between categories for one month.
+• A first plan in a minute: answer a few questions and Bztam suggests your budgets.
 • Budget suggestions from your last months.
 
 RENT, SALARY AND SUBSCRIPTIONS
@@ -31,6 +32,14 @@ YOUR DART (TONTINE)
 • Members in turn order, who paid this turn, whose turn it is to collect.
 • Reminders on each turn day, and payments added to your money.
 
+WIDGETS AND ACTION BUTTON
+• See what's left on your Home Screen and Lock Screen.
+• Add an expense or scan a receipt from Control Center or the Action button.
+
+BZTAM NOTICES FOR YOU
+• A weekly recap every Monday.
+• An alert when a bill or a category is well above usual.
+
 INSIGHTS AND EXPORT
 • Where your money goes, money in vs. out, this period vs. the last.
 • Export a PDF report or a CSV for Excel and Numbers.
@@ -38,5 +47,7 @@ INSIGHTS AND EXPORT
 PRIVATE BY DESIGN
 • No account, no bank connection, no ads, no tracking.
 • Receipts, voice and questions are processed on your iPhone.
+• Privacy mode: one tap hides amounts, or only your money in.
 • Optional iCloud sync to your own iCloud. Face ID lock.
-• Dark mode, English and French.
+• Dirham, euro, dollar, pound, Canadian dollar, Swiss franc, riyal and UAE dirham.
+• Dark mode, English, French and Arabic.
