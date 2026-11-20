@@ -19,6 +19,7 @@ enum BudgetAlerts {
     /// Call after adding an expense. Sends at most one notification per threshold, category and period.
     @MainActor
     static func afterAdding(_ entry: Entry, context: ModelContext) {
+        InsightAlerts.afterAdding(entry, context: context)
         guard isEnabled, entry.kind == .expense, entry.amount > 0, let category = entry.category else { return }
         let payday = DataStore.settings(in: context).payday
         let period = BudgetCalculator.period(containing: .now, payday: payday)

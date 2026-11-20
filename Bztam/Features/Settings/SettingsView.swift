@@ -13,6 +13,8 @@ struct SettingsView: View {
     @AppStorage(BudgetAlerts.enabledKey) private var budgetAlerts = true
     @AppStorage(AppLock.enabledKey) private var faceIDLock = false
     @AppStorage(Money.hideOnOpenKey) private var hideOnOpen = false
+    @AppStorage(InsightAlerts.weeklyKey) private var weeklyRecap = true
+    @AppStorage(InsightAlerts.unusualKey) private var unusualAlerts = true
     @AppStorage(Money.hideIncomeOnlyKey) private var hideIncomeOnly = false
     @AppStorage(L10n.storageKey) private var language = AppLanguage.system.rawValue
     @AppStorage(Appearance.storageKey) private var appearance = Appearance.system.rawValue
@@ -99,6 +101,11 @@ struct SettingsView: View {
                     section(L10n.t("Alerts")) {
                         ToggleRow(symbol: "bell", title: L10n.t("Budget alerts"),
                                   detail: L10n.t("A notification at 80% and 100% of a category"), isOn: $budgetAlerts)
+                        ToggleRow(symbol: "calendar", title: L10n.t("Weekly recap"),
+                                  detail: L10n.t("Monday morning: last week in one line"), isOn: $weeklyRecap)
+                            .onChange(of: weeklyRecap) { _, _ in InsightAlerts.scheduleWeekly() }
+                        ToggleRow(symbol: "exclamationmark.triangle", title: L10n.t("Unusual spending"),
+                                  detail: L10n.t("When a bill or a category is well above usual"), isOn: $unusualAlerts)
                     }
 
                     section(L10n.t("Receipts")) {

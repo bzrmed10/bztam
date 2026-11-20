@@ -149,6 +149,7 @@ struct MainTabView: View {
                 if !LaunchOptions.demoData { RecurringEngine.run(in: context) }
                 refreshSubscription()
                 DartActions.scheduleReminders(context: context)
+                InsightAlerts.scheduleWeekly()
                 Task {
                     await scanner.openNextShared()
                     await watcher.check()

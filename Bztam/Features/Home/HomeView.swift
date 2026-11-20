@@ -19,6 +19,8 @@ struct HomeView: View {
     @Query private var darts: [Dart]
     @AppStorage(Money.hiddenKey) private var amountsHidden = false
     @Namespace private var zoom
+    /// Bumped when an insight card is dismissed, so the row refreshes.
+    @State private var dismissedTick = 0
     // Watched so the friends card refreshes after a split or a payback.
     @Query private var splitShares: [SplitShare]
     @State private var showFriends = LaunchOptions.openScreen == "friends"
@@ -117,6 +119,25 @@ struct HomeView: View {
             cards.append(ForYouCard(id: "subscription", view: AnyView(
                 SubscriptionCard(candidate: subscription, onYes: { onSubscriptionYes(subscription) },
                                  onDismiss: { onSubscriptionDismiss(subscription) }))))
+        }
+        let records = entries.map { EntryRecord($0) }
+        let name: (UUID) -> String = { id in categories.first { $0.id == id }?.displayName ?? L10n.t("Other") }
+        _ = dismissedTick
+        if InsightAlerts.unusualOn {
+            let payday = settingsRows.first?.payday ?? 1
+            for u in UnusualSpending.detect(records, period: period, payday: payday).prefix(2) {
+                let key = InsightAlerts.unusualKey(u, period: period)
+                guard !InsightAlerts.isDismissed(key) else { continue }
+                cards.append(ForYouCard(id: key, view: AnyView(
+                    InsightCard(symbol: "exclamationmark.triangle", title: InsightAlerts.title(u, categoryName: name),
+                                detail: InsightAlerts.detail(u)) { InsightAlerts.dismiss(key); dismissedTick += 1 })))
+            }
+        }
+        if InsightAlerts.weeklyOn, let recap = WeeklyRecap.lastWeek(records), !InsightAlerts.isDismissed(InsightAlerts.recapKey(recap)) {
+            let key = InsightAlerts.recapKey(recap)
+            cards.append(ForYouCard(id: key, view: AnyView(
+                InsightCard(symbol: "calendar", title: InsightAlerts.recapTitle(recap),
+                            detail: InsightAlerts.recapDetail(recap, categoryName: name)) { InsightAlerts.dismiss(key); dismissedTick += 1 })))
         }
         if let warning = Advice.paceWarnings(categories: categories.map { BudgetSnapshot.value($0, period: period) },
                                              entries: BudgetSnapshot.values(entries), period: period).first,
