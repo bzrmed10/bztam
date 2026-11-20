@@ -12,6 +12,8 @@ struct SettingsView: View {
     @AppStorage(ScreenshotWatcher.enabledKey) private var suggestScreenshots = false
     @AppStorage(BudgetAlerts.enabledKey) private var budgetAlerts = true
     @AppStorage(AppLock.enabledKey) private var faceIDLock = false
+    @AppStorage(Money.hideOnOpenKey) private var hideOnOpen = false
+    @AppStorage(Money.hideIncomeOnlyKey) private var hideIncomeOnly = false
     @AppStorage(L10n.storageKey) private var language = AppLanguage.system.rawValue
     @AppStorage(Appearance.storageKey) private var appearance = Appearance.system.rawValue
     @AppStorage(Money.currencyKey) private var currency = Currency.mad.rawValue
@@ -138,6 +140,10 @@ struct SettingsView: View {
                     }
 
                     section(L10n.t("Privacy")) {
+                        ToggleRow(symbol: "eye.slash", title: L10n.t("Hide amounts when Bztam opens"),
+                                  detail: L10n.t("Tap the eye on Home to show them"), isOn: $hideOnOpen)
+                        ToggleRow(symbol: "banknote", title: L10n.t("Only hide money in"),
+                                  detail: L10n.t("Your salary and what's left stay private; expenses stay visible"), isOn: $hideIncomeOnly)
                         ToggleRow(symbol: "faceid", title: L10n.t("Lock with Face ID"),
                                   detail: L10n.t("Asks for Face ID or your passcode when Bztam opens"),
                                   isOn: Binding(get: { faceIDLock }, set: { on in

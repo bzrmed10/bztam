@@ -189,7 +189,7 @@ private struct AskTurnView: View {
             }
             VStack(alignment: .leading, spacing: 10) {
                 if let amount = turn.answer.amount {
-                    Text(Money.format(amount))
+                    Text(Money.format(amount, privacy: turn.answer.sensitive ? .income : .any))
                         .font(.system(size: 34, weight: .heavy).monospacedDigit())
                         .tracking(-0.8)
                         .foregroundStyle(amount < 0 ? Theme.Colors.negative : Theme.Colors.ink)
@@ -212,7 +212,7 @@ private struct AskTurnView: View {
                                     Text(DateText.day(e.date)).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
                                 }
                                 Spacer()
-                                Text(Money.format(e.amount, sign: e.kind == .income))
+                                Text(Money.format(e.amount, sign: e.kind == .income, privacy: e.kind == .income ? .income : .any))
                                     .font(.bzAmount)
                                     .foregroundStyle(e.kind == .income ? Theme.Colors.positive : Theme.Colors.ink)
                             }

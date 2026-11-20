@@ -85,6 +85,8 @@ struct AskAnswer: Equatable, Sendable {
     /// Entries behind the answer, newest first (biggest first for "biggest"), at most 5.
     var entries: [EntryRecord]
     var isHelp = false
+    /// The amount reveals money in (privacy mode hides it).
+    var sensitive = false
 }
 
 /// Turns a question into an `AskQuery` with keyword rules (French, English, Darija in Latin letters).
@@ -314,8 +316,8 @@ enum AskEngine {
             let incomes = inRange.filter { $0.kind == .income }
             guard !incomes.isEmpty else { return nothing() }
             let total = incomes.reduce(0) { $0 + $1.amount }
-            return AskAnswer(amount: total, sentence: L10n.t("You received %@ %@.", Money.format(total), when),
-                             understood: understood, entries: Array(incomes.sorted { $0.date > $1.date }.prefix(5)))
+            return AskAnswer(amount: total, sentence: L10n.t("You received %@ %@.", Money.format(total, privacy: .income), when),
+                             understood: understood, entries: Array(incomes.sorted { $0.date > $1.date }.prefix(5)), sensitive: true)
 
         case .left:
             if let category {
@@ -334,10 +336,10 @@ enum AskEngine {
                 entries: inRange.map { EntryValue(kind: $0.kind, amount: $0.amount, date: $0.date, categoryID: $0.categoryID) },
                 categories: [], period: period)
             let sentence = summary.left >= 0
-                ? L10n.t("%@ left to spend %@: %@ in, %@ spent.", Money.format(summary.left), when,
-                         Money.format(summary.moneyIn), Money.format(summary.spent))
-                : L10n.t("You spent %@ more than came in %@.", Money.format(-summary.left), when)
-            return AskAnswer(amount: summary.left, sentence: sentence, understood: understood, entries: [])
+                ? L10n.t("%@ left to spend %@: %@ in, %@ spent.", Money.format(summary.left, privacy: .income), when,
+                         Money.format(summary.moneyIn, privacy: .income), Money.format(summary.spent))
+                : L10n.t("You spent %@ more than came in %@.", Money.format(-summary.left, privacy: .income), when)
+            return AskAnswer(amount: summary.left, sentence: sentence, understood: understood, entries: [], sensitive: true)
 
         case .count:
             guard !expenses.isEmpty else { return nothing() }

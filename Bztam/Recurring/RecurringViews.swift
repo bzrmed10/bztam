@@ -62,7 +62,7 @@ struct RecurringRow: View {
                 Text(details).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted).lineLimit(1)
             }
             Spacer(minLength: 8)
-            Text(Money.format(rule.amount, sign: rule.kind == .income))
+            Text(Money.format(rule.amount, sign: rule.kind == .income, privacy: rule.kind == .income ? .income : .any))
                 .font(.bzAmount)
                 .foregroundStyle(rule.kind == .income ? Theme.Colors.positive : Theme.Colors.ink)
         }

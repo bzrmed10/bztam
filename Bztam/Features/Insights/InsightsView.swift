@@ -117,12 +117,12 @@ struct InsightsView: View {
         let maxValue = max(s.moneyIn, s.spent, 1)
         return VStack(alignment: .leading, spacing: 14) {
             SectionTitle(text: L10n.t("In vs out"))
-            bar(L10n.t("Money in"), Money.format(s.moneyIn, sign: true), Theme.Colors.positive,
+            bar(L10n.t("Money in"), Money.format(s.moneyIn, sign: true, privacy: .income), Theme.Colors.positive,
                 value: Double(s.moneyIn) / Double(maxValue), fill: Theme.Colors.positive)
             bar(L10n.t("Spent"), Money.format(s.spent), Theme.Colors.ink,
                 value: Double(s.spent) / Double(maxValue), fill: s.spent > s.moneyIn ? Theme.Colors.negative : Theme.Colors.ink)
-            Text(s.left >= 0 ? L10n.t("%@ still in your bztam.", Money.format(s.left))
-                             : L10n.t("%@ more spent than came in.", Money.format(-s.left)))
+            Text(s.left >= 0 ? L10n.t("%@ still in your bztam.", Money.format(s.left, privacy: .income))
+                             : L10n.t("%@ more spent than came in.", Money.format(-s.left, privacy: .income)))
                 .font(.bzCaption)
                 .foregroundStyle(s.left >= 0 ? Theme.Colors.inkMuted : Theme.Colors.negative)
         }
@@ -192,7 +192,7 @@ struct InsightsView: View {
         let categories = allCategories.filter { !$0.isArchived }
         if offset == 0, summary.moneyIn > 0 {
             let days = Advice.daysLeft(in: period)
-            lines.append(L10n.t("%@ left for the next %d days.", Money.format(max(0, summary.left)), days))
+            lines.append(L10n.t("%@ left for the next %d days.", Money.format(max(0, summary.left), privacy: .income), days))
         }
         if let top = InsightsCalculator.biggestChanges(current: spends, previous: previousSpends).first(where: { $0.ratio > 0 }),
            let id = top.categoryID {

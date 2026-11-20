@@ -17,6 +17,7 @@ struct HomeView: View {
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
     @Query private var settingsRows: [AppSettings]
     @Query private var darts: [Dart]
+    @AppStorage(Money.hiddenKey) private var amountsHidden = false
     // Watched so the friends card refreshes after a split or a payback.
     @Query private var splitShares: [SplitShare]
     @State private var showFriends = LaunchOptions.openScreen == "friends"
@@ -113,6 +114,13 @@ struct HomeView: View {
                     .font(.bzCaption)
                     .foregroundStyle(Theme.Colors.inkMuted)
                 Spacer()
+                Button { amountsHidden.toggle() } label: {
+                    Image(systemName: amountsHidden ? "eye.slash" : "eye").frame(width: 36, height: 36)
+                        .contentTransition(.symbolEffect(.replace))
+                }
+                .sensoryFeedback(.selection, trigger: amountsHidden)
+                .accessibilityLabel(amountsHidden ? L10n.t("Show amounts") : L10n.t("Hide amounts"))
+                .accessibilityIdentifier("home.privacy")
                 Button { offset -= 1 } label: {
                     Image(systemName: "chevron.left").frame(width: 36, height: 36)
                 }
@@ -127,7 +135,7 @@ struct HomeView: View {
             .font(.system(size: 15, weight: .semibold))
             .foregroundStyle(Theme.Colors.ink)
 
-            Text(Money.format(s.left))
+            Text(Money.format(s.left, privacy: .income))
                 .font(.bzAmountHero)
                 .tracking(-1.2)
                 .foregroundStyle(s.left < 0 ? Theme.Colors.negative : Theme.Colors.ink)
@@ -135,7 +143,7 @@ struct HomeView: View {
                 .minimumScaleFactor(0.6)
                 .accessibilityIdentifier("home.left")
 
-            (Text(Money.format(s.moneyIn, sign: true) + " " + L10n.t("in")).foregroundColor(Theme.Colors.positive).fontWeight(.semibold)
+            (Text(Money.format(s.moneyIn, sign: true, privacy: .income) + " " + L10n.t("in")).foregroundColor(Theme.Colors.positive).fontWeight(.semibold)
              + Text(" · " + Money.format(s.spent) + " " + L10n.t("spent")).foregroundColor(Theme.Colors.inkMuted))
                 .font(.system(size: 15, weight: .medium))
 

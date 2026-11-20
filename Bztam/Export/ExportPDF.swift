@@ -58,9 +58,9 @@ enum ExportPDF {
             // Totals
             let left = moneyIn - spent
             let columns: [(String, String, UIColor)] = [
-                (L10n.t("Money in"), Money.format(moneyIn, sign: true), positive),
-                (L10n.t("Spent"), Money.format(spent), ink),
-                (L10n.t("Left"), Money.format(left), left < 0 ? negative : ink)
+                (L10n.t("Money in"), Money.format(moneyIn, sign: true, privacy: .never), positive),
+                (L10n.t("Spent"), Money.format(spent, privacy: .never), ink),
+                (L10n.t("Left"), Money.format(left, privacy: .never), left < 0 ? negative : ink)
             ]
             let colWidth = contentWidth / 3
             for (i, c) in columns.enumerated() {
@@ -81,8 +81,8 @@ enum ExportPDF {
                     ensure(34)
                     _ = text(c.name, size: 12, weight: .semibold, width: contentWidth * 0.5)
                     let right = c.budget > 0
-                        ? L10n.t("%@ of %@", Money.format(c.spent, symbol: false), Money.format(c.budget))
-                        : Money.format(c.spent)
+                        ? L10n.t("%@ of %@", Money.format(c.spent, symbol: false, privacy: .never), Money.format(c.budget, privacy: .never))
+                        : Money.format(c.spent, privacy: .never)
                     y += text(right, size: 12, color: c.budget > 0 && c.spent > c.budget ? negative : ink,
                               x: margin + contentWidth * 0.5, width: contentWidth * 0.5, align: .right) + 5
                     let progress = c.budget > 0 ? min(1, CGFloat(c.spent) / CGFloat(c.budget)) : 0
@@ -125,7 +125,7 @@ enum ExportPDF {
                 _ = text(day.string(from: r.date), size: 11, color: muted, width: dateW)
                 _ = text(r.title, size: 11, weight: .medium, x: margin + dateW, width: titleW - 8)
                 _ = text(r.category, size: 11, color: muted, x: margin + dateW + titleW, width: categoryW - 8)
-                y += text(Money.format(r.amount, sign: isIncome), size: 11, weight: .semibold, color: isIncome ? positive : ink,
+                y += text(Money.format(r.amount, sign: isIncome, privacy: .never), size: 11, weight: .semibold, color: isIncome ? positive : ink,
                           x: margin + contentWidth - amountW, width: amountW, align: .right) + 6
             }
 

@@ -134,7 +134,7 @@ struct PlanMonthView: View {
                 HStack {
                     Text(L10n.t("Not planned yet")).font(.system(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
                     Spacer()
-                    TagPill(text: Money.format(max(0, income - planned)),
+                    TagPill(text: Money.format(max(0, income - planned), privacy: .income),
                             fill: income - planned < 0 ? Theme.Colors.surface : Theme.Colors.brandTint)
                 }
                 if planned > income {

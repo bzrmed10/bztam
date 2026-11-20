@@ -103,6 +103,13 @@ final class ScreenshotTests: XCTestCase {
         save("\(lang)-07-scan-review")
         app.terminate()
 
+        // Privacy mode
+        app = launch(lang, ["-demoData", "-amountsHidden", "YES"])
+        XCTAssertTrue(app.staticTexts["home.left"].waitForExistence(timeout: 15))
+        sleep(1)
+        save("\(lang)-27-privacy")
+        app.terminate()
+
         // Split with friends
         app = launch(lang, ["-demoData", "-openScreen", "friends"])
         sleep(3)

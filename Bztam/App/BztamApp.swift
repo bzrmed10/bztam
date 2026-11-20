@@ -45,6 +45,8 @@ struct RootView: View {
     @AppStorage(L10n.storageKey) private var language = AppLanguage.system.rawValue
     @AppStorage(Money.currencyKey) private var currency = Currency.mad.rawValue
     @AppStorage(Appearance.storageKey) private var appearance = Appearance.system.rawValue
+    @AppStorage(Money.hiddenKey) private var amountsHidden = false
+    @Environment(\.scenePhase) private var phase
     @State private var lock = AppLock()
 
     var body: some View {
@@ -57,7 +59,7 @@ struct RootView: View {
                 }
             }
             // Changing the language or currency in Settings redraws every screen with the new text.
-            .id(language + currency)
+            .id(language + currency + (amountsHidden ? "·hidden" : ""))
             .environment(\.locale, L10n.locale)
 
             if lock.locked {
@@ -67,7 +69,22 @@ struct RootView: View {
         }
         .background(Theme.Colors.canvas)
         .preferredColorScheme((Appearance(rawValue: appearance) ?? .system).scheme)
+        // The app switcher never shows your numbers.
+        .overlay {
+            if phase != .active && !lock.locked {
+                ZStack {
+                    Theme.Colors.canvas
+                    Image("AppIconImage").resizable().frame(width: 96, height: 96).clipShape(RoundedRectangle(cornerRadius: 22))
+                }
+                .ignoresSafeArea()
+                .transition(.opacity)
+            }
+        }
+        .onChange(of: phase) { _, now in
+            if now == .background && UserDefaults.standard.bool(forKey: Money.hideOnOpenKey) { amountsHidden = true }
+        }
         .onAppear {
+            if UserDefaults.standard.bool(forKey: Money.hideOnOpenKey) { amountsHidden = true }
             if settingsRows.isEmpty { _ = DataStore.settings(in: context) }
         }
         .onChange(of: scenePhase) { _, phase in

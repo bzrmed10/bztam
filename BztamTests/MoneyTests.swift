@@ -47,4 +47,12 @@ struct MoneyTests {
         #expect(AmountInput(centimes: 24_505).text == "245,05")
         #expect(AmountInput(centimes: 0).text == "")
     }
+
+    @Test func symbolPlacement() {
+        #expect(Currency.gbp.symbolFirst(language: "en"))
+        #expect(!Currency.gbp.symbolFirst(language: "fr"))
+        #expect(!Currency.mad.symbolFirst(language: "en"))
+        #expect(!Currency.sar.symbolFirst(language: "ar"))
+        #expect(Currency.allCases.count == 8)
+    }
 }

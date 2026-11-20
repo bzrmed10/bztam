@@ -5,7 +5,7 @@ typealias Centimes = Int
 
 /// Currencies the user can pick in Settings. Amounts are never converted; only the label changes.
 enum Currency: String, CaseIterable, Identifiable, Sendable {
-    case mad, eur, usd
+    case mad, eur, usd, gbp, cad, chf, sar, aed
     var id: String { rawValue }
 
     var symbol: String {
@@ -13,6 +13,11 @@ enum Currency: String, CaseIterable, Identifiable, Sendable {
         case .mad: "DH"
         case .eur: "€"
         case .usd: "$"
+        case .gbp: "£"
+        case .cad: "CA$"
+        case .chf: "CHF"
+        case .sar: "SAR"
+        case .aed: "AED"
         }
     }
 
@@ -21,28 +26,62 @@ enum Currency: String, CaseIterable, Identifiable, Sendable {
         case .mad: L10n.t("Moroccan dirham (DH)")
         case .eur: L10n.t("Euro (€)")
         case .usd: L10n.t("US dollar ($)")
+        case .gbp: L10n.t("British pound (£)")
+        case .cad: L10n.t("Canadian dollar (CA$)")
+        case .chf: L10n.t("Swiss franc (CHF)")
+        case .sar: L10n.t("Saudi riyal (SAR)")
+        case .aed: L10n.t("UAE dirham (AED)")
         }
     }
+
+    /// English writes £245.50, $12 and €9; French and Arabic put every symbol after the number, like "245,50 £".
+    func symbolFirst(language: String) -> Bool {
+        language == "en" && [.eur, .usd, .gbp, .cad].contains(self)
+    }
+}
+
+/// Which amounts privacy mode hides.
+enum AmountPrivacy: Sendable {
+    /// Ordinary amounts (expenses, budgets): hidden only when "hide all amounts" is chosen.
+    case any
+    /// Money in and what's left (they reveal the salary): hidden in both privacy settings.
+    case income
+    /// Never hidden (exports the user asked for).
+    case never
 }
 
 enum Money {
     static let currencyKey = "currency"
+    /// Privacy mode is on right now (the eye on Home).
+    static let hiddenKey = "amountsHidden"
+    /// Privacy mode hides only money in and what's left.
+    static let hideIncomeOnlyKey = "hideIncomeOnly"
+    /// Turn privacy mode on each time Bztam opens.
+    static let hideOnOpenKey = "hideAmountsOnOpen"
 
     static var currency: Currency {
         Currency(rawValue: UserDefaults.standard.string(forKey: currencyKey) ?? "") ?? .mad
     }
 
-    /// Currency label shown after amounts.
+    /// Currency label shown with amounts.
     static var currencySymbol: String { currency.symbol }
 
+    static func isHidden(_ privacy: AmountPrivacy) -> Bool {
+        let d = UserDefaults.standard
+        guard privacy != .never, d.bool(forKey: hiddenKey) else { return false }
+        return privacy == .income || !d.bool(forKey: hideIncomeOnlyKey)
+    }
+
     /// "2,760 DH" (en) or "2 760 DH" (fr). Decimals only when there are centimes: "245.50 DH" / "245,50 DH".
-    static func format(_ amount: Centimes, language: String = L10n.code, sign: Bool = false, symbol: Bool = true) -> String {
+    /// With privacy mode on, the number becomes "••••".
+    static func format(_ amount: Centimes, language: String = L10n.code, sign: Bool = false, symbol: Bool = true,
+                       privacy: AmountPrivacy = .any) -> String {
         let negative = amount < 0
         let absolute = abs(amount)
         let units = absolute / 100
         let cents = absolute % 100
-        let grouping = language == "fr" ? "\u{202F}" : ","
-        let decimal = language == "fr" ? "," : "."
+        let grouping = language == "en" ? "," : "\u{202F}"
+        let decimal = language == "en" ? "." : ","
 
         var digits = String(units)
         var grouped = ""
@@ -55,10 +94,13 @@ enum Money {
         if cents > 0 {
             grouped += decimal + (cents < 10 ? "0\(cents)" : "\(cents)")
         }
-        var result = grouped
-        if negative { result = "−" + result } else if sign && amount > 0 { result = "+" + result }
-        if symbol { result += " " + currencySymbol }
-        return result
+        if isHidden(privacy) { grouped = "••••" }
+        var signText = ""
+        if negative { signText = "−" } else if sign && amount > 0 { signText = "+" }
+        guard symbol else { return signText + grouped }
+        return currency.symbolFirst(language: language)
+            ? signText + currencySymbol + grouped
+            : signText + grouped + " " + currencySymbol
     }
 }
 
