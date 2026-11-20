@@ -176,4 +176,29 @@ final class ScreenshotTests: XCTestCase {
 
     func testScreenshotsEnglish() { capture("en") }
     func testScreenshotsFrench() { capture("fr") }
+
+    /// Arabic, right to left: the main screens only.
+    func testScreenshotsArabic() {
+        var app = launch("ar", ["-demoData"])
+        XCTAssertTrue(app.staticTexts["home.left"].waitForExistence(timeout: 15))
+        sleep(1)
+        save("ar-01-home")
+        app.buttons["tab.insights"].tap(); sleep(2); save("ar-09-insights")
+        app.buttons["tab.activity"].tap(); sleep(1); save("ar-03-activity")
+        app.buttons["tab.settings"].tap(); sleep(1); save("ar-05-settings")
+        app.terminate()
+        app = launch("ar", ["-demoData", "-openScreen", "add"])
+        XCTAssertTrue(app.buttons["add.save"].waitForExistence(timeout: 15))
+        sleep(1)
+        save("ar-02-add")
+        app.terminate()
+        app = launch("ar", ["-demoData", "-openScreen", "friends"])
+        sleep(3)
+        save("ar-24-friends")
+        app.terminate()
+        app = launch("ar", ["-freshStart"])
+        XCTAssertTrue(app.buttons["onboarding.continue"].waitForExistence(timeout: 15))
+        save("ar-06-onboarding-welcome")
+        app.terminate()
+    }
 }

@@ -1,0 +1,5 @@
+"NSCameraUsageDescription" = "يستعمل بزطام الكاميرا لمسح تذاكرك. يُقرأ النص على جهاز iPhone.";
+"NSPhotoLibraryUsageDescription" = "يطّلع بزطام على آخر لقطة شاشة ليقترح إضافة فاتورة. لا شيء يغادر جهاز iPhone.";
+"NSFaceIDUsageDescription" = "يستعمل بزطام Face ID لإبقاء مالك خاصًا عندما تفعّل القفل.";
+"NSMicrophoneUsageDescription" = "يستمع بزطام عندما تضغط على الميكروفون لإضافة مصروف بصوتك.";
+"NSSpeechRecognitionUsageDescription" = "يحوّل بزطام ما تقوله إلى مصروف، مثل «طاكسي 20».";

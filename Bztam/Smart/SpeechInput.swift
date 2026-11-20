@@ -27,7 +27,7 @@ final class SpeechInput {
         let mic = await AVAudioApplication.requestRecordPermission()
         guard speech == .authorized, mic else { denied = true; return }
 
-        let locale = Locale(identifier: L10n.code == "fr" ? "fr-FR" : "en-US")
+        let locale = Locale(identifier: L10n.code == "fr" ? "fr-FR" : L10n.code == "ar" ? "ar-SA" : "en-US")
         guard let recognizer = SFSpeechRecognizer(locale: locale), recognizer.isAvailable else { denied = true; return }
 
         do {

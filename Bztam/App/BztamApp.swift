@@ -60,6 +60,8 @@ struct RootView: View {
             }
             // Changing the language or currency in Settings redraws every screen with the new text.
             .id(language + currency + (amountsHidden ? "·hidden" : ""))
+            .environment(\.layoutDirection, L10n.isRightToLeft ? .rightToLeft : .leftToRight)
+            .environment(\.locale, L10n.locale)
             .environment(\.locale, L10n.locale)
 
             if lock.locked {

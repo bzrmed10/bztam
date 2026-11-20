@@ -101,7 +101,7 @@ enum AskParser {
     }
 
     private static let metricPhrases: [(AskQuery.Metric, [String])] = [
-        (.owed, ["OWES ME", "OWE ME", "WHO OWES", "I OWE", "DO I OWE", "ME DOIT", "ME DOIVENT", "JE DOIS", "DOIS JE", "QUI ME DOIT",
+        (.owed, ["من يدين لي", "من مدين لي", "شكون كيسالني", "كم علي", "OWES ME", "OWE ME", "WHO OWES", "I OWE", "DO I OWE", "ME DOIT", "ME DOIVENT", "JE DOIS", "DOIS JE", "QUI ME DOIT",
                  "KAYSALNI", "KAYSAL LIYA", "KAYSALO LIYA", "KANSAL", "KANSALO", "SALNI", "SAL LIYA", "KHASSO YRED", "KHASSHOM YRDO"]),
         (.count, ["HOW MANY", "HOW OFTEN", "COMBIEN DE FOIS", "NOMBRE DE", "CH7AL MN MRA", "CHHAL MN MRA", "CHHAL DYAL MRAT", "MRAT"]),
         (.biggest, ["BIGGEST", "LARGEST", "MOST EXPENSIVE", "PLUS GROSSE", "PLUS GROS", "PLUS GRANDE", "PLUS GRAND", "PLUS CHERE",
@@ -109,18 +109,18 @@ enum AskParser {
         (.top, ["WHERE DID", "WHERE DOES", "WHERE IS MY MONEY", "WHERE MY MONEY", "SPEND THE MOST", "SPENT THE MOST", "SPEND MOST",
                 "SPENT MOST", "OU VA", "OU PASSE", "OU PART", "OU EST PASSE", "LE PLUS DEPENSE", "DEPENSE LE PLUS", "FIN MCHAW",
                 "FIN MCHAT", "FIN KAYMCHI", "FIN KAYMCHIW", "FIN SREFT", "FIN KHLST"]),
-        (.left, ["LEFT", "REMAINING", "REMAIN", "RESTE", "RESTANT", "RESTE T IL", "B9A", "BQA", "BAQI", "BA9I", "B9ALI", "BQALI",
+        (.left, ["تبقى", "باقي", "بقي", "المتبقي", "LEFT", "REMAINING", "REMAIN", "RESTE", "RESTANT", "RESTE T IL", "B9A", "BQA", "BAQI", "BA9I", "B9ALI", "BQALI",
                  "CAN I STILL SPEND", "CAN I SPEND"]),
-        (.earned, ["EARN", "EARNED", "RECEIVED", "INCOME", "MONEY IN", "GOT PAID", "GAGNE", "RECU", "RENTRE", "RENTREES", "RENTREE",
+        (.earned, ["دخل", "الدخل", "راتب", "الراتب", "EARN", "EARNED", "RECEIVED", "INCOME", "MONEY IN", "GOT PAID", "GAGNE", "RECU", "RENTRE", "RENTREES", "RENTREE",
                    "REVENU", "REVENUS", "SALARY", "SALAIRE", "DKHEL", "DKHLI", "DKHLO", "DKHAL", "KHLASS", "KHLAS"]),
-        (.spent, ["SPEND", "SPENT", "SPENDING", "PAID", "COST", "DEPENSE", "DEPENSES", "DEPENSER", "PAYE", "SREFT", "SRAFT",
+        (.spent, ["صرفت", "صرف", "مصروف", "المصاريف", "SPEND", "SPENT", "SPENDING", "PAID", "COST", "DEPENSE", "DEPENSES", "DEPENSER", "PAYE", "SREFT", "SRAFT",
                   "KHLST", "KHALLAST", "DFA3T"]),
     ]
 
     private static let rangePhrases: [(AskQuery.Range, [String])] = [
         (.lastWeek, ["LAST WEEK", "PREVIOUS WEEK", "SEMAINE DERNIERE", "SEMAINE PASSEE", "DERNIERE SEMAINE", "SIMANA LI FATT",
                      "SIMANA LI FAT", "SEMANA LI FAT", "SIMANA LI DAZT", "SIMANA LI DAZET"]),
-        (.lastPeriod, ["LAST MONTH", "PREVIOUS MONTH", "LAST PERIOD", "PREVIOUS PERIOD", "MOIS DERNIER", "MOIS PASSE", "DERNIER MOIS",
+        (.lastPeriod, ["الشهر الماضي", "الشهر اللي فات", "LAST MONTH", "PREVIOUS MONTH", "LAST PERIOD", "PREVIOUS PERIOD", "MOIS DERNIER", "MOIS PASSE", "DERNIER MOIS",
                        "MOIS PRECEDENT", "PERIODE PRECEDENTE", "CHHAR LI FAT", "CHHER LI FAT", "CHHAR LI DAZ", "CHHER LI DAZ", "CHHAR LI FATT"]),
         (.thisWeek, ["THIS WEEK", "CETTE SEMAINE", "HAD SIMANA", "HAD SEMANA", "WEEK", "SEMAINE", "SIMANA"]),
         (.yesterday, ["YESTERDAY", "HIER", "LBARH", "LBARE7", "LBAREH", "LBARE7"]),
@@ -128,10 +128,10 @@ enum AskParser {
         (.thisYear, ["THIS YEAR", "CETTE ANNEE", "HAD L3AM", "HAD L3AME", "THE YEAR", "L ANNEE", "YEAR", "ANNEE"]),
         (.all, ["EVER", "ALL TIME", "IN TOTAL", "SO FAR", "DEPUIS LE DEBUT", "DEPUIS TOUJOURS", "AU TOTAL", "SINCE I STARTED",
                 "SINCE THE START", "MN LWLL", "MN LAWEL"]),
-        (.thisPeriod, ["THIS MONTH", "THIS PERIOD", "CE MOIS", "CETTE PERIODE", "HAD CHHAR", "HAD CHHER", "MONTH", "MOIS"]),
+        (.thisPeriod, ["هذا الشهر", "هاد الشهر", "THIS MONTH", "THIS PERIOD", "CE MOIS", "CETTE PERIODE", "HAD CHHAR", "HAD CHHER", "MONTH", "MOIS"]),
     ]
 
-    private static let moneyWords = ["HOW MUCH", "COMBIEN", "CH7AL", "CHHAL", "CHHAL", "MONEY", "ARGENT", "FLOUS", "LFLOUS",
+    private static let moneyWords = ["كم", "فلوس", "المال", "HOW MUCH", "COMBIEN", "CH7AL", "CHHAL", "CHHAL", "MONEY", "ARGENT", "FLOUS", "LFLOUS",
                                      "BUDGET", "DH", "DIRHAM", "DIRHAMS", "EXPENSE", "EXPENSES"]
 
     /// Extra words for the built-in categories, on top of Type it's keywords.

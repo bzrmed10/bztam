@@ -27,7 +27,7 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleDevelopmentRegion: en
-        CFBundleLocalizations: [en, fr]
+        CFBundleLocalizations: [en, fr, ar]
         UILaunchScreen:
           UIColorName: LaunchBackground
         UISupportedInterfaceOrientations:

@@ -44,4 +44,19 @@ struct L10nTests {
         #expect(L10n.t("Home", language: "en") == "Home")
         #expect(L10n.t("A key nobody translated", language: "fr") == "A key nobody translated")
     }
+
+    @Test func arabicCoversEveryFrenchKey() {
+        #expect(StringsArabic.table.count > 50)
+        for key in Strings.table.keys {
+            #expect(StringsArabic.table[key] != nil, "Arabic missing: \(key)")
+        }
+    }
+
+    @Test func arabicPlaceholdersMatch() {
+        for (key, value) in StringsArabic.table {
+            #expect(!value.trimmingCharacters(in: .whitespaces).isEmpty, "Arabic empty: \(key)")
+            #expect(placeholders(value) == placeholders(key), "Arabic placeholders differ: \(key)")
+        }
+        #expect(L10n.t("Home", language: "ar") == "الرئيسية")
+    }
 }
