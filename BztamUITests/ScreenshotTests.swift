@@ -154,7 +154,23 @@ final class ScreenshotTests: XCTestCase {
 
         app = launch(lang, ["-freshStart"])
         XCTAssertTrue(app.buttons["onboarding.continue"].waitForExistence(timeout: 15))
-        save("\(lang)-06-onboarding-payday")
+        save("\(lang)-06-onboarding-welcome")
+        app.buttons["onboarding.continue"].tap()               // payday
+        sleep(1)
+        app.buttons["onboarding.continue"].tap()               // money in
+        sleep(1)
+        for key in ["8", "0", "0", "0"] where app.buttons[key].exists { app.buttons[key].tap() }
+        app.buttons["onboarding.continue"].tap()               // bills
+        sleep(1)
+        let rent = app.staticTexts[lang == "fr" ? "Loyer" : "Rent"]
+        if rent.exists { rent.tap(); app.typeText("3000") }
+        save("\(lang)-28-onboarding-bills")
+        app.buttons["onboarding.continue"].firstMatch.tap()    // how you live
+        sleep(1)
+        save("\(lang)-29-onboarding-life")
+        app.buttons["onboarding.continue"].tap()               // plan
+        sleep(2)
+        save("\(lang)-30-onboarding-plan")
         app.terminate()
     }
 
