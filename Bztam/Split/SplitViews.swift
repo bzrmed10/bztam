@@ -344,7 +344,7 @@ struct FriendsView: View {
                     .font(.bzAmount)
                     .foregroundStyle(b.net > 0 ? Theme.Colors.positive : Theme.Colors.negative)
             }
-            Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+            Image(systemName: "chevron.forward").font(.system(size: 13, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
         }
         .frame(minHeight: Theme.Size.row)
         .contentShape(Rectangle())
@@ -560,7 +560,7 @@ struct FriendsCard: View {
                         .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
                 }
                 Spacer()
-                Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                Image(systemName: "chevron.forward").font(.system(size: 13, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
             }
             .padding(12)
             .foregroundStyle(Theme.Colors.ink)

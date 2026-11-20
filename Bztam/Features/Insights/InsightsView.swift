@@ -40,9 +40,9 @@ struct InsightsView: View {
             VStack(alignment: .leading, spacing: 32) {
                 HStack(spacing: 4) {
                     ScreenTitle(text: L10n.t("Insights"))
-                    Button { offset -= 1 } label: { Image(systemName: "chevron.left").frame(width: 36, height: 36) }
+                    Button { offset -= 1 } label: { Image(systemName: "chevron.backward").frame(width: 36, height: 36) }
                         .accessibilityLabel(L10n.t("Previous period"))
-                    Button { offset += 1 } label: { Image(systemName: "chevron.right").frame(width: 36, height: 36) }
+                    Button { offset += 1 } label: { Image(systemName: "chevron.forward").frame(width: 36, height: 36) }
                         .disabled(offset >= 0).opacity(offset >= 0 ? 0.3 : 1)
                         .accessibilityLabel(L10n.t("Next period"))
                 }

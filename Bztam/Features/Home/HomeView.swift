@@ -163,11 +163,11 @@ struct HomeView: View {
                 .accessibilityLabel(amountsHidden ? L10n.t("Show amounts") : L10n.t("Hide amounts"))
                 .accessibilityIdentifier("home.privacy")
                 Button { offset -= 1 } label: {
-                    Image(systemName: "chevron.left").frame(width: 36, height: 36)
+                    Image(systemName: "chevron.backward").frame(width: 36, height: 36)
                 }
                 .accessibilityLabel(L10n.t("Previous period"))
                 Button { offset += 1 } label: {
-                    Image(systemName: "chevron.right").frame(width: 36, height: 36)
+                    Image(systemName: "chevron.forward").frame(width: 36, height: 36)
                 }
                 .disabled(offset >= 0)
                 .opacity(offset >= 0 ? 0.3 : 1)

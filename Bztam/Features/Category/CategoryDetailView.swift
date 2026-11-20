@@ -27,7 +27,7 @@ struct CategoryDetailView: View {
         List {
             VStack(alignment: .leading, spacing: 24) {
                 HStack {
-                    CircleIconButton(symbol: "chevron.left", label: L10n.t("Back")) { dismiss() }
+                    CircleIconButton(symbol: "chevron.backward", label: L10n.t("Back")) { dismiss() }
                     Spacer()
                     Button(L10n.t("Move money")) { moving = true }
                         .buttonStyle(.plain)

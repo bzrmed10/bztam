@@ -162,7 +162,7 @@ final class ScreenshotTests: XCTestCase {
         for key in ["8", "0", "0", "0"] where app.buttons[key].exists { app.buttons[key].tap() }
         app.buttons["onboarding.continue"].tap()               // bills
         sleep(1)
-        let rent = app.staticTexts[lang == "fr" ? "Loyer" : "Rent"]
+        let rent = app.staticTexts[lang == "fr" ? "Loyer" : "Rent"].firstMatch
         if rent.exists { rent.tap(); app.typeText("3000") }
         save("\(lang)-28-onboarding-bills")
         app.buttons["onboarding.continue"].firstMatch.tap()    // how you live
@@ -195,6 +195,28 @@ final class ScreenshotTests: XCTestCase {
         app = launch("ar", ["-demoData", "-openScreen", "friends"])
         sleep(3)
         save("ar-24-friends")
+        app.terminate()
+        app = launch("ar", ["-demoData", "-openScreen", "ask", "-askQuestion", "كم صرفت هذا الشهر؟"])
+        XCTAssertTrue(app.staticTexts["ask.amount"].waitForExistence(timeout: 30))
+        sleep(1)
+        save("ar-10-ask")
+        app.terminate()
+        app = launch("ar", ["-demoData", "-openScreen", "dart"])
+        sleep(4)
+        save("ar-11-dart")
+        app.terminate()
+        app = launch("ar", ["-demoData", "-openScreen", "category"])
+        sleep(3)
+        save("ar-04-category")
+        app.terminate()
+        app = launch("ar", ["-demoData", "-openScreen", "scan"])
+        XCTAssertTrue(app.buttons["scan.save"].waitForExistence(timeout: 30))
+        sleep(1)
+        save("ar-07-scan-review")
+        app.terminate()
+        app = launch("ar", ["-demoData", "-openScreen", "split"])
+        sleep(3)
+        save("ar-25-split")
         app.terminate()
         app = launch("ar", ["-freshStart"])
         XCTAssertTrue(app.buttons["onboarding.continue"].waitForExistence(timeout: 15))

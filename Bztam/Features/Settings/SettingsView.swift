@@ -262,7 +262,7 @@ struct SettingsRow: View {
             }
             Spacer()
             if chevron {
-                Image(systemName: "chevron.right").font(.system(size: 14, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                Image(systemName: "chevron.forward").font(.system(size: 14, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
             }
         }
         .frame(minHeight: Theme.Size.row)

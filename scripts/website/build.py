@@ -30,6 +30,7 @@ ICONS = {
     "eye-off": '<path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c5 0 9 4.5 10 7-.4 1-1.2 2.3-2.4 3.5M6.6 6.6C4.4 8 2.8 10.2 2 12c1 2.5 5 7 10 7 1.8 0 3.4-.6 4.8-1.4"/>',
     "phone": '<rect x="6" y="2" width="12" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M10 18h4"/>',
     "spark": '<path fill="currentColor" d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8zM19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9z"/>',
+    "plus-c": '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.2"/><path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 8v8M8 12h8"/>',
     "move": '<path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M4 8h14m-4-4 4 4-4 4M20 16H6m4-4-4 4 4 4"/>',
 }
 
@@ -41,7 +42,7 @@ def ic(name, cls=""):
 def shot(lang, name, alt="", lazy=True, cls=""):
     """Light and dark versions of one app screen; CSS shows the one matching the site theme."""
     l = ' loading="lazy"' if lazy else ""
-    base = "../" if lang == "fr" else ""
+    base = "" if lang == "en" else "../"
     c = f" {cls}" if cls else ""
     return (f'<img class="lt{c}" src="{base}assets/screens/{lang}-{name}-light.webp" alt="{alt}"{l}>'
             f'<img class="dk{c}" src="{base}assets/screens/{lang}-{name}-dark.webp" alt=""{l} aria-hidden="true">')
@@ -57,7 +58,7 @@ T = {
     "title": "Bztam: budget and receipts for iPhone",
     "desc": "See what came in, what you spent and what's left in every category. Snap receipts, share bills, ask questions. Private, on your iPhone.",
     "nav": [("#how", "How it works"), ("#ask", "Ask Bztam"), ("#split", "Split"), ("#dart", "Dart"), ("#features", "Features"), ("#privacy", "Privacy")],
-    "other": ("fr/", "FR"), "soon": "Coming soon",
+    "langs": [("fr/", "FR"), ("ar/", "ع")], "soon": "Coming soon",
     "chip": ("New", "For iPhone · English and Français"),
     "h1": 'Know what\'s<br><span class="hl">left to spend.</span>',
     "lead": "Bztam (“wallet” in Darija) shows what came in, what you spent and <b>what's left in every category</b>. Snap a receipt, share a bill, and it's added.",
@@ -65,7 +66,7 @@ T = {
     "notes": ["No account", "No bank connection", "No ads"],
     "tag_a": ("Receipt added", "Marjane · 245.50 DH"), "tag_b": ("+8,000 DH in", "Salary · this period"),
     "facts": ["Money left per category", "Receipt scanning", "Screenshots and PDF bills", "Type it or say it", "Ask Bztam",
-              "Split with friends", "Dart tracker", "Recurring entries", "Subscription detection", "PDF and CSV export", "iCloud sync", "Face ID lock",
+              "Split with friends", "Dart tracker", "Privacy mode", "Widgets", "Action button", "Weekly recap", "العربية", "Recurring entries", "Subscription detection", "PDF and CSV export", "iCloud sync", "Face ID lock",
               "Dark mode", "English and French"],
     "story_eye": "How it works", "story_h": "Three seconds<br>per expense.",
     "story_lead": "Adding money should never feel like bookkeeping. Bztam reads what you give it and puts it in the right place.",
@@ -102,16 +103,26 @@ T = {
         "move": ("Move money", "Plans change.", "Give or take from another category, for this month only."),
         "export": ("Export", "A report worth keeping.", "A PDF report or a CSV for Excel and Numbers, for any period."),
         "sync": ("iCloud sync", "On all your iPhones.", "Your data follows your Apple account, in your own iCloud."),
-        "lock": ("Face ID", "Locked when you want.", "Open Bztam with Face ID or your passcode."),
+        "lock": ("Privacy mode", "Your salary stays yours.", "One tap on the eye hides amounts, or only money in, when friends are around. Face ID lock too."),
+        "recap": ("Weekly recap and alerts", "Bztam notices for you.", "Every Monday, last week in one line, and an alert when a bill or a category is well above usual."),
         "dark": ("Dark mode", "Easy on the eyes.", "Automatic, light or dark, on every screen."),
-        "lang": ("Languages", "English and Français.", "Switch any time. Darija questions work too."),
+        "lang": ("Languages", "English, Français, العربية.", "Switch any time, right to left in Arabic. Darija questions work too."),
         "share": ("Share sheet", "From any app.", "Share a screenshot or a PDF bill to Bztam from WhatsApp, Mail or Files."),
     },
     "pv_eye": "Privacy", "pv_h": "Your money<br>stays yours.",
     "pv_lead": "Bztam has no servers and no accounts. Receipts, voice and questions are processed on your iPhone. We never see your data.",
     "pv": [("eye-off", "No tracking, no ads, no analytics"), ("lock", "No bank connection needed"), ("phone", "Receipts read on your iPhone"), ("cloud", "Optional sync to your own iCloud")],
     "final_h": "Take control of<br>your month.", "final_lead": "Bztam is coming soon to the App Store for iPhone.",
-    "foot": [("privacy.html", "Privacy"), ("terms.html", "Terms"), ("support.html", "Support"), ("fr/", "Français")],
+    "foot": [("privacy.html", "Privacy"), ("terms.html", "Terms"), ("support.html", "Support"), ("fr/", "Français"), ("ar/", "العربية")],
+    "mini": {"yes": "Yes", "rent": "Rent", "rent_sub": "Every month · next Dec 1", "move": "Groceries → Café", "move_sub": "This month only",
+             "inwi": "Inwi bill.pdf", "inwi_sub": "Shared to Bztam", "recap": "Last week: 1,240 DH", "recap_sub": "18% less than usual · most on Groceries",
+             "alert": "Lydec is 45% higher than usual", "alert_sub": "435 DH this time, usually 300 DH"},
+    "w_eye": "Widgets and Action button", "w_h": "Your month,<br>at a glance.",
+    "w_lead": "See what's left right on your Home Screen and Lock Screen. Add an expense from Control Center, or with one press of the Action button.",
+    "w_points": [("phone", "Home and Lock Screen widgets", "What's left, with your busiest categories."),
+                 ("spark", "Action button and Control Center", "One press opens Bztam ready to add or scan."),
+                 ("eye-off", "Private when you want", "Widgets follow privacy mode and hide amounts.")],
+    "w_mock": {"left": "Left to spend", "amount": "2,310 DH", "days": "6 days left", "cats": [("Groceries", "350 DH left", 70), ("Transport", "280 DH left", 44), ("Café & Food", "40 DH over", 100)], "add": "Add expense", "scan": "Scan receipt"},
     "made": "Made in Morocco",
     "theme": "Switch light or dark",
 },
@@ -119,7 +130,7 @@ T = {
     "title": "Bztam : budget et tickets pour iPhone",
     "desc": "Voyez ce qui est rentré, ce que vous avez dépensé et ce qu'il reste dans chaque catégorie. Tickets, factures, questions. Privé, sur votre iPhone.",
     "nav": [("#how", "Fonctionnement"), ("#ask", "Demander"), ("#split", "Partager"), ("#dart", "Dart"), ("#features", "Fonctions"), ("#privacy", "Confidentialité")],
-    "other": ("../", "EN"), "soon": "Bientôt",
+    "langs": [("../", "EN"), ("../ar/", "ع")], "soon": "Bientôt",
     "chip": ("Nouveau", "Pour iPhone · Français et English"),
     "h1": 'Sachez ce qu\'il<br><span class="hl">vous reste.</span>',
     "lead": "Bztam (« portefeuille » en darija) montre ce qui est rentré, ce que vous avez dépensé et <b>ce qu'il reste dans chaque catégorie</b>. Un ticket en photo, une facture partagée : c'est ajouté.",
@@ -127,7 +138,7 @@ T = {
     "notes": ["Pas de compte", "Pas de banque", "Pas de pub"],
     "tag_a": ("Ticket ajouté", "Marjane · 245,50 DH"), "tag_b": ("+8 000 DH rentrés", "Salaire · cette période"),
     "facts": ["Le reste par catégorie", "Scan des tickets", "Captures et factures PDF", "Tapez-le ou dites-le", "Demander à Bztam",
-              "Partage entre amis", "Suivi de dart", "Entrées récurrentes", "Abonnements repérés", "Export PDF et CSV", "Synchro iCloud", "Verrouillage Face ID",
+              "Partage entre amis", "Suivi de dart", "Mode confidentialité", "Widgets", "Bouton Action", "Récap de la semaine", "العربية", "Entrées récurrentes", "Abonnements repérés", "Export PDF et CSV", "Synchro iCloud", "Verrouillage Face ID",
               "Mode sombre", "Français et anglais"],
     "story_eye": "Fonctionnement", "story_h": "Trois secondes<br>par dépense.",
     "story_lead": "Noter son argent ne devrait jamais ressembler à de la comptabilité. Bztam lit ce que vous lui donnez et le range au bon endroit.",
@@ -164,28 +175,112 @@ T = {
         "move": ("Déplacer", "Les plans changent.", "Donnez ou prenez à une autre catégorie, pour ce mois seulement."),
         "export": ("Export", "Un rapport à garder.", "Un rapport PDF ou un CSV pour Excel et Numbers, pour n'importe quelle période."),
         "sync": ("Synchro iCloud", "Sur tous vos iPhone.", "Vos données suivent votre compte Apple, dans votre propre iCloud."),
-        "lock": ("Face ID", "Verrouillé si vous voulez.", "Ouvrez Bztam avec Face ID ou votre code."),
+        "lock": ("Mode confidentialité", "Votre salaire reste à vous.", "Un geste sur l'œil masque les montants, ou seulement les rentrées, devant vos amis. Verrouillage Face ID aussi."),
+        "recap": ("Récap et alertes", "Bztam remarque pour vous.", "Chaque lundi, la semaine passée en une ligne, et une alerte quand une facture ou une catégorie dépasse nettement l'habitude."),
         "dark": ("Mode sombre", "Doux pour les yeux.", "Automatique, clair ou sombre, sur chaque écran."),
-        "lang": ("Langues", "Français et English.", "Changez quand vous voulez. Les questions en darija marchent aussi."),
+        "lang": ("Langues", "Français, English, العربية.", "Changez quand vous voulez, de droite à gauche en arabe. Les questions en darija marchent aussi."),
         "share": ("Partage", "Depuis n'importe quelle app.", "Partagez une capture ou une facture PDF vers Bztam depuis WhatsApp, Mail ou Fichiers."),
     },
     "pv_eye": "Confidentialité", "pv_h": "Votre argent<br>reste à vous.",
     "pv_lead": "Bztam n'a ni serveur ni compte. Tickets, voix et questions sont traités sur votre iPhone. Nous ne voyons jamais vos données.",
     "pv": [("eye-off", "Pas de pistage, de pub ni de statistiques"), ("lock", "Aucune connexion bancaire"), ("phone", "Tickets lus sur votre iPhone"), ("cloud", "Synchro facultative vers votre iCloud")],
     "final_h": "Reprenez la main<br>sur votre mois.", "final_lead": "Bztam arrive bientôt sur l'App Store pour iPhone.",
-    "foot": [("privacy.html", "Confidentialité"), ("terms.html", "Conditions"), ("support.html", "Aide"), ("../", "English")],
+    "foot": [("privacy.html", "Confidentialité"), ("terms.html", "Conditions"), ("support.html", "Aide"), ("../", "English"), ("../ar/", "العربية")],
+    "mini": {"yes": "Oui", "rent": "Loyer", "rent_sub": "Chaque mois · prochain le 1 déc.", "move": "Courses → Café", "move_sub": "Ce mois seulement",
+             "inwi": "Facture Inwi.pdf", "inwi_sub": "Partagée vers Bztam", "recap": "La semaine dernière : 1 240 DH", "recap_sub": "18 % de moins que d'habitude · surtout en Courses",
+             "alert": "Lydec est 45 % plus élevé que d'habitude", "alert_sub": "435 DH cette fois, d'habitude 300 DH"},
+    "w_eye": "Widgets et bouton Action", "w_h": "Votre mois,<br>d'un coup d'œil.",
+    "w_lead": "Voyez ce qu'il reste directement sur l'écran d'accueil et l'écran verrouillé. Ajoutez une dépense depuis le Centre de contrôle, ou d'une pression sur le bouton Action.",
+    "w_points": [("phone", "Widgets d'accueil et d'écran verrouillé", "Ce qu'il reste, avec vos catégories les plus actives."),
+                 ("spark", "Bouton Action et Centre de contrôle", "Une pression ouvre Bztam prêt à ajouter ou scanner."),
+                 ("eye-off", "Privé quand vous voulez", "Les widgets suivent le mode confidentialité et masquent les montants.")],
+    "w_mock": {"left": "Reste à dépenser", "amount": "2 310 DH", "days": "6 jours restants", "cats": [("Courses", "350 DH restants", 70), ("Transport", "280 DH restants", 44), ("Café et repas", "40 DH de trop", 100)], "add": "Ajouter une dépense", "scan": "Scanner un ticket"},
     "made": "Fait au Maroc",
     "theme": "Passer en clair ou sombre",
 },
 }
 
+T["ar"] = {
+    "title": "بزطام: الميزانية والتذاكر على iPhone",
+    "desc": "اعرف ما دخل وما صرفت وما تبقى في كل فئة. امسح التذاكر، شارك الفواتير، واسأل. خاص، على جهاز iPhone.",
+    "nav": [("#how", "كيف يعمل"), ("#ask", "اسأل"), ("#split", "التقسيم"), ("#dart", "الدارت"), ("#features", "المزايا"), ("#privacy", "الخصوصية")],
+    "langs": [("../", "EN"), ("../fr/", "FR")], "soon": "قريبًا",
+    "chip": ("جديد", "لجهاز iPhone · العربية وFrançais وEnglish"),
+    "h1": 'اعرف كم<br><span class="hl">تبقى لتصرفه.</span>',
+    "lead": "بزطام (أي «المحفظة» بالدارجة) يُظهر ما دخل وما صرفت و<b>ما تبقى في كل فئة</b>. صوّر تذكرة أو شارك فاتورة، وتُضاف مباشرة.",
+    "store": ("قريبًا على", "App Store"), "how": "كيف يعمل",
+    "notes": ["بلا حساب", "بلا ربط بنكي", "بلا إعلانات"],
+    "tag_a": ("أُضيفت التذكرة", "مرجان · 245,50 DH"), "tag_b": ("+8 000 DH دخل", "الراتب · هذه الفترة"),
+    "facts": ["المتبقي لكل فئة", "مسح التذاكر", "لقطات الشاشة وفواتير PDF", "اكتبها أو قلها", "اسأل بزطام",
+              "التقسيم مع الأصدقاء", "تتبّع الدارت", "وضع الخصوصية", "الأدوات", "زر الإجراء", "ملخص الأسبوع",
+              "العمليات المتكررة", "اكتشاف الاشتراكات", "تصدير PDF وCSV", "مزامنة iCloud", "قفل Face ID", "الوضع الداكن", "العربية والفرنسية والإنجليزية"],
+    "story_eye": "كيف يعمل", "story_h": "ثلاث ثوانٍ<br>لكل مصروف.",
+    "story_lead": "تسجيل المال لا يجب أن يشبه المحاسبة. بزطام يقرأ ما تعطيه ويضعه في مكانه الصحيح.",
+    "steps": [
+        ("add", "إضافة", "اكتبها. قلها.<br>انتهى.", "اكتب <b>«taxi 20»</b> أو اضغط على الميكروفون وقلها. يملأ بزطام المبلغ والفئة، ويتذكر اختياراتك.",
+         ["لوحة أرقام كبيرة، فئة بلمسة واحدة", "بالعربية أو الفرنسية أو الإنجليزية", "ينبّهك إلى التكرار"]),
+        ("scan", "مسح", "تذاكر ولقطات شاشة<br>وفواتير PDF.", "صوّر تذكرة، شارك لقطة شاشة لفاتورة الهاتف أو افتح ملف PDF. <b>المبلغ والمتجر والتاريخ تُقرأ على جهاز iPhone</b>، لا على خادم.",
+         ["الكاميرا والصور والملفات", "المشاركة من أي تطبيق", "يقترح آخر لقطة شاشة"]),
+        ("category", "الميزانيات", "المتبقي،<br>لكل فئة.", "يبدأ شهرك <b>يوم راتبك</b>. كل فئة تُظهر ما تبقى، وينبّهك بزطام إذا كنت تصرف بسرعة.",
+         ["ميزانيات تتبع يوم راتبك", "نقل المال بين الفئات", "تنبيهات عند 80% وعند التجاوز"]),
+        ("insights", "التحليلات", "اعرف أين<br>ذهب كل شيء.", "ملخص شهري بكلمات بسيطة، توزيع مصاريفك، الداخل والخارج، و<b>مقارنة هذه الفترة بالسابقة</b>.",
+         ["ملخص: ما تبقى وما تغيّر", "المصاريف حسب الفئة", "ميزانيات مقترحة من تاريخك"]),
+    ],
+    "ask_eye": "اسأل بزطام", "ask_h": "فقط اسأل.",
+    "ask_lead": "اسأل عن مالك كما تتكلم. يفهم بزطام العربية والفرنسية والإنجليزية والدارجة بالحروف اللاتينية.",
+    "qs": [("عربي", "كم صرفت هذا الشهر؟"), ("FR", "Combien il me reste ?"), ("دارجة", "ch7al sreft f taxi had simana"), ("EN", "Who owes me?")],
+    "ask_note": "الإجابات تُحسب على جهاز iPhone. كل رقم يأتي من عملياتك، لا من التخمين.",
+    "split_eye": "التقسيم مع الأصدقاء", "split_h": "من عليه ماذا،<br>محسوم.",
+    "split_lead": "خرجة مع الأصدقاء ودفع شخص واحد؟ امسح التذكرة، اختر من كان حاضرًا، ويقسم بزطام بالتساوي ويتابع حتى يرجع الجميع المبلغ.",
+    "split_points": [("receipt", "من تذكرة أو يدويًا", "امسح الفاتورة أو اكتب المجموع، ثم اختر أصدقاءك من قائمتك."),
+                     ("share", "أرسلها على واتساب", "بلمسة واحدة يصل لكل شخص نصيبه."),
+                     ("wallet", "يُحسب مثل بنكك", "عندما تدفع، يخرج المبلغ كاملًا من مالك؛ وما يُرجع يعود إلى نفس الفئة."),
+                     ("bell", "الأرصدة والتذكيرات", "اعرف من يدين لك ولمن أنت مدين، مع تذكير بعد 3 أيام.")],
+    "dart_eye": "الدارت", "dart_h": "دارتك،<br>منظمة أخيرًا.",
+    "dart_lead": "يدفع الجميع نفس المبلغ كل شهر ويستلم شخص واحد المجموع بالتناوب. بزطام يتتبع كل شيء حتى لا يضطر أحد للتذكر.",
+    "dart_points": [("people", "الأعضاء حسب ترتيب الأدوار", "أشّر على من دفع، واعرف من يستلم بعده."),
+                    ("bell", "تذكير يوم الدور", "إشعار الساعة 9:00 في يوم كل دور."),
+                    ("wallet", "مرتبط بمالك", "دفعتك تصبح مصروفًا، والمجموع يصبح دخلًا.")],
+    "f_eye": "وكل الباقي", "f_h": "التفاصيل،<br>بإتقان.",
+    "f_lead": "ما يجعلك تستمر في استعمال تطبيق للميزانية.",
+    "cards": {
+        "recurring": ("المتكررة", "الكراء والراتب، يُضافان لك.", "كرّر أي عملية كل أسبوع أو شهر أو سنة. ويكتشف بزطام المتاجر التي تدفع لها كل شهر."),
+        "sub": ("Netflix كل شهر؟", "65 DH في كل مرة"),
+        "move": ("نقل المال", "الخطط تتغير.", "أعطِ أو خذ من فئة أخرى، لهذا الشهر فقط."),
+        "export": ("التصدير", "تقرير يستحق الاحتفاظ.", "تقرير PDF أو ملف CSV لـ Excel وNumbers، لأي فترة."),
+        "sync": ("مزامنة iCloud", "على كل أجهزة iPhone.", "بياناتك تتبع حساب Apple الخاص بك، في iCloud الخاص بك."),
+        "lock": ("وضع الخصوصية", "راتبك يبقى لك.", "لمسة على العين تخفي المبالغ، أو الدخل فقط، أمام الأصدقاء. وقفل Face ID أيضًا."),
+        "recap": ("ملخص وتنبيهات", "بزطام ينتبه لك.", "كل اثنين، الأسبوع الماضي في سطر واحد، وتنبيه عندما تكون فاتورة أو فئة أعلى بكثير من المعتاد."),
+        "dark": ("الوضع الداكن", "مريح للعين.", "تلقائي أو فاتح أو داكن، في كل شاشة."),
+        "lang": ("اللغات", "العربية، Français، English.", "غيّر اللغة متى شئت، من اليمين إلى اليسار بالعربية. والأسئلة بالدارجة تعمل أيضًا."),
+        "share": ("المشاركة", "من أي تطبيق.", "شارك لقطة شاشة أو فاتورة PDF مع بزطام من واتساب أو البريد أو الملفات."),
+    },
+    "mini": {"yes": "نعم", "rent": "الكراء", "rent_sub": "كل شهر · التالي 1 دجنبر", "move": "التقضية ← المقهى", "move_sub": "لهذا الشهر فقط",
+             "inwi": "فاتورة Inwi.pdf", "inwi_sub": "شوركت مع بزطام", "recap": "الأسبوع الماضي: 1 240 DH", "recap_sub": "أقل من المعتاد بـ 18% · أغلبه على التقضية",
+             "alert": "Lydec أعلى من المعتاد بـ 45%", "alert_sub": "435 DH هذه المرة، والمعتاد 300 DH"},
+    "w_eye": "الأدوات وزر الإجراء", "w_h": "شهرك،<br>بنظرة واحدة.",
+    "w_lead": "شاهد ما تبقى مباشرة على الشاشة الرئيسية وشاشة القفل. أضف مصروفًا من مركز التحكم، أو بضغطة على زر الإجراء.",
+    "w_points": [("phone", "أدوات الشاشة الرئيسية وشاشة القفل", "ما تبقى، مع أكثر فئاتك نشاطًا."),
+                 ("spark", "زر الإجراء ومركز التحكم", "ضغطة واحدة تفتح بزطام جاهزًا للإضافة أو المسح."),
+                 ("eye-off", "خاص متى شئت", "الأدوات تتبع وضع الخصوصية وتخفي المبالغ.")],
+    "w_mock": {"left": "المتبقي للصرف", "amount": "2 310 DH", "days": "تبقى 6 أيام", "cats": [("التقضية", "تبقى 350 DH", 70), ("النقل", "تبقى 280 DH", 44), ("مقهى وأكل", "تجاوز بـ 40 DH", 100)], "add": "إضافة مصروف", "scan": "مسح تذكرة"},
+    "pv_eye": "الخصوصية", "pv_h": "مالك<br>يبقى لك.",
+    "pv_lead": "بزطام بلا خوادم وبلا حسابات. التذاكر والصوت والأسئلة تُعالج على جهاز iPhone. لا نرى بياناتك أبدًا.",
+    "pv": [("eye-off", "بلا تتبّع ولا إعلانات ولا إحصاءات"), ("lock", "لا حاجة لربط بنكي"), ("phone", "التذاكر تُقرأ على جهاز iPhone"), ("cloud", "مزامنة اختيارية إلى iCloud الخاص بك")],
+    "final_h": "تحكّم<br>في شهرك.", "final_lead": "بزطام قريبًا على App Store لجهاز iPhone.",
+    "foot": [("privacy.html", "الخصوصية"), ("terms.html", "الشروط"), ("support.html", "المساعدة"), ("../", "English"), ("../fr/", "Français")],
+    "made": "صُنع في المغرب",
+    "theme": "التبديل بين الفاتح والداكن",
+}
+
+
 THEME_BOOT = """<script>(()=>{try{const s=localStorage.getItem("theme");document.documentElement.dataset.theme=s||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}})()</script>"""
 
 
 def head(t, lang, title, desc):
-    base = "../" if lang == "fr" else ""
+    base = "" if lang == "en" else "../"
     return f"""<!doctype html>
-<html lang="{lang}">
+<html lang="{lang}"{' dir="rtl"' if lang == "ar" else ""}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -200,6 +295,7 @@ def head(t, lang, title, desc):
 <link rel="apple-touch-icon" href="{base}icon.png">
 <link rel="alternate" hreflang="en" href="/">
 <link rel="alternate" hreflang="fr" href="/fr/">
+<link rel="alternate" hreflang="ar" href="/ar/">
 {THEME_BOOT}
 <link rel="stylesheet" href="{base}style.css">
 </head>
@@ -208,13 +304,13 @@ def head(t, lang, title, desc):
 
 
 def nav(t, lang, home=True):
-    base = "../" if lang == "fr" else ""
+    base = "" if lang == "en" else "../"
     links = "".join(f'<a href="{"" if home else "./"}{h}">{n}</a>' for h, n in t["nav"])
-    other_href, other = t["other"]
+    langs = "".join(f'<a class="icon-btn keep" href="{h}" lang="{"ar" if n == "ع" else n.lower()}">{n}</a>' for h, n in t["langs"])
     return f"""<header class="nav" id="nav"><div class="wrap">
   <a href="./" class="logo"><img src="{base}icon.png" alt="">Bztam</a>
   <nav class="nav-links">{links}
-    <a class="icon-btn keep" href="{other_href}" aria-label="{other}">{other}</a>
+    {langs}
     <button class="icon-btn" id="theme" aria-label="{t['theme']}">{ic('moon', 'dk-ic')}{ic('sun', 'lt-ic')}</button>
     <span class="btn btn-lime small">{ic('apple')}{t['soon']}</span>
   </nav>
@@ -223,7 +319,7 @@ def nav(t, lang, home=True):
 
 
 def footer(t, lang):
-    base = "../" if lang == "fr" else ""
+    base = "" if lang == "en" else "../"
     links = "".join(f'<a href="{h}">{n}</a>' for h, n in t["foot"])
     return f"""<footer><div class="wrap">
   <span class="sp"><img src="{base}icon.png" alt="">Bztam</span>
@@ -249,8 +345,12 @@ def home(lang):
     sp = "".join(f'<li><span class="ic">{ic(i)}</span><div><b>{b}</b><span>{x}</span></div></li>' for i, b, x in t["split_points"])
     dp = "".join(f'<li><span class="ic">{ic(i)}</span><div><b>{b}</b><span>{s}</span></div></li>' for i, b, s in t["dart_points"])
     c = t["cards"]
+    m = t["mini"]
+    wm = t["w_mock"]
+    wp = "".join(f'<li><span class="ic">{ic(i)}</span><div><b>{b}</b><span>{x}</span></div></li>' for i, b, x in t["w_points"])
+    cats = "".join(f'<div class="wg-cat"><div class="row"><span>{n}</span><small class="{"over" if pct >= 100 else ""}">{l}</small></div><div class="bar"><i style="--w:{pct}%"></i></div></div>' for n, l, pct in wm["cats"])
     pv = "".join(f"<div>{ic(i)}{s}</div>" for i, s in t["pv"])
-    base = "../" if lang == "fr" else ""
+    base = "" if lang == "en" else "../"
     money = "245.50" if lang == "en" else "245,50"
     return head(t, lang, t["title"], t["desc"]) + nav(t, lang) + f"""<main id="top">
 
@@ -327,33 +427,62 @@ def home(lang):
   </div>
 </section>
 
-<section class="sec" id="features" style="padding-top:40px">
+<section class="sec" id="widgets" style="background:var(--surface-2)">
+  <div class="wrap split rev">
+    <div class="rv">
+      <span class="eyebrow">{t['w_eye']}</span>
+      <h2 style="margin:16px 0 18px">{t['w_h']}</h2>
+      <p class="lead">{t['w_lead']}</p>
+      <ul class="ticks">{wp}</ul>
+    </div>
+    <div class="media rv" style="--d:2"><div class="halo"></div>
+      <div class="widgets">
+        <div class="wg small">
+          <div class="wg-top"><span class="wg-logo">{ic('wallet')}</span><span class="wg-add">+</span></div>
+          <small>{wm['left']}</small><b>{wm['amount']}</b>
+          <div class="bar"><i style="--w:70%"></i></div><small>{wm['days']}</small>
+        </div>
+        <div class="wg medium">{cats}</div>
+        <div class="wg-row">
+          <div class="ctl">{ic('plus-c')}<span>{wm['add']}</span></div>
+          <div class="ctl">{ic('receipt')}<span>{wm['scan']}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="features" style="padding-top:80px">
   <div class="wrap">
     <div class="sec-head"><span class="eyebrow rv">{t['f_eye']}</span><h2 class="rv" style="--d:1">{t['f_h']}</h2><p class="lead rv" style="--d:2">{t['f_lead']}</p></div>
     <div class="bento">
       <div class="card w4 rv"><span class="eyebrow">{c['recurring'][0]}</span><h3>{c['recurring'][1]}</h3><p>{c['recurring'][2]}</p>
         <div class="art" style="flex-direction:column;align-items:center">
-          <div class="mini"><div class="row"><span class="ci">{ic('repeat')}</span><div><b>{c['sub'][0]}</b><small>{c['sub'][1]}</small></div><span class="yes">{'Yes' if lang == 'en' else 'Oui'}</span></div></div>
-          <div class="mini"><div class="row"><span class="ci">{ic('wallet')}</span><div><b>{'Rent' if lang == 'en' else 'Loyer'}</b><small>{'Every month · next Dec 1' if lang == 'en' else 'Chaque mois · prochain le 1 déc.'}</small></div><span class="amt">3,000 DH</span></div></div>
+          <div class="mini"><div class="row"><span class="ci">{ic('repeat')}</span><div><b>{c['sub'][0]}</b><small>{c['sub'][1]}</small></div><span class="yes">{m['yes']}</span></div></div>
+          <div class="mini"><div class="row"><span class="ci">{ic('wallet')}</span><div><b>{m['rent']}</b><small>{m['rent_sub']}</small></div><span class="amt">3,000 DH</span></div></div>
         </div></div>
-      <div class="card w2 rv" style="--d:1"><span class="eyebrow">{c['move'][0]}</span><h3>{c['move'][1]}</h3><p>{c['move'][2]}</p>
-        <div class="art"><div class="mini"><div class="row"><span class="ci">{ic('move')}</span><div><b>{'Groceries → Café' if lang == 'en' else 'Courses → Café'}</b><small>{'This month only' if lang == 'en' else 'Ce mois seulement'}</small></div><span class="amt">200 DH</span></div><div class="bar"><i style="--w:72%"></i></div></div></div></div>
-      <div class="card w2 rv"><span class="eyebrow">{c['export'][0]}</span><h3>{c['export'][1]}</h3><p>{c['export'][2]}</p>
+      <div class="card w2 rv" style="--d:1"><span class="eyebrow">{c['lock'][0]}</span><h3>{c['lock'][1]}</h3><p>{c['lock'][2]}</p>
+        <div class="art"><div class="mini privacy-mini"><small>{wm['left']}</small><div class="row"><b class="blurred">•••• DH</b><span class="eye">{ic('eye-off')}</span></div></div></div></div>
+      <div class="card w2 rv"><span class="eyebrow">{c['move'][0]}</span><h3>{c['move'][1]}</h3><p>{c['move'][2]}</p>
+        <div class="art"><div class="mini"><div class="row"><span class="ci">{ic('move')}</span><div><b>{m['move']}</b><small>{m['move_sub']}</small></div><span class="amt">200 DH</span></div><div class="bar"><i style="--w:72%"></i></div></div></div></div>
+      <div class="card w2 rv" style="--d:1"><span class="eyebrow">{c['export'][0]}</span><h3>{c['export'][1]}</h3><p>{c['export'][2]}</p>
         <div class="art"><div class="paper"><b>Bztam</b>Oct 25 – Nov 24<div class="ln"></div><div class="ln g"></div><div class="ln s"></div><div class="ln"></div></div><div class="csv">Date;Amount;Shop<br>2026-11-03;-{money};Marjane<br>2026-11-05;-38,00;Café</div></div></div>
-      <div class="card w2 rv" style="--d:1"><span class="eyebrow">{c['sync'][0]}</span><h3>{c['sync'][1]}</h3><p>{c['sync'][2]}</p>
+      <div class="card w2 rv" style="--d:2"><span class="eyebrow">{c['sync'][0]}</span><h3>{c['sync'][1]}</h3><p>{c['sync'][2]}</p>
         <div class="art"><div class="sync"><div class="ph"></div><div class="cloud">{ic('cloud')}</div><div class="ph"></div></div></div></div>
-      <div class="card w2 rv" style="--d:2"><span class="eyebrow">{c['lock'][0]}</span><h3>{c['lock'][1]}</h3><p>{c['lock'][2]}</p>
-        <div class="art"><div class="lockcard">{ic('lock')}</div></div></div>
-      <div class="card w3 rv"><span class="eyebrow">{c['dark'][0]}</span><h3>{c['dark'][1]}</h3><p>{c['dark'][2]}</p>
+      <div class="card w3 rv"><span class="eyebrow">{c['recap'][0]}</span><h3>{c['recap'][1]}</h3><p>{c['recap'][2]}</p>
+        <div class="art" style="flex-direction:column;align-items:center">
+          <div class="mini"><div class="row"><span class="ci">{ic('spark')}</span><div><b>{m['recap']}</b><small>{m['recap_sub']}</small></div></div></div>
+          <div class="mini"><div class="row"><span class="ci">{ic('bell')}</span><div><b>{m['alert']}</b><small>{m['alert_sub']}</small></div></div></div>
+        </div></div>
+      <div class="card w3 rv" style="--d:1"><span class="eyebrow">{c['dark'][0]}</span><h3>{c['dark'][1]}</h3><p>{c['dark'][2]}</p>
         <div class="art duo">
           <div class="device sm"><div class="island"></div><div class="screen"><img class="force" src="{base}assets/screens/{lang}-insights-light.webp" alt="" loading="lazy"></div></div>
           <div class="device sm"><div class="island"></div><div class="screen"><img class="force" src="{base}assets/screens/{lang}-insights-dark.webp" alt="" loading="lazy"></div></div>
         </div></div>
-      <div class="card w3 rv" style="--d:1"><span class="eyebrow">{c['share'][0]}</span><h3>{c['share'][1]}</h3><p>{c['share'][2]}</p>
-        <div class="art" style="flex-direction:column;align-items:center">
-          <div class="mini"><div class="row"><span class="ci">{ic('share')}</span><div><b>{'Inwi bill.pdf' if lang == 'en' else 'Facture Inwi.pdf'}</b><small>{'Shared to Bztam' if lang == 'en' else 'Partagée vers Bztam'}</small></div><span class="amt">200 DH</span></div></div>
-          <div class="langs" style="margin-top:14px"><span class="on">{c['lang'][1]}</span><span>Darija</span></div>
-        </div></div>
+      <div class="card w3 rv"><span class="eyebrow">{c['share'][0]}</span><h3>{c['share'][1]}</h3><p>{c['share'][2]}</p>
+        <div class="art"><div class="mini"><div class="row"><span class="ci">{ic('share')}</span><div><b>{m['inwi']}</b><small>{m['inwi_sub']}</small></div><span class="amt">200 DH</span></div></div></div></div>
+      <div class="card w3 rv" style="--d:1"><span class="eyebrow">{c['lang'][0]}</span><h3>{c['lang'][1]}</h3><p>{c['lang'][2]}</p>
+        <div class="art"><div class="langs"><span class="{'on' if lang == 'ar' else ''}">العربية</span><span class="{'on' if lang == 'fr' else ''}">Français</span><span class="{'on' if lang == 'en' else ''}">English</span><span>Darija</span></div></div></div>
     </div>
   </div>
 </section>
@@ -383,13 +512,14 @@ def legal(lang, page):
     t = T[lang]
     body = (CONTENT / f"{lang}-{page}.html").read_text().replace("SUPPORT_EMAIL", EMAIL)
     title = {"privacy": ("Bztam privacy policy", "Bztam : confidentialité"), "terms": ("Bztam terms of use", "Bztam : conditions d'utilisation"),
-             "support": ("Bztam support", "Bztam : aide")}[page][0 if lang == "en" else 1]
+             "support": ("Bztam support", "Bztam : aide")}[page][0 if lang == "en" else 1] if lang != "ar" else \
+        {"privacy": "بزطام: سياسة الخصوصية", "terms": "بزطام: شروط الاستعمال", "support": "بزطام: المساعدة"}[page]
     return head(t, lang, title, t["desc"]) + nav(t, lang, home=False) + \
         f'<main class="wrap doc">{body}</main>\n' + footer(t, lang)
 
 
-for lang in ("en", "fr"):
-    out = SITE if lang == "en" else SITE / "fr"
+for lang in ("en", "fr", "ar"):
+    out = SITE if lang == "en" else SITE / lang
     out.mkdir(exist_ok=True)
     (out / "index.html").write_text(home(lang))
     for page in ("privacy", "terms", "support"):

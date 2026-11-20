@@ -245,3 +245,36 @@ footer .sp img { width: 26px; height: 26px; border-radius: 7px; }
   .tag.a { top: auto; bottom: 30%; left: 0; }
   .tag.b { top: auto; bottom: 8%; right: 0; }
 }
+
+/* widgets section */
+.widgets { position: relative; display: grid; grid-template-columns: 170px 1fr; gap: 14px; width: min(460px, 100%); z-index: 1; }
+.wg { background: var(--canvas); border-radius: 26px; padding: 16px; box-shadow: var(--shadow), inset 0 0 0 1px var(--line); }
+.wg.small { aspect-ratio: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; }
+.wg.small b { font-size: 26px; font-weight: 850; letter-spacing: -.03em; line-height: 1.1; }
+.wg small { color: var(--muted); font-size: 12px; font-weight: 600; }
+.wg-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: auto; }
+.wg-logo svg { width: 18px; height: 18px; color: var(--lime); }
+.wg-add { width: 28px; height: 28px; border-radius: 50%; background: var(--lime); color: var(--on-lime); display: grid; place-items: center; font-weight: 800; }
+.wg.medium { display: grid; gap: 12px; align-content: center; }
+.wg-cat .row { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 700; }
+.wg-cat small.over { color: var(--negative); }
+.wg .bar { margin-top: 6px; }
+.wg-row { grid-column: 1 / -1; display: flex; gap: 12px; }
+.ctl { flex: 1; display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-radius: 999px; background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 10px 30px -14px rgba(0,0,0,.3), inset 0 0 0 1px var(--line); font-weight: 700; font-size: 14px; }
+.ctl svg { width: 22px; height: 22px; color: var(--link); flex: none; }
+.privacy-mini .row { justify-content: space-between; margin-top: 4px; }
+.privacy-mini .blurred { font-size: 28px; letter-spacing: .08em; }
+.privacy-mini .eye { width: 40px; height: 40px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; }
+.privacy-mini .eye svg { width: 20px; height: 20px; }
+
+/* right to left (Arabic) */
+[dir="rtl"] body { font-family: -apple-system, "SF Arabic", "Geeza Pro", "Noto Kufi Arabic", system-ui, sans-serif; }
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3 { letter-spacing: 0; }
+[dir="rtl"] .eyebrow { letter-spacing: 0; }
+[dir="rtl"] .q { border-radius: 22px 22px 6px 22px; }
+[dir="rtl"] .facts .track { animation-direction: reverse; }
+[dir="rtl"] .dots { right: auto; left: 0; }
+[dir="rtl"] .paper { transform: rotate(3deg); }
+[dir="rtl"] .csv { transform: rotate(-4deg) translateY(10px); direction: ltr; }
+@media (max-width: 960px) { .widgets { grid-template-columns: 1fr 1fr; } .wg.medium { grid-column: auto; } }
+@media (max-width: 520px) { .widgets { grid-template-columns: 1fr; } .wg.small { aspect-ratio: auto; min-height: 160px; } }

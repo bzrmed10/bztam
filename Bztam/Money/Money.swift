@@ -97,10 +97,16 @@ enum Money {
         if isHidden(privacy) { grouped = "••••" }
         var signText = ""
         if negative { signText = "−" } else if sign && amount > 0 { signText = "+" }
-        guard symbol else { return signText + grouped }
-        return currency.symbolFirst(language: language)
-            ? signText + currencySymbol + grouped
-            : signText + grouped + " " + currencySymbol
+        let text: String
+        if !symbol {
+            text = signText + grouped
+        } else {
+            text = currency.symbolFirst(language: language)
+                ? signText + currencySymbol + grouped
+                : signText + grouped + " " + currencySymbol
+        }
+        // In Arabic, keep "2 310 DH" together as one left-to-right piece inside right-to-left sentences.
+        return language == "ar" ? "\u{2066}" + text + "\u{2069}" : text
     }
 }
 

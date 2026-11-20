@@ -28,12 +28,14 @@ SCREENS = {
     "split": ("25-split", None),
 }
 
-for lang in ("en", "fr"):
+for lang in ("en", "fr", "ar"):
     for name, (light, dark) in SCREENS.items():
         for mode, shot in (("light", light), ("dark", dark or light)):
             src = SRC / f"{lang}-{shot}.png"
             if not src.exists():
                 src = SRC / f"{lang}-{light}.png"  # no dark shot yet: fall back to light
+            if not src.exists():
+                continue
             im = Image.open(src).convert("RGB")
             w, h = im.size
             im = im.resize((660, round(h * 660 / w)), Image.LANCZOS)

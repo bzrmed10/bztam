@@ -183,7 +183,7 @@ struct AddEntryView: View {
                             Image(systemName: "person.2").font(.system(size: 15, weight: .semibold))
                             Text(L10n.t("Split with friends")).font(.system(size: 15, weight: .semibold))
                             Spacer()
-                            Image(systemName: "chevron.right").font(.system(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                            Image(systemName: "chevron.forward").font(.system(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
                         }
                         .foregroundStyle(Theme.Colors.ink)
                         .padding(.horizontal, 16)
