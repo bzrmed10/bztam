@@ -25,6 +25,7 @@ API = "https://api.appstoreconnect.apple.com/v1"
 PROFILES = {
     "com.bzrmed.bztam": "Bztam CI AppStore",
     "com.bzrmed.bztam.share": "Bztam CI Share AppStore",
+    "com.bzrmed.bztam.widgets": "Bztam CI Widgets AppStore",
 }
 WORK = pathlib.Path(os.environ.get("RUNNER_TEMP", "/tmp")) / "signing"
 STATE = WORK / "state.json"
@@ -130,6 +131,7 @@ CAPABILITIES = {
         ("PUSH_NOTIFICATIONS", None),
     ],
     "com.bzrmed.bztam.share": [("APP_GROUPS", None)],
+    "com.bzrmed.bztam.widgets": [("APP_GROUPS", None)],
 }
 
 

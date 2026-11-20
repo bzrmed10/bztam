@@ -143,8 +143,17 @@ struct MainTabView: View {
         .onReceive(NotificationCenter.default.publisher(for: .NSPersistentStoreRemoteChange).receive(on: RunLoop.main)) { _ in
             if CloudSync.isActive && CloudSync.mergeDuplicates(in: context) > 0 { refreshSubscription() }
         }
+        .onOpenURL { url in
+            switch url.host() {
+            case "add": tab = .home; addRequest = AddRequest()
+            case "scan": tab = .home; startScan(.camera)
+            default: tab = .home
+            }
+        }
         .onChange(of: scenePhase) { _, phase in
+            if phase != .active { WidgetSync.update(context: context) }
             if phase == .active {
+                runPendingAction()
                 if CloudSync.isActive { CloudSync.mergeDuplicates(in: context) }
                 if !LaunchOptions.demoData { RecurringEngine.run(in: context) }
                 refreshSubscription()
@@ -159,6 +168,8 @@ struct MainTabView: View {
         .task {
             if !LaunchOptions.demoData { RecurringEngine.run(in: context) }
             refreshSubscription()
+            WidgetSync.update(context: context)
+            runPendingAction()
             if LaunchOptions.openScreen == "add" { addRequest = AddRequest() }
             if LaunchOptions.openScreen == "ask" { tab = .insights; asking = true }
             if LaunchOptions.openScreen == "dart" { tab = .settings }
@@ -190,6 +201,15 @@ extension MainTabView {
         guard let image = watcher.suggestion else { return }
         watcher.clear()
         Task { await scanner.read([image], source: .screenshot) }
+    }
+
+    /// Widgets, Control Center and the Action button leave a request in the App Group; links use bztam://.
+    func runPendingAction() {
+        switch PendingAction.take() {
+        case "add": tab = .home; addRequest = AddRequest()
+        case "scan": tab = .home; startScan(.camera)
+        default: break
+        }
     }
 
     /// Looks for a shop paid every month that isn't recurring yet.
