@@ -10,8 +10,12 @@ BUDGETS THAT FOLLOW YOUR PAYDAY
 • Your month starts on your payday, not on the 1st.
 • Money left per category, with a pace warning before you overspend.
 • Move money between categories for one month.
-• A first plan in a minute: answer a few questions and Bztam suggests your budgets.
+• A first plan in two minutes: your income, household and bills, and Bztam suggests your budgets. Fixed bills are added by themselves.
 • Budget suggestions from your last months.
+
+SAVINGS GOALS
+• Save for a trip, Eid or a new phone, with what to put aside each month.
+• Money put aside comes off what's left, so it doesn't get spent by accident.
 
 RENT, SALARY AND SUBSCRIPTIONS
 • Repeat any entry every week, month or year.
@@ -21,6 +25,7 @@ ASK BZTAM
 • "How much did I spend on food last month?"
 • "What's left?" "Biggest expense this year?"
 • Ask in English, French or Darija. Every number comes from your own entries.
+• "Hey Siri, add to Bztam": say "taxi 20" and it's added without opening the app.
 
 SPLIT WITH FRIENDS
 • Scan the ticket, pick who was there, split equally.

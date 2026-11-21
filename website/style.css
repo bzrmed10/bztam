@@ -290,3 +290,7 @@ footer .sp img { width: 26px; height: 26px; border-radius: 7px; }
 .nav-links .lang-list a:hover { background: var(--surface); }
 .lang-list a svg { width: 16px; height: 16px; color: var(--ink); }
 .lang-list a[lang="ar"] { font-family: inherit; }
+
+/* Siri bubble in the bento */
+.mini.siri-q { align-self: flex-end; max-width: 80%; background: var(--ink); color: var(--canvas); font-weight: 600; font-size: 14px; border-radius: 18px 18px 4px 18px; padding: 10px 14px; }
+[dir="rtl"] .mini.siri-q { align-self: flex-start; border-radius: 18px 18px 18px 4px; }

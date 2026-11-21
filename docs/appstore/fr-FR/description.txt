@@ -10,8 +10,12 @@ DES BUDGETS QUI SUIVENT VOTRE JOUR DE PAIE
 • Votre mois commence le jour de votre paie, pas le 1er.
 • Le reste par catégorie, avec une alerte de rythme avant de trop dépenser.
 • Déplacez de l'argent entre catégories pour un mois.
-• Un premier plan en une minute : répondez à quelques questions et Bztam propose vos budgets.
+• Un premier plan en deux minutes : revenus, foyer et factures, et Bztam propose vos budgets. Les factures fixes s'ajoutent toutes seules.
 • Des budgets suggérés à partir de vos derniers mois.
+
+OBJECTIFS D'ÉPARGNE
+• Épargnez pour un voyage, l'Aïd ou un téléphone, avec ce qu'il faut mettre de côté chaque mois.
+• L'argent mis de côté est retiré du reste à dépenser, pour ne pas le dépenser par erreur.
 
 LOYER, SALAIRE ET ABONNEMENTS
 • Répétez une entrée chaque semaine, mois ou année.
@@ -21,6 +25,7 @@ DEMANDEZ À BZTAM
 • « Combien j'ai dépensé en restos le mois dernier ? »
 • « Combien il me reste ? » « Plus grosse dépense cette année ? »
 • En français, anglais ou darija. Chaque chiffre vient de vos propres entrées.
+• « Dis Siri, ajoute à Bztam » : dites « taxi 20 » et c'est ajouté sans ouvrir l'app.
 
 PARTAGE ENTRE AMIS
 • Scannez le ticket, choisissez qui était là, partagez à parts égales.

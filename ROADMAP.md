@@ -113,3 +113,11 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] M12.7 Arabic interface (right to left)
 - [x] M12.8 Website (Arabic site, widgets section, new features), App Store texts
 - [x] M12.9 TestFlight build
+
+## Milestone 13 — Onboarding, savings goals, Siri
+- [x] M13.1 Keyboard: Done button above number pads; Add expense hides its keypad while typing and shows "More below"
+- [x] M13.2 Savings goals (put aside / take out, saved lowers what's left, Home section and card, Settings)
+- [x] M13.3 New onboarding: currency, payday, salary (recurring), other income, household, bills grid with your own, recurring bills with their day, lifestyle, savings and a first goal, plan bar with leftover choice, summary. Every step skippable; "Set up your month" card and "Plan my month again"
+- [x] M13.4 Siri: "Add to Bztam" → "taxi 20", "What's left in Bztam", Undo under the answer; phrases in 3 languages
+- [x] M13.5 Website, App Store texts, iCloud schema (SavingsGoal, GoalMove)
+- [ ] M13.6 TestFlight build, Deploy Schema Changes in CloudKit Console

@@ -77,7 +77,7 @@ T = {
         ("scan", "Scan", "Receipts, screenshots<br>and PDF bills.", "Snap a receipt, share a screenshot of a phone bill, or open a PDF. <b>The amount, shop and date are read on your iPhone</b>, not on a server.",
          ["Camera, Photos and Files", "Share from any app", "Suggests your newest screenshot"]),
         ("category", "Budgets", "Money left,<br>per category.", "Your month starts <b>on your payday</b>. Each category shows what's left, and Bztam warns you when you're spending too fast.",
-         ["Budgets that follow your payday", "Move money between categories", "Alerts at 80% and over budget"]),
+         ["A first plan in two minutes", "Budgets that follow your payday", "Alerts at 80% and over budget"]),
         ("insights", "Insights", "See where it<br>all went.", "A monthly recap in plain words, where your money went, money in vs. out, and <b>this period compared with the last</b>.",
          ["Recap: what's left and what changed", "Spending by category", "Budget suggestions from your history"]),
     ],
@@ -105,6 +105,8 @@ T = {
         "export": ("Export", "A report worth keeping.", "A PDF report or a CSV for Excel and Numbers, for any period."),
         "sync": ("iCloud sync", "On all your iPhones.", "Your data follows your Apple account, in your own iCloud."),
         "lock": ("Privacy mode", "Your salary stays yours.", "One tap on the eye hides amounts, or only money in, when friends are around. Face ID lock too."),
+        "goals": ("Savings goals", "Save for what matters.", "A trip, Eid, a new phone. Put money aside, see what to save each month, and it never gets spent by accident."),
+        "siri": ("Siri", "Hey Siri, add to Bztam.", "Say \"taxi 20\" and it's added, without opening the app. Or ask what's left."),
         "recap": ("Weekly recap and alerts", "Bztam notices for you.", "Every Monday, last week in one line, and an alert when a bill or a category is well above usual."),
         "dark": ("Dark mode", "Easy on the eyes.", "Automatic, light or dark, on every screen."),
         "lang": ("Languages", "English, Français, العربية.", "Switch any time, right to left in Arabic. Darija questions work too."),
@@ -115,7 +117,7 @@ T = {
     "pv": [("eye-off", "No tracking, no ads, no analytics"), ("lock", "No bank connection needed"), ("phone", "Receipts read on your iPhone"), ("cloud", "Optional sync to your own iCloud")],
     "final_h": "Take control of<br>your month.", "final_lead": "Bztam is coming soon to the App Store for iPhone.",
     "foot": [("privacy.html", "Privacy"), ("terms.html", "Terms"), ("support.html", "Support"), ("fr/", "Français"), ("ar/", "العربية")],
-    "mini": {"yes": "Yes", "rent": "Rent", "rent_sub": "Every month · next Dec 1", "move": "Groceries → Café", "move_sub": "This month only",
+    "mini": {"goal": "Summer trip", "goal_sub": "1,500 of 6,000 DH · 750 DH a month", "siri_q": "Add to Bztam: taxi 20", "siri_a": "Added 20 DH to Transport.", "yes": "Yes", "rent": "Rent", "rent_sub": "Every month · next Dec 1", "move": "Groceries → Café", "move_sub": "This month only",
              "inwi": "Inwi bill.pdf", "inwi_sub": "Shared to Bztam", "recap": "Last week: 1,240 DH", "recap_sub": "18% less than usual · most on Groceries",
              "alert": "Lydec is 45% higher than usual", "alert_sub": "435 DH this time, usually 300 DH"},
     "w_eye": "Widgets and Action button", "w_h": "Your month,<br>at a glance.",
@@ -149,7 +151,7 @@ T = {
         ("scan", "Scanner", "Tickets, captures<br>et factures PDF.", "Prenez un ticket en photo, partagez une capture de facture téléphone ou ouvrez un PDF. <b>Montant, magasin et date sont lus sur votre iPhone</b>, pas sur un serveur.",
          ["Appareil photo, Photos et Fichiers", "Partage depuis n'importe quelle app", "Propose votre dernière capture"]),
         ("category", "Budgets", "Le reste,<br>par catégorie.", "Votre mois commence <b>le jour de votre paie</b>. Chaque catégorie montre ce qu'il reste, et Bztam vous prévient si vous dépensez trop vite.",
-         ["Des budgets qui suivent votre paie", "Déplacez de l'argent entre catégories", "Alertes à 80 % et en cas de dépassement"]),
+         ["Un premier plan en deux minutes", "Des budgets qui suivent votre paie", "Alertes à 80 % et en cas de dépassement"]),
         ("insights", "Analyses", "Voyez où tout<br>est passé.", "Un récap mensuel en mots simples, la répartition de vos dépenses, rentrées et sorties, et <b>cette période comparée à la précédente</b>.",
          ["Récap : ce qui reste et ce qui change", "Dépenses par catégorie", "Budgets suggérés selon votre historique"]),
     ],
@@ -177,6 +179,8 @@ T = {
         "export": ("Export", "Un rapport à garder.", "Un rapport PDF ou un CSV pour Excel et Numbers, pour n'importe quelle période."),
         "sync": ("Synchro iCloud", "Sur tous vos iPhone.", "Vos données suivent votre compte Apple, dans votre propre iCloud."),
         "lock": ("Mode confidentialité", "Votre salaire reste à vous.", "Un geste sur l'œil masque les montants, ou seulement les rentrées, devant vos amis. Verrouillage Face ID aussi."),
+        "goals": ("Objectifs d'épargne", "Épargnez pour ce qui compte.", "Un voyage, l'Aïd, un nouveau téléphone. Mettez de côté, voyez combien épargner chaque mois, sans le dépenser par erreur."),
+        "siri": ("Siri", "Dis Siri, ajoute à Bztam.", "Dites « taxi 20 » et c'est ajouté, sans ouvrir l'app. Ou demandez ce qu'il reste."),
         "recap": ("Récap et alertes", "Bztam remarque pour vous.", "Chaque lundi, la semaine passée en une ligne, et une alerte quand une facture ou une catégorie dépasse nettement l'habitude."),
         "dark": ("Mode sombre", "Doux pour les yeux.", "Automatique, clair ou sombre, sur chaque écran."),
         "lang": ("Langues", "Français, English, العربية.", "Changez quand vous voulez, de droite à gauche en arabe. Les questions en darija marchent aussi."),
@@ -187,7 +191,7 @@ T = {
     "pv": [("eye-off", "Pas de pistage, de pub ni de statistiques"), ("lock", "Aucune connexion bancaire"), ("phone", "Tickets lus sur votre iPhone"), ("cloud", "Synchro facultative vers votre iCloud")],
     "final_h": "Reprenez la main<br>sur votre mois.", "final_lead": "Bztam arrive bientôt sur l'App Store pour iPhone.",
     "foot": [("privacy.html", "Confidentialité"), ("terms.html", "Conditions"), ("support.html", "Aide"), ("../", "English"), ("../ar/", "العربية")],
-    "mini": {"yes": "Oui", "rent": "Loyer", "rent_sub": "Chaque mois · prochain le 1 déc.", "move": "Courses → Café", "move_sub": "Ce mois seulement",
+    "mini": {"goal": "Voyage d'été", "goal_sub": "1 500 sur 6 000 DH · 750 DH par mois", "siri_q": "Ajoute à Bztam : taxi 20", "siri_a": "20 DH ajoutés à Transport.", "yes": "Oui", "rent": "Loyer", "rent_sub": "Chaque mois · prochain le 1 déc.", "move": "Courses → Café", "move_sub": "Ce mois seulement",
              "inwi": "Facture Inwi.pdf", "inwi_sub": "Partagée vers Bztam", "recap": "La semaine dernière : 1 240 DH", "recap_sub": "18 % de moins que d'habitude · surtout en Courses",
              "alert": "Lydec est 45 % plus élevé que d'habitude", "alert_sub": "435 DH cette fois, d'habitude 300 DH"},
     "w_eye": "Widgets et bouton Action", "w_h": "Votre mois,<br>d'un coup d'œil.",
@@ -223,7 +227,7 @@ T["ar"] = {
         ("scan", "مسح", "تذاكر ولقطات شاشة<br>وفواتير PDF.", "صوّر تذكرة، شارك لقطة شاشة لفاتورة الهاتف أو افتح ملف PDF. <b>المبلغ والمتجر والتاريخ تُقرأ على جهاز iPhone</b>، لا على خادم.",
          ["الكاميرا والصور والملفات", "المشاركة من أي تطبيق", "يقترح آخر لقطة شاشة"]),
         ("category", "الميزانيات", "المتبقي،<br>لكل فئة.", "يبدأ شهرك <b>يوم راتبك</b>. كل فئة تُظهر ما تبقى، وينبّهك بزطام إذا كنت تصرف بسرعة.",
-         ["ميزانيات تتبع يوم راتبك", "نقل المال بين الفئات", "تنبيهات عند 80% وعند التجاوز"]),
+         ["خطة أولى في دقيقتين", "ميزانيات تتبع يوم راتبك", "تنبيهات عند 80% وعند التجاوز"]),
         ("insights", "التحليلات", "اعرف أين<br>ذهب كل شيء.", "ملخص شهري بكلمات بسيطة، توزيع مصاريفك، الداخل والخارج، و<b>مقارنة هذه الفترة بالسابقة</b>.",
          ["ملخص: ما تبقى وما تغيّر", "المصاريف حسب الفئة", "ميزانيات مقترحة من تاريخك"]),
     ],
@@ -251,12 +255,14 @@ T["ar"] = {
         "export": ("التصدير", "تقرير يستحق الاحتفاظ.", "تقرير PDF أو ملف CSV لـ Excel وNumbers، لأي فترة."),
         "sync": ("مزامنة iCloud", "على كل أجهزة iPhone.", "بياناتك تتبع حساب Apple الخاص بك، في iCloud الخاص بك."),
         "lock": ("وضع الخصوصية", "راتبك يبقى لك.", "لمسة على العين تخفي المبالغ، أو الدخل فقط، أمام الأصدقاء. وقفل Face ID أيضًا."),
+        "goals": ("أهداف الادخار", "ادّخر لما يهمك.", "سفر، العيد، هاتف جديد. ادّخر المال، واعرف كم تدّخر كل شهر، دون أن تصرفه بالخطأ."),
+        "siri": ("Siri", "يا Siri، أضف إلى بزطام.", "قل «taxi 20» ويُضاف دون فتح التطبيق. أو اسأل كم تبقى."),
         "recap": ("ملخص وتنبيهات", "بزطام ينتبه لك.", "كل اثنين، الأسبوع الماضي في سطر واحد، وتنبيه عندما تكون فاتورة أو فئة أعلى بكثير من المعتاد."),
         "dark": ("الوضع الداكن", "مريح للعين.", "تلقائي أو فاتح أو داكن، في كل شاشة."),
         "lang": ("اللغات", "العربية، Français، English.", "غيّر اللغة متى شئت، من اليمين إلى اليسار بالعربية. والأسئلة بالدارجة تعمل أيضًا."),
         "share": ("المشاركة", "من أي تطبيق.", "شارك لقطة شاشة أو فاتورة PDF مع بزطام من واتساب أو البريد أو الملفات."),
     },
-    "mini": {"yes": "نعم", "rent": "الكراء", "rent_sub": "كل شهر · التالي 1 دجنبر", "move": "التقضية ← المقهى", "move_sub": "لهذا الشهر فقط",
+    "mini": {"goal": "سفر الصيف", "goal_sub": "1 500 من 6 000 DH · 750 DH في الشهر", "siri_q": "أضف إلى بزطام: taxi 20", "siri_a": "أُضيف 20 DH إلى النقل.", "yes": "نعم", "rent": "الكراء", "rent_sub": "كل شهر · التالي 1 دجنبر", "move": "التقضية ← المقهى", "move_sub": "لهذا الشهر فقط",
              "inwi": "فاتورة Inwi.pdf", "inwi_sub": "شوركت مع بزطام", "recap": "الأسبوع الماضي: 1 240 DH", "recap_sub": "أقل من المعتاد بـ 18% · أغلبه على التقضية",
              "alert": "Lydec أعلى من المعتاد بـ 45%", "alert_sub": "435 DH هذه المرة، والمعتاد 300 DH"},
     "w_eye": "الأدوات وزر الإجراء", "w_h": "شهرك،<br>بنظرة واحدة.",
@@ -481,6 +487,13 @@ def home(lang):
         </div></div>
       <div class="card w2 rv" style="--d:1"><span class="eyebrow">{c['lock'][0]}</span><h3>{c['lock'][1]}</h3><p>{c['lock'][2]}</p>
         <div class="art"><div class="mini privacy-mini"><small>{wm['left']}</small><div class="row"><b class="blurred">•••• DH</b><span class="eye">{ic('eye-off')}</span></div></div></div></div>
+      <div class="card w3 rv"><span class="eyebrow">{c['goals'][0]}</span><h3>{c['goals'][1]}</h3><p>{c['goals'][2]}</p>
+        <div class="art"><div class="mini"><div class="row"><span class="ci">{ic('spark')}</span><div><b>{m['goal']}</b><small>{m['goal_sub']}</small></div></div><div class="bar"><i style="--w:25%"></i></div></div></div></div>
+      <div class="card w3 rv" style="--d:1"><span class="eyebrow">{c['siri'][0]}</span><h3>{c['siri'][1]}</h3><p>{c['siri'][2]}</p>
+        <div class="art" style="flex-direction:column;align-items:center">
+          <div class="mini siri-q">{m['siri_q']}</div>
+          <div class="mini"><div class="row"><span class="ci">{ic('check')}</span><div><b>{m['siri_a']}</b></div></div></div>
+        </div></div>
       <div class="card w2 rv"><span class="eyebrow">{c['move'][0]}</span><h3>{c['move'][1]}</h3><p>{c['move'][2]}</p>
         <div class="art"><div class="mini"><div class="row"><span class="ci">{ic('move')}</span><div><b>{m['move']}</b><small>{m['move_sub']}</small></div><span class="amt">200 DH</span></div><div class="bar"><i style="--w:72%"></i></div></div></div></div>
       <div class="card w2 rv" style="--d:1"><span class="eyebrow">{c['export'][0]}</span><h3>{c['export'][1]}</h3><p>{c['export'][2]}</p>
