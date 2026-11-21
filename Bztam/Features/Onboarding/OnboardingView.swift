@@ -232,34 +232,36 @@ struct OnboardingView: View {
         DataStore.ensureCategories(in: context, income: 0)
         let period = BudgetCalculator.period(containing: .now, payday: payday)
 
-        var all = (try? context.fetch(FetchDescriptor<BudgetCategory>())) ?? []
-        var nextOrder = (all.map(\.order).max() ?? 0) + 1
-        func category(_ key: String) -> BudgetCategory? {
-            if let c = all.first(where: { $0.key == key && !$0.isArchived }) { return c }
-            if let c = all.first(where: { $0.key == key }) { c.isArchived = false; return c }
-            guard let t = DefaultCategories.template(for: key) else { return nil }
-            let c = BudgetCategory(key: t.key, name: t.englishName, symbol: t.symbol, isFixed: t.isFixed, order: nextOrder)
-            nextOrder += 1
-            context.insert(c)
-            all.append(c)
-            return c
+        // Every category the plan and the bills need, by key (built-in ones created when missing).
+        let existing = (try? context.fetch(FetchDescriptor<BudgetCategory>())) ?? []
+        var byKey: [String: BudgetCategory] = [:]
+        for c in existing where !c.key.isEmpty && (byKey[c.key] == nil || !c.isArchived) { byKey[c.key] = c }
+        var order = (existing.map(\.order).max() ?? 0) + 1
+        let neededKeys = Set(planBudgets.keys).union(bills.map(\.categoryKey))
+        for key in neededKeys.sorted() {
+            if let c = byKey[key] {
+                c.isArchived = false
+            } else if let t = DefaultCategories.template(for: key) {
+                let c = BudgetCategory(key: t.key, name: t.englishName, symbol: t.symbol, isFixed: t.isFixed, order: order)
+                order += 1
+                context.insert(c)
+                byKey[key] = c
+            }
         }
         // Bills you named get their own category.
-        var customCategories: [String: BudgetCategory] = [:]
         for bill in bills where bill.isCustom && bill.amount > 0 {
             let name = bill.customName.trimmingCharacters(in: .whitespacesAndNewlines)
-            let c = BudgetCategory(name: name.isEmpty ? L10n.t("Bill") : name, symbol: "pin", isFixed: true, order: nextOrder)
-            nextOrder += 1
+            let c = BudgetCategory(name: name.isEmpty ? L10n.t("Bill") : name, symbol: "pin", isFixed: true, order: order)
+            order += 1
             context.insert(c)
-            customCategories[bill.categoryKey] = c
+            byKey[bill.categoryKey] = c
         }
-        func resolve(_ key: String) -> BudgetCategory? { customCategories[key] ?? category(key) }
 
         // Budgets: the plan (or only the bills when tracking first).
         let fixed = BillCatalog.fixedByCategory(bills)
         let budgets = trackFirst ? fixed : planBudgets
         for (key, amount) in budgets {
-            resolve(key)?.budget = amount
+            byKey[key]?.budget = amount
         }
 
         let rules = (try? context.fetch(FetchDescriptor<RecurringRule>(predicate: #Predicate { $0.isActive }))) ?? []
@@ -284,7 +286,7 @@ struct OnboardingView: View {
         }
         // Bills with the same amount every month become recurring expenses.
         for bill in bills where bill.amount > 0 && bill.sameEveryMonth {
-            guard let c = resolve(bill.categoryKey) else { continue }
+            guard let c = byKey[bill.categoryKey] else { continue }
             let title = bill.isCustom ? bill.customName : L10n.t(bill.kind?.title ?? "")
             if rules.contains(where: { $0.kind == .expense && $0.category?.id == c.id && $0.amount == bill.amount }) { continue }
             context.insert(RecurringRule(kind: .expense, amount: bill.amount, merchant: title, category: c,
