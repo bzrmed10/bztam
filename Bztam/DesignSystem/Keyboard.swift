@@ -7,33 +7,36 @@ func hideKeyboard() {
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 }
 
-/// A small "Done" button that floats just above the keyboard while it is open, so number pads
+/// A small "Done" button just above the keyboard while it is open, so number pads
 /// (which have no return key) can always be closed.
 struct KeyboardDoneButton: ViewModifier {
     @State private var visible = false
 
     func body(content: Content) -> some View {
         content
-            .overlay(alignment: .bottomTrailing) {
+            // A strip of its own above the keyboard, so it never covers a field or a switch.
+            .safeAreaInset(edge: .bottom, spacing: 0) {
                 if visible {
-                    Button(action: hideKeyboard) {
-                        HStack(spacing: 6) {
-                            Image(systemName: "keyboard.chevron.compact.down")
-                            Text(L10n.t("Done"))
+                    HStack {
+                        Spacer()
+                        Button(action: hideKeyboard) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "keyboard.chevron.compact.down")
+                                Text(L10n.t("Done"))
+                            }
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundStyle(Theme.Colors.ink)
+                            .padding(.horizontal, 14)
+                            .frame(height: 36)
+                            .background(Theme.Colors.surface, in: Capsule())
                         }
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(Theme.Colors.ink)
-                        .padding(.horizontal, 14)
-                        .frame(height: 40)
-                        .background(.regularMaterial, in: Capsule())
-                        .overlay(Capsule().stroke(Theme.Colors.line, lineWidth: 1))
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(L10n.t("Hide keyboard"))
+                        .accessibilityIdentifier("keyboard.done")
                     }
-                    .buttonStyle(.plain)
-                    .padding(.trailing, 12)
-                    .padding(.bottom, 8)
-                    .accessibilityLabel(L10n.t("Hide keyboard"))
-                    .accessibilityIdentifier("keyboard.done")
-                    .transition(.opacity.combined(with: .scale(scale: 0.9, anchor: .bottomTrailing)))
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 6)
+                    .transition(.opacity)
                 }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
