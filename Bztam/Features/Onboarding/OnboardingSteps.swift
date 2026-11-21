@@ -13,10 +13,15 @@ extension OnboardingView {
         }
     }
 
+    /// The step's main button. Hidden while the keyboard is open, so the field you type in stays visible.
+    @ViewBuilder
     func continueButton(_ title: String = L10n.t("Continue"), action: (() -> Void)? = nil) -> some View {
-        Button(title) { if let action { action() } else { next() } }
-            .buttonStyle(.pillPrimary)
-            .accessibilityIdentifier("onboarding.continue")
+        if !keyboardShown {
+            Button(title) { if let action { action() } else { next() } }
+                .buttonStyle(.pillPrimary)
+                .accessibilityIdentifier("onboarding.continue")
+                .transition(.opacity)
+        }
     }
 
     func choice(_ title: String, detail: String? = nil, symbol: String? = nil, selected: Bool, action: @escaping () -> Void) -> some View {
@@ -480,7 +485,7 @@ extension OnboardingView {
             header(L10n.t("You're set"), L10n.t("Here's what Bztam set up. You can change all of it later."))
             ScrollView {
                 VStack(alignment: .leading, spacing: 10) {
-                    summaryRow("calendar", L10n.t("Your month starts on the %d", payday))
+                    summaryRow("calendar", L10n.t("Your month starts on day %d", payday))
                     if salary.centimes > 0 {
                         summaryRow("arrow.down.to.line", salaryRepeats
                                    ? L10n.t("Salary of %@ added every month on payday", Money.format(salary.centimes, privacy: .never))
@@ -493,7 +498,7 @@ extension OnboardingView {
                         if bill.amount > 0 && bill.sameEveryMonth {
                             let title = bill.isCustom ? (bill.customName.isEmpty ? L10n.t("Bill") : bill.customName) : L10n.t(bill.kind?.title ?? "")
                             VStack(alignment: .leading, spacing: 6) {
-                                summaryRow(bill.symbol, L10n.t("%@ added every month on the %d", title + " · " + Money.format(bill.amount), bill.day))
+                                summaryRow(bill.symbol, L10n.t("%@ added every month on day %d", title + " · " + Money.format(bill.amount), bill.day))
                                 if BillCatalog.hasPassed(day: bill.day, period: period) {
                                     Toggle(isOn: $bill.paidThisMonth) {
                                         Text(L10n.t("Already paid this month")).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
@@ -585,7 +590,7 @@ struct BillCard: View {
                 } label: {
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
-                        Text(L10n.t("On the %d", bill.day))
+                        Text(L10n.t("Day %d", bill.day))
                         Image(systemName: "chevron.up.chevron.down").font(.system(size: 10, weight: .semibold))
                     }
                     .font(.system(size: 13, weight: .semibold))

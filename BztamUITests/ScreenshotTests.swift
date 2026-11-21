@@ -176,7 +176,7 @@ final class ScreenshotTests: XCTestCase {
         next()                                                  // household
         next()                                                  // bills
         XCTAssertTrue(app.buttons["bill.rent"].waitForExistence(timeout: 5))
-        for bill in ["bill.rent", "bill.phone", "bill.utilities"] { app.buttons[bill].tap() }
+        for bill in ["bill.rent", "bill.phone", "bill.utilities"] { app.buttons[bill].firstMatch.tap(); sleep(1) }
         let field = app.textFields.firstMatch
         if field.waitForExistence(timeout: 3) { field.tap(); app.typeText("3000") }
         sleep(1)
