@@ -112,4 +112,4 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] M12.6 Widgets (Home and Lock Screen), Control Center and Action button controls
 - [x] M12.7 Arabic interface (right to left)
 - [x] M12.8 Website (Arabic site, widgets section, new features), App Store texts
-- [ ] M12.9 TestFlight build (tick the App Group on com.bzrmed.bztam.widgets first)
+- [x] M12.9 TestFlight build
