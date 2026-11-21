@@ -29,6 +29,8 @@ struct OnboardingView: View {
     @AppStorage(OnboardingView.setupSkippedKey) var setupSkipped = false
 
     @State var step: Step = .welcome
+    /// The currency picked on the currency step; saved only when you continue.
+    @State var pickedCurrency: Currency?
     @State var payday = 1
     @State var salary = AmountInput()
     @State var salaryRepeats = true
@@ -179,7 +181,7 @@ struct OnboardingView: View {
             step = .payday
             if settings.expectedIncome > 0 { salary = AmountInput(centimes: settings.expectedIncome) }
         } else if UserDefaults.standard.string(forKey: Money.currencyKey) == nil, let detected = Self.detectedCurrency {
-            currency = detected.rawValue
+            pickedCurrency = detected
         }
     }
 

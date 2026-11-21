@@ -118,11 +118,14 @@ extension OnboardingView {
                 VStack(spacing: 8) {
                     ForEach(Currency.allCases) { c in
                         choice(c.title, detail: c == Self.detectedCurrency ? L10n.t("Your iPhone's region") : nil,
-                               selected: currency == c.rawValue) { currency = c.rawValue }
+                               selected: (pickedCurrency?.rawValue ?? currency) == c.rawValue) { pickedCurrency = c }
                     }
                 }
             }
-            continueButton()
+            continueButton {
+                if let pickedCurrency { currency = pickedCurrency.rawValue }
+                next()
+            }
         }
     }
 
