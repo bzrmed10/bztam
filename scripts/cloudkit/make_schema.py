@@ -26,6 +26,9 @@ MODELS = {
                   ("memberIDs", "B"), ("includesMe", "I"), ("createdAt", "T")],
     "SplitShare": [("id", "S"), ("billID", "S"), ("friendID", "S"), ("amount", "I"), ("settled", "I"),
                    ("lastSettledAt", "T")],
+    "SavingsGoal": [("id", "S"), ("name", "S"), ("symbol", "S"), ("target", "I"), ("deadline", "T"), ("monthlyPlan", "I"),
+                    ("order", "I"), ("isArchived", "I"), ("reachedAt", "T"), ("createdAt", "T")],
+    "GoalMove": [("id", "S"), ("goalID", "S"), ("amount", "I"), ("date", "T"), ("createdAt", "T")],
 }
 
 SYS = '''        "___createTime" TIMESTAMP,

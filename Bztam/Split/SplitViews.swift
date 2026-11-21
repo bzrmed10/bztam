@@ -46,6 +46,7 @@ struct SplitSheet: View {
         }
         .foregroundStyle(Theme.Colors.ink)
         .background(Theme.Colors.canvas)
+        .keyboardDoneButton()
         .presentationDetents([.large])
         .sheet(isPresented: $editingAmount) { AmountEditSheet(title: L10n.t("Total to split"), input: $amount) }
         .onAppear {
@@ -316,6 +317,7 @@ struct FriendsView: View {
             .foregroundStyle(Theme.Colors.ink)
         }
         .background(Theme.Colors.canvas)
+        .keyboardDoneButton()
         .sheet(item: $open) { FriendDetailSheet(friend: $0) }
         .sheet(item: $splitting) { SplitSheet(draft: $0) }
     }
@@ -465,6 +467,7 @@ struct FriendDetailSheet: View {
             .foregroundStyle(Theme.Colors.ink)
         }
         .background(Theme.Colors.canvas)
+        .keyboardDoneButton()
         .sheet(item: $paying) { p in
             PayBackSheet(title: p.fromFriend ? L10n.t("%@ paid me back", friend.name) : L10n.t("I paid %@ back", friend.name),
                          open: p.open) { amount in

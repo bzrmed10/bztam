@@ -212,6 +212,7 @@ struct CategoryEditSheet: View {
             .padding(Theme.Space.l)
             .foregroundStyle(Theme.Colors.ink)
         }
+        .keyboardDoneButton()
         .background(Theme.Colors.canvas)
         .scrollDismissesKeyboard(.interactively)
         .confirmationDialog(L10n.t("Archive this category?"), isPresented: $confirmArchive, titleVisibility: .visible) {

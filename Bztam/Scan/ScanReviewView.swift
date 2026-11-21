@@ -134,6 +134,7 @@ struct ScanReviewView: View {
         }
         .background(Theme.Colors.canvas)
         .scrollDismissesKeyboard(.interactively)
+        .keyboardDoneButton()
         .sheet(isPresented: $editingAmount) {
             AmountEditSheet(title: L10n.t("Total"), input: $amount)
         }

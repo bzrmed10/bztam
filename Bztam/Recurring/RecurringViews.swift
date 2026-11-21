@@ -146,6 +146,7 @@ struct RecurringEditSheet: View {
             .foregroundStyle(Theme.Colors.ink)
         }
         .background(Theme.Colors.canvas)
+        .keyboardDoneButton()
         .sheet(isPresented: $editingAmount) { AmountEditSheet(title: L10n.t("Amount"), input: $amount) }
         .confirmationDialog(L10n.t("Stop repeating?"), isPresented: $confirmStop, titleVisibility: .visible) {
             Button(L10n.t("Stop repeating"), role: .destructive) {

@@ -17,6 +17,13 @@ struct HomeView: View {
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
     @Query private var settingsRows: [AppSettings]
     @Query private var darts: [Dart]
+    @Query(filter: #Predicate<SavingsGoal> { !$0.isArchived }, sort: \SavingsGoal.order) private var goals: [SavingsGoal]
+    @Query private var goalMoves: [GoalMove]
+    @State private var showGoals = LaunchOptions.openScreen == "goals"
+    @State private var openGoalID: UUID?
+    @State private var goalMove: GoalMoveRequest?
+    @State private var showSetup = false
+    @AppStorage(OnboardingView.setupSkippedKey) private var setupSkipped = false
     @AppStorage(Money.hiddenKey) private var amountsHidden = false
     @Namespace private var zoom
     /// Bumped when an insight card is dismissed, so the row refreshes.
@@ -39,7 +46,7 @@ struct HomeView: View {
 
     var body: some View {
         let summary = BudgetSnapshot.summary(entries: entries, categories: categories, period: period,
-                                             expectedIncome: settingsRows.first?.expectedIncome ?? 0)
+                                             expectedIncome: settingsRows.first?.expectedIncome ?? 0, moves: goalMoves)
         let lines = BudgetSnapshot.lines(entries: entries, categories: categories, period: period)
 
         NavigationStack(path: $path) {
@@ -68,6 +75,9 @@ struct HomeView: View {
                             .buttonStyle(.plain)
                         }
                     }
+                    if !goals.isEmpty && offset == 0 {
+                        goalsSection
+                    }
                 }
                 .padding(.horizontal, Theme.Space.l)
                 .padding(.top, Theme.Space.m)
@@ -77,6 +87,12 @@ struct HomeView: View {
             .statusBarFade()
             .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $showFriends) { FriendsView() }
+            .sheet(isPresented: $showGoals, onDismiss: { openGoalID = nil }) { GoalsView(openGoalID: openGoalID) }
+            .sheet(item: $goalMove) { r in
+                GoalMoveSheet(goal: r.goal, mode: .putAside, saved: GoalMath.saved(r.goal.id, in: GoalMove.values(goalMoves)),
+                              suggested: r.amount)
+            }
+            .fullScreenCover(isPresented: $showSetup) { OnboardingView(setupMode: true) }
             .sheet(item: $splitDemo) { SplitSheet(draft: $0) }
             .navigationDestination(for: BudgetCategory.self) { category in
                 CategoryDetailView(category: category, period: period, onAdd: onAdd)
@@ -93,6 +109,17 @@ struct HomeView: View {
     /// Everything that needs you now, one card at a time.
     private func forYouCards(categories: [BudgetCategory]) -> [ForYouCard] {
         var cards: [ForYouCard] = []
+        if setupSkipped {
+            cards.append(ForYouCard(id: "setup", view: AnyView(
+                InsightCard(symbol: "wand.and.stars", title: L10n.t("Set up your month"),
+                            detail: L10n.t("Two minutes: income, bills and a suggested plan.")) { setupSkipped = false }
+                    .contentShape(Rectangle())
+                    .onTapGesture { showSetup = true })))
+        }
+        if let due = goalDue() {
+            cards.append(ForYouCard(id: "goal-\(due.goal.id)", view: AnyView(
+                GoalCard(goal: due.goal, amount: due.amount) { goalMove = due })))
+        }
         if let suggestion {
             cards.append(ForYouCard(id: "screenshot", view: AnyView(
                 ScreenshotSuggestionCard(image: suggestion, onAdd: onSuggestionAdd, onDismiss: onSuggestionDismiss))))
@@ -148,6 +175,42 @@ struct HomeView: View {
         return cards
     }
 
+    /// The first goal still waiting for this month's money.
+    private func goalDue() -> GoalMoveRequest? {
+        let values = GoalMove.values(goalMoves)
+        for g in goals where g.reachedAt == nil {
+            let saved = GoalMath.saved(g.id, in: values)
+            let suggestion = GoalMath.suggestedMonthly(target: g.target, saved: saved, deadline: g.deadline)
+            let plan = suggestion > 0 ? suggestion : g.monthlyPlan
+            let done = GoalMath.saved(g.id, in: period, moves: values)
+            if plan > 0 && done < plan { return GoalMoveRequest(goal: g, amount: plan - done) }
+        }
+        return nil
+    }
+
+    private var goalsSection: some View {
+        let values = GoalMove.values(goalMoves)
+        return VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                SectionTitle(text: L10n.t("Savings goals"))
+                Spacer()
+                Button(L10n.t("See all")) { openGoalID = nil; showGoals = true }
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(Theme.Colors.link)
+                    .accessibilityIdentifier("home.goals")
+            }
+            ForEach(goals.prefix(3)) { g in
+                Button {
+                    openGoalID = g.id
+                    showGoals = true
+                } label: {
+                    GoalRow(goal: g, saved: GoalMath.saved(g.id, in: values))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
     private func hero(_ s: PeriodSummary) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 4) {
@@ -187,7 +250,8 @@ struct HomeView: View {
                 .accessibilityIdentifier("home.left")
 
             (Text(Money.format(s.moneyIn, sign: true, privacy: .income) + " " + L10n.t("in")).foregroundColor(Theme.Colors.positive).fontWeight(.semibold)
-             + Text(" · " + Money.format(s.spent) + " " + L10n.t("spent")).foregroundColor(Theme.Colors.inkMuted))
+             + Text(" · " + Money.format(s.spent) + " " + L10n.t("spent")).foregroundColor(Theme.Colors.inkMuted)
+             + Text(s.saved > 0 ? " · " + Money.format(s.saved, privacy: .income) + " " + L10n.t("saved") : "").foregroundColor(Theme.Colors.inkMuted))
                 .font(.system(size: 15, weight: .medium))
 
             ProgressPill(value: s.progress)
@@ -313,4 +377,11 @@ struct PaceCard: View {
         .background(Theme.Colors.brandTint, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
         .accessibilityElement(children: .combine)
     }
+}
+
+/// "Put 500 DH aside for Summer trip" from the For you row.
+struct GoalMoveRequest: Identifiable {
+    let goal: SavingsGoal
+    let amount: Centimes
+    var id: UUID { goal.id }
 }

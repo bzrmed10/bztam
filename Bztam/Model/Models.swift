@@ -129,7 +129,7 @@ final class BudgetCategory {
 
     /// Built-in categories are shown in the app language; renamed or custom ones as typed.
     var displayName: String {
-        if !key.isEmpty, let builtIn = DefaultCategories.all.first(where: { $0.key == key }), name == builtIn.englishName {
+        if !key.isEmpty, let builtIn = DefaultCategories.template(for: key), name == builtIn.englishName {
             return L10n.t(builtIn.englishName)
         }
         return name

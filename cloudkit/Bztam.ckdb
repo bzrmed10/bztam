@@ -178,6 +178,47 @@ DEFINE SCHEMA
         GRANT READ TO "_world"
     );
 
+    RECORD TYPE CD_SavingsGoal (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE QUERYABLE,
+        CD_createdAt                 TIMESTAMP,
+        CD_deadline                  TIMESTAMP,
+        CD_entityName                STRING,
+        CD_id                        STRING,
+        CD_isArchived                INT64,
+        CD_monthlyPlan               INT64,
+        CD_name                      STRING,
+        CD_order                     INT64,
+        CD_reachedAt                 TIMESTAMP,
+        CD_symbol                    STRING,
+        CD_target                    INT64,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
+    RECORD TYPE CD_GoalMove (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE QUERYABLE,
+        CD_amount                    INT64,
+        CD_createdAt                 TIMESTAMP,
+        CD_date                      TIMESTAMP,
+        CD_entityName                STRING,
+        CD_goalID                    STRING,
+        CD_id                        STRING,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
     RECORD TYPE Users (
         "___createTime" TIMESTAMP,
         "___createdBy"  REFERENCE,

@@ -29,6 +29,9 @@ struct AddEntryView: View {
     @State private var duplicate: EntryRecord?
     @State private var repeatFrequency: Frequency?
     @State private var splitting: SplitDraft?
+    @State private var keyboardShown = false
+    @State private var moreBelow = false
+    @State private var scroll = ScrollPosition(edge: .top)
 
     init(request: AddRequest, onScan: ((ScanKind) -> Void)? = nil) {
         editing = nil
@@ -204,9 +207,40 @@ struct AddEntryView: View {
             .padding(.bottom, 12)
             }
             .scrollDismissesKeyboard(.interactively)
+            .scrollPosition($scroll)
+            .scrollIndicatorsFlash(trigger: keyboardShown)
+            .onScrollGeometryChange(for: Bool.self) { g in
+                g.contentSize.height - (g.contentOffset.y + g.containerSize.height) > 24
+            } action: { _, more in
+                withAnimation(.snappy) { moreBelow = more }
+            }
+            // When the keyboard covers part of the form, say there is more below.
+            .overlay(alignment: .bottom) {
+                if moreBelow {
+                    Button {
+                        withAnimation(.snappy) { scroll.scrollTo(edge: .bottom) }
+                    } label: {
+                        Label(L10n.t("More below"), systemImage: "chevron.down")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(Theme.Colors.ink)
+                            .padding(.horizontal, 14)
+                            .frame(height: 32)
+                            .background(.regularMaterial, in: Capsule())
+                            .overlay(Capsule().stroke(Theme.Colors.line, lineWidth: 1))
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.bottom, 6)
+                    .transition(.opacity.combined(with: .move(edge: .bottom)))
+                    .accessibilityIdentifier("add.more")
+                }
+            }
 
             VStack(spacing: 10) {
-            KeypadView { amount.press($0) }
+            // The system keyboard replaces the amount keypad while typing a shop or a sentence.
+            if !keyboardShown {
+                KeypadView { amount.press($0) }
+                    .transition(.opacity.combined(with: .move(edge: .bottom)))
+            }
 
             Button(editing == nil ? title : L10n.t("Save")) { checkThenSave() }
                 .buttonStyle(.pillPrimary)
@@ -238,6 +272,12 @@ struct AddEntryView: View {
             SplitSheet(draft: d) { dismiss() }
         }
         .onAppear(perform: load)
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            withAnimation(.snappy) { keyboardShown = true }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            withAnimation(.snappy) { keyboardShown = false }
+        }
         .onChange(of: speech.transcript) { _, text in quickText = text }
         .onChange(of: speech.isListening) { was, now in
             if was && !now { applyQuickText() }

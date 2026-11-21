@@ -14,6 +14,8 @@ enum ResetData {
         func wipe<T: PersistentModel>(_ type: T.Type) {
             for object in (try? context.fetch(FetchDescriptor<T>())) ?? [] { context.delete(object) }
         }
+        wipe(GoalMove.self)
+        wipe(SavingsGoal.self)
         wipe(SplitShare.self)
         wipe(SplitBill.self)
         wipe(Friend.self)

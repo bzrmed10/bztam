@@ -11,7 +11,9 @@ enum WidgetSync {
         let categories = ((try? context.fetch(FetchDescriptor<BudgetCategory>(sortBy: [SortDescriptor(\.order)]))) ?? [])
             .filter { !$0.isArchived }
         let period = BudgetCalculator.period(containing: now, payday: settings.payday)
-        let s = BudgetSnapshot.summary(entries: entries, categories: categories, period: period, expectedIncome: settings.expectedIncome)
+        let moves = (try? context.fetch(FetchDescriptor<GoalMove>())) ?? []
+        let s = BudgetSnapshot.summary(entries: entries, categories: categories, period: period, expectedIncome: settings.expectedIncome,
+                                       moves: moves)
         let lines = BudgetSnapshot.lines(entries: entries, categories: categories, period: period)
             .filter { $0.status.budget > 0 && !$0.category.isFixed }
             .sorted { $0.status.progress > $1.status.progress }

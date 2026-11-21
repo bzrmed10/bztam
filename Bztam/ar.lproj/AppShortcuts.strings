@@ -1,0 +1,8 @@
+"Add to ${applicationName}" = "أضف إلى ${applicationName}";
+"Add an expense in ${applicationName}" = "أضف مصروفًا في ${applicationName}";
+"New expense in ${applicationName}" = "مصروف جديد في ${applicationName}";
+"${applicationName} add an expense" = "${applicationName} أضف مصروفًا";
+"How much is left in ${applicationName}" = "كم تبقى في ${applicationName}";
+"What's left in ${applicationName}" = "ماذا تبقى في ${applicationName}";
+"${applicationName} what's left" = "${applicationName} ماذا تبقى";
+"Scan a receipt with ${applicationName}" = "امسح تذكرة بـ${applicationName}";

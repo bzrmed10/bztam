@@ -6,3 +6,18 @@
 "Opens Bztam on the receipt scanner." = "Ouvre Bztam sur le scanner de tickets.";
 "Add an expense" = "Ajouter une dépense";
 "Scan a receipt" = "Scanner un ticket";
+
+"Add from text" = "Ajouter en quelques mots";
+"Adds an expense from a few words, like \"taxi 20\" or \"café 38\"." = "Ajoute une dépense en quelques mots, comme « taxi 20 » ou « café 38 ».";
+"What you spent" = "Ce que vous avez dépensé";
+"What did you spend? For example: taxi 20" = "Qu'avez-vous dépensé ? Par exemple : taxi 20";
+"How much was it? For example: taxi 20" = "C'était combien ? Par exemple : taxi 20";
+"How much was it?" = "C'était combien ?";
+"Adds an expense to Bztam. The category is guessed from what you say." = "Ajoute une dépense dans Bztam. La catégorie est devinée d'après ce que vous dites.";
+"Amount" = "Montant";
+"What for" = "Pour quoi";
+"Undo" = "Annuler";
+"Entry" = "Entrée";
+"What's left to spend" = "Ce qu'il reste à dépenser";
+"Tells you what's left to spend this month." = "Vous dit ce qu'il reste à dépenser ce mois-ci.";
+"What's left" = "Ce qu'il reste";

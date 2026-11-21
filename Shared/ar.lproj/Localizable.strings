@@ -6,3 +6,18 @@
 "Opens Bztam on the receipt scanner." = "يفتح بزطام على ماسح التذاكر.";
 "Add an expense" = "إضافة مصروف";
 "Scan a receipt" = "مسح تذكرة";
+
+"Add from text" = "إضافة بكلمات";
+"Adds an expense from a few words, like \"taxi 20\" or \"café 38\"." = "يضيف مصروفًا بكلمات قليلة، مثل «taxi 20» أو «café 38».";
+"What you spent" = "ما صرفته";
+"What did you spend? For example: taxi 20" = "ماذا صرفت؟ مثلًا: taxi 20";
+"How much was it? For example: taxi 20" = "كم كان المبلغ؟ مثلًا: taxi 20";
+"How much was it?" = "كم كان المبلغ؟";
+"Adds an expense to Bztam. The category is guessed from what you say." = "يضيف مصروفًا إلى بزطام. تُخمَّن الفئة مما تقوله.";
+"Amount" = "المبلغ";
+"What for" = "مقابل ماذا";
+"Undo" = "تراجع";
+"Entry" = "العملية";
+"What's left to spend" = "المتبقي للصرف";
+"Tells you what's left to spend this month." = "يخبرك بما تبقى للصرف هذا الشهر.";
+"What's left" = "المتبقي";

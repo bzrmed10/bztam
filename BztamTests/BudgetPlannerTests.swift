@@ -44,4 +44,33 @@ struct BudgetPlannerTests {
         #expect(BudgetPlanner.round50(124_900) == 120_000)
         #expect(BudgetPlanner.round50(-100) == 0)
     }
+
+    @Test func householdRaisesGroceries() {
+        var a = BudgetPlanner.Answers(income: 1_000_000, saving: .low)
+        let alone = BudgetPlanner.plan(a).budgets["courses"]!
+        a.adults = 2; a.children = 2
+        let family = BudgetPlanner.plan(a).budgets["courses"]!
+        #expect(alone == 120_000)
+        #expect(family == 250_000)
+        #expect(BudgetPlanner.groceriesPercent(adults: 6, children: 8) == 35)
+    }
+
+    @Test func transportPassComesOnTop() {
+        let a = BudgetPlanner.Answers(income: 1_000_000, fixed: ["transport": 30_000], gettingAround: .low, saving: .low)
+        #expect(BudgetPlanner.plan(a).budgets["transport"] == 30_000 + 30_000)
+    }
+
+    @Test func leftoverChoices() {
+        let a = BudgetPlanner.Answers(income: 1_000_000, eatingOut: .low, gettingAround: .low, saving: .low)
+        let p = BudgetPlanner.plan(a)
+        #expect(p.leftover > 0)
+        #expect(BudgetPlanner.apply(.buffer, to: p, answers: a) == p)
+        let saved = BudgetPlanner.apply(.savings, to: p, answers: a)
+        #expect(saved.savings == BudgetPlanner.round50(p.leftover))
+        let spread = BudgetPlanner.apply(.spread, to: p, answers: a)
+        #expect(spread.budgets["courses"]! > p.budgets["courses"]!)
+        #expect(spread.leftover < p.leftover)
+        let total = spread.budgets.values.reduce(0, +) + spread.savings + spread.leftover
+        #expect(total == 1_000_000)
+    }
 }

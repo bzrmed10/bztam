@@ -6,3 +6,18 @@
 "Opens Bztam on the receipt scanner." = "Opens Bztam on the receipt scanner.";
 "Add an expense" = "Add an expense";
 "Scan a receipt" = "Scan a receipt";
+
+"Add from text" = "Add from text";
+"Adds an expense from a few words, like \"taxi 20\" or \"café 38\"." = "Adds an expense from a few words, like \"taxi 20\" or \"café 38\".";
+"What you spent" = "What you spent";
+"What did you spend? For example: taxi 20" = "What did you spend? For example: taxi 20";
+"How much was it? For example: taxi 20" = "How much was it? For example: taxi 20";
+"How much was it?" = "How much was it?";
+"Adds an expense to Bztam. The category is guessed from what you say." = "Adds an expense to Bztam. The category is guessed from what you say.";
+"Amount" = "Amount";
+"What for" = "What for";
+"Undo" = "Undo";
+"Entry" = "Entry";
+"What's left to spend" = "What's left to spend";
+"Tells you what's left to spend this month." = "Tells you what's left to spend this month.";
+"What's left" = "What's left";

@@ -19,9 +19,11 @@ enum BudgetSnapshot {
         CategoryValue(id: category.id, budget: period.map { category.budget(in: $0) } ?? category.budget, isFixed: category.isFixed)
     }
 
-    static func summary(entries: [Entry], categories: [BudgetCategory], period: BudgetPeriod, expectedIncome: Centimes) -> PeriodSummary {
+    static func summary(entries: [Entry], categories: [BudgetCategory], period: BudgetPeriod, expectedIncome: Centimes,
+                        moves: [GoalMove] = []) -> PeriodSummary {
         BudgetCalculator.summary(entries: values(entries), categories: categories.map { value($0, period: period) },
-                                 period: period, expectedIncome: expectedIncome)
+                                 period: period, expectedIncome: expectedIncome,
+                                 saved: GoalMath.saved(in: period, moves: GoalMove.values(moves)))
     }
 
     /// Lines in Home order: still being spent first, then paid, then unused; each group by the user's order.
@@ -53,6 +55,9 @@ enum DateText {
 
     /// "25 Nov"
     static func short(_ date: Date) -> String { formatter("d MMM").string(from: date) }
+
+    /// "July 2027"
+    static func month(_ date: Date) -> String { formatter("MMMM yyyy").string(from: date) }
 
     /// "Today", "Yesterday" or "12 Nov".
     static func day(_ date: Date, calendar: Calendar = .current) -> String {

@@ -366,6 +366,7 @@ struct DartEditSheet: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .background(Theme.Colors.canvas)
+        .keyboardDoneButton()
         .sheet(isPresented: $editingAmount) { AmountEditSheet(title: L10n.t("Each person pays a month"), input: $amount) }
         .confirmationDialog(L10n.t("Delete this dart?"), isPresented: $confirmDelete, titleVisibility: .visible) {
             Button(L10n.t("Delete dart"), role: .destructive) {

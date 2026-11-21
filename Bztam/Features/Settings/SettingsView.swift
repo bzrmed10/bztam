@@ -29,6 +29,9 @@ struct SettingsView: View {
     @AppStorage(CloudSync.enabledKey) private var iCloudSync = true
     @State private var showDart = LaunchOptions.openScreen == "dart"
     @State private var showFriends = false
+    @State private var showGoals = false
+    @State private var showSetup = false
+    @Query(filter: #Predicate<SavingsGoal> { !$0.isArchived }) private var goalRows: [SavingsGoal]
     @Query private var friendRows: [Friend]
     @Query private var darts: [Dart]
     @Query(filter: #Predicate<RecurringRule> { $0.isActive }) private var rules: [RecurringRule]
@@ -77,6 +80,19 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("settings.categories")
+
+                        Button { showGoals = true } label: {
+                            SettingsRow(symbol: "leaf", title: L10n.t("Savings goals"),
+                                        value: goalRows.isEmpty ? L10n.t("Save for a trip, Eid, a new phone") : goalRows.map(\.name).joined(separator: ", "))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("settings.goals")
+
+                        Button { showSetup = true } label: {
+                            SettingsRow(symbol: "wand.and.stars", title: L10n.t("Plan my month again"),
+                                        value: L10n.t("Income, bills and a suggested plan"))
+                        }
+                        .buttonStyle(.plain)
 
                         Button { showRecurring = true } label: {
                             SettingsRow(symbol: "arrow.triangle.2.circlepath", title: L10n.t("Recurring"),
@@ -251,6 +267,8 @@ struct SettingsView: View {
             .task { cloudStatus = await CloudSync.accountStatus() }
             .sheet(isPresented: $showDart) { DartListView() }
             .sheet(isPresented: $showFriends) { FriendsView() }
+            .sheet(isPresented: $showGoals) { GoalsView() }
+            .fullScreenCover(isPresented: $showSetup) { OnboardingView(setupMode: true) }
             .sheet(isPresented: $showCategories) {
                 CategoriesEditorView(income: settings?.expectedIncome ?? 0)
             }

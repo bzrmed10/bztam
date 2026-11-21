@@ -3,7 +3,7 @@ import SwiftData
 
 /// Builds the SwiftData container and seeds data.
 enum DataStore {
-    static let schema = Schema([Entry.self, BudgetCategory.self, AppSettings.self, RecurringRule.self, Dart.self, Friend.self, SplitBill.self, SplitShare.self])
+    static let schema = Schema([Entry.self, BudgetCategory.self, AppSettings.self, RecurringRule.self, Dart.self, Friend.self, SplitBill.self, SplitShare.self, SavingsGoal.self, GoalMove.self])
 
     /// The one container of the app process, shared with Siri / Shortcuts.
     @MainActor static let shared: ModelContainer = makeContainer(inMemory: LaunchOptions.demoData || LaunchOptions.freshStart)
@@ -150,6 +150,15 @@ enum DataStore {
         for (key, amount, merchant, offset) in earlier {
             context.insert(Entry(kind: .expense, amount: amount, date: prev(offset), merchant: merchant, category: byKey[key]))
         }
+
+        // Two savings goals, money put aside last period (so this period's numbers stay as designed).
+        let trip = SavingsGoal(name: "Summer trip", symbol: "airplane", target: 600_000,
+                               deadline: cal.date(byAdding: .month, value: 8, to: now), order: 0)
+        let eid = SavingsGoal(name: "Eid", symbol: "moon.stars", target: 300_000, monthlyPlan: 50_000, order: 1)
+        context.insert(trip)
+        context.insert(eid)
+        context.insert(GoalMove(goalID: trip.id, amount: 150_000, date: prev(2)))
+        context.insert(GoalMove(goalID: eid.id, amount: 120_000, date: prev(3)))
         try? context.save()
     }
 }

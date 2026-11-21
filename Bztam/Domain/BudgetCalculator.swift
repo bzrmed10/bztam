@@ -55,16 +55,18 @@ struct CategoryStatus: Sendable, Equatable {
 struct PeriodSummary: Sendable, Equatable {
     var moneyIn: Centimes
     var spent: Centimes
-    /// Money in minus spent.
-    var left: Centimes { moneyIn - spent }
+    /// Money in minus spent, minus what was put aside in savings goals.
+    var left: Centimes { moneyIn - spent - saved }
     /// Sum of category budgets.
     var planned: Centimes
     /// Money in (or the expected income when nothing came in yet) not given to any category.
     var notPlanned: Centimes
-    /// Share of money in already spent, 0...1.
+    /// Net money put aside in savings goals this period (saved, not spent).
+    var saved: Centimes = 0
+    /// Share of money in already spent or put aside, 0...1.
     var progress: Double {
-        guard moneyIn > 0 else { return spent > 0 ? 1 : 0 }
-        return min(1, Double(spent) / Double(moneyIn))
+        guard moneyIn > 0 else { return spent + saved > 0 ? 1 : 0 }
+        return min(1, Double(max(0, spent + saved)) / Double(moneyIn))
     }
 }
 
@@ -90,7 +92,7 @@ enum BudgetCalculator {
     }
 
     static func summary(entries: [EntryValue], categories: [CategoryValue], period: BudgetPeriod,
-                        expectedIncome: Centimes = 0) -> PeriodSummary {
+                        expectedIncome: Centimes = 0, saved: Centimes = 0) -> PeriodSummary {
         var moneyIn = 0, spent = 0
         for e in entries where period.contains(e.date) {
             switch e.kind {
@@ -100,7 +102,7 @@ enum BudgetCalculator {
         }
         let planned = categories.reduce(0) { $0 + max(0, $1.budget) }
         let base = moneyIn > 0 ? moneyIn : expectedIncome
-        return PeriodSummary(moneyIn: moneyIn, spent: spent, planned: planned, notPlanned: max(0, base - planned))
+        return PeriodSummary(moneyIn: moneyIn, spent: spent, planned: planned, notPlanned: max(0, base - planned), saved: saved)
     }
 
     static func status(for category: CategoryValue, entries: [EntryValue], period: BudgetPeriod) -> CategoryStatus {

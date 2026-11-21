@@ -22,6 +22,21 @@ enum DefaultCategories {
         Template(key: "other", englishName: "Other", symbol: "square.grid.2x2", isFixed: false, suggestedPercent: 0)
     ]
 
+    /// Categories created only when onboarding needs them (a loan, school fees…). Fixed: planned first.
+    static let extras: [Template] = [
+        Template(key: "loans", englishName: "Loans", symbol: "creditcard", isFixed: true, suggestedPercent: 0),
+        Template(key: "school", englishName: "School", symbol: "graduationcap", isFixed: true, suggestedPercent: 0),
+        Template(key: "insurance", englishName: "Insurance", symbol: "shield", isFixed: true, suggestedPercent: 0),
+        Template(key: "sport", englishName: "Sport", symbol: "figure.run", isFixed: true, suggestedPercent: 0),
+        Template(key: "subscriptions", englishName: "Subscriptions", symbol: "play.rectangle", isFixed: true, suggestedPercent: 0),
+        Template(key: "familyhelp", englishName: "Family help", symbol: "heart", isFixed: true, suggestedPercent: 0),
+        Template(key: "homehelp", englishName: "Home help", symbol: "sparkles.rectangle.stack", isFixed: true, suggestedPercent: 0)
+    ]
+
+    static func template(for key: String) -> Template? {
+        all.first { $0.key == key } ?? extras.first { $0.key == key }
+    }
+
     /// Suggested budget for a template from an income, rounded down to 50 DH.
     static func suggestedBudget(_ template: Template, income: Centimes) -> Centimes {
         guard income > 0 else { return 0 }
