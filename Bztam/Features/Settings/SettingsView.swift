@@ -228,7 +228,10 @@ struct SettingsView: View {
                 Button(L10n.t("Delete everything"), role: .destructive) {
                     Task {
                         // Same protection as the lock: only the owner can wipe Bztam.
-                        guard !faceIDLock || await AppLock.authenticate(reason: L10n.t("Confirm to delete all data")) else { return }
+                        if faceIDLock {
+                            let confirmed = await AppLock.authenticate(reason: L10n.t("Confirm to delete all data"))
+                            guard confirmed else { return }
+                        }
                         ResetData.deleteEverything(in: context)
                     }
                 }
