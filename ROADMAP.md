@@ -120,4 +120,4 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] M13.3 New onboarding: currency, payday, salary (recurring), other income, household, bills grid with your own, recurring bills with their day, lifestyle, savings and a first goal, plan bar with leftover choice, summary. Every step skippable; "Set up your month" card and "Plan my month again"
 - [x] M13.4 Siri: "Add to Bztam" → "taxi 20", "What's left in Bztam", Undo under the answer; phrases in 3 languages
 - [x] M13.5 Website, App Store texts, iCloud schema (SavingsGoal, GoalMove)
-- [ ] M13.6 TestFlight build, Deploy Schema Changes in CloudKit Console
+- [x] M13.6 TestFlight build (Deploy Schema Changes in CloudKit Console: user)
