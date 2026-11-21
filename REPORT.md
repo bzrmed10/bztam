@@ -102,4 +102,6 @@ Once the secrets are fixed, run Actions -> TestFlight -> Run workflow, then inst
 - Widgets: Left to spend (small, medium, Lock Screen). Controls "Add expense" and "Scan receipt" for Control Center, Lock Screen and the Action button.
 - Arabic: the whole interface (495 strings) right to left, Arabic speech recognition, Arabic questions in Ask Bztam. Amounts stay as one left-to-right piece inside Arabic sentences.
 - Website: an Arabic site (bztam/ar), a widgets section, privacy mode, recap and alerts, languages. App Store texts updated.
-- Tests: BudgetPlannerTests, RecapTests, currency placement, Arabic coverage and placeholders.
+- Delete all data (Settings → Data): asks to confirm (and Face ID when the lock is on), deletes everything here and in iCloud, removes receipt photos and reminders, then shows onboarding again. Language, currency and appearance stay.
+- Website language: one globe button opens English, Français, العربية, each going to the same page.
+- Tests: BudgetPlannerTests, RecapTests, ResetDataTests, currency placement, Arabic coverage and placeholders.
