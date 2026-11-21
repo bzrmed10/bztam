@@ -10,6 +10,12 @@ enum Strings {
 
     private static let json = #"""
 {
+ "Delete all data": "Supprimer toutes les données",
+ "Delete all data?": "Supprimer toutes les données ?",
+ "Delete everything": "Tout supprimer",
+ "Confirm to delete all data": "Confirmez pour tout supprimer",
+ "Every expense, money in, category, dart and friend is deleted from this iPhone and from your iCloud. This can't be undone. Export first if you want a copy.": "Chaque dépense, rentrée, catégorie, dart et ami est supprimé de cet iPhone et de votre iCloud. C'est définitif. Exportez d'abord si vous voulez une copie.",
+ "Every expense, money in, category, dart and friend is deleted from this iPhone. This can't be undone. Export first if you want a copy.": "Chaque dépense, rentrée, catégorie, dart et ami est supprimé de cet iPhone. C'est définitif. Exportez d'abord si vous voulez une copie.",
  "\"taxi 20\" is enough.": "« taxi 20 » suffit.",
  "%@ budget used up": "Budget %@ épuisé",
  "%@ collects": "%@ encaisse",

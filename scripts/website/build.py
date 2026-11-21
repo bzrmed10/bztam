@@ -31,6 +31,7 @@ ICONS = {
     "phone": '<rect x="6" y="2" width="12" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M10 18h4"/>',
     "spark": '<path fill="currentColor" d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8zM19 14l.9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9z"/>',
     "plus-c": '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.2"/><path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 8v8M8 12h8"/>',
+    "globe": '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3z"/>',
     "move": '<path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M4 8h14m-4-4 4 4-4 4M20 16H6m4-4-4 4 4 4"/>',
 }
 
@@ -58,8 +59,8 @@ T = {
     "title": "Bztam: budget and receipts for iPhone",
     "desc": "See what came in, what you spent and what's left in every category. Snap receipts, share bills, ask questions. Private, on your iPhone.",
     "nav": [("#how", "How it works"), ("#ask", "Ask Bztam"), ("#split", "Split"), ("#dart", "Dart"), ("#features", "Features"), ("#privacy", "Privacy")],
-    "langs": [("fr/", "FR"), ("ar/", "ع")], "soon": "Coming soon",
-    "chip": ("New", "For iPhone · English and Français"),
+    "soon": "Coming soon",
+    "chip": ("New", "For iPhone · English, Français, العربية"),
     "h1": 'Know what\'s<br><span class="hl">left to spend.</span>',
     "lead": "Bztam (“wallet” in Darija) shows what came in, what you spent and <b>what's left in every category</b>. Snap a receipt, share a bill, and it's added.",
     "store": ("Coming soon on the", "App Store"), "how": "See how it works",
@@ -130,8 +131,8 @@ T = {
     "title": "Bztam : budget et tickets pour iPhone",
     "desc": "Voyez ce qui est rentré, ce que vous avez dépensé et ce qu'il reste dans chaque catégorie. Tickets, factures, questions. Privé, sur votre iPhone.",
     "nav": [("#how", "Fonctionnement"), ("#ask", "Demander"), ("#split", "Partager"), ("#dart", "Dart"), ("#features", "Fonctions"), ("#privacy", "Confidentialité")],
-    "langs": [("../", "EN"), ("../ar/", "ع")], "soon": "Bientôt",
-    "chip": ("Nouveau", "Pour iPhone · Français et English"),
+    "soon": "Bientôt",
+    "chip": ("Nouveau", "Pour iPhone · Français, English, العربية"),
     "h1": 'Sachez ce qu\'il<br><span class="hl">vous reste.</span>',
     "lead": "Bztam (« portefeuille » en darija) montre ce qui est rentré, ce que vous avez dépensé et <b>ce qu'il reste dans chaque catégorie</b>. Un ticket en photo, une facture partagée : c'est ajouté.",
     "store": ("Bientôt sur l'", "App Store"), "how": "Voir le fonctionnement",
@@ -204,7 +205,7 @@ T["ar"] = {
     "title": "بزطام: الميزانية والتذاكر على iPhone",
     "desc": "اعرف ما دخل وما صرفت وما تبقى في كل فئة. امسح التذاكر، شارك الفواتير، واسأل. خاص، على جهاز iPhone.",
     "nav": [("#how", "كيف يعمل"), ("#ask", "اسأل"), ("#split", "التقسيم"), ("#dart", "الدارت"), ("#features", "المزايا"), ("#privacy", "الخصوصية")],
-    "langs": [("../", "EN"), ("../fr/", "FR")], "soon": "قريبًا",
+    "soon": "قريبًا",
     "chip": ("جديد", "لجهاز iPhone · العربية وFrançais وEnglish"),
     "h1": 'اعرف كم<br><span class="hl">تبقى لتصرفه.</span>',
     "lead": "بزطام (أي «المحفظة» بالدارجة) يُظهر ما دخل وما صرفت و<b>ما تبقى في كل فئة</b>. صوّر تذكرة أو شارك فاتورة، وتُضاف مباشرة.",
@@ -303,14 +304,31 @@ def head(t, lang, title, desc):
 """
 
 
-def nav(t, lang, home=True):
+LANGS = [("en", "English", ""), ("fr", "Français", "fr/"), ("ar", "العربية", "ar/")]
+LANG_LABEL = {"en": "Language", "fr": "Langue", "ar": "اللغة"}
+
+
+def lang_menu(lang, page):
+    """One globe button that opens a small list; each language links to the same page."""
+    base = "" if lang == "en" else "../"
+    file = "" if page == "index" else f"{page}.html"
+    items = "".join(
+        f'<a href="{(base + folder + file) or "./"}" lang="{code}" hreflang="{code}"'
+        f'{" aria-current=page class=on" if code == lang else ""}>{name}{ic("check") if code == lang else ""}</a>'
+        for code, name, folder in LANGS)
+    return f"""<div class="lang-menu keep">
+    <button class="icon-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-label="{LANG_LABEL[lang]}">{ic('globe')}</button>
+    <div class="lang-list" id="langList" role="menu">{items}</div>
+  </div>"""
+
+
+def nav(t, lang, home=True, page="index"):
     base = "" if lang == "en" else "../"
     links = "".join(f'<a href="{"" if home else "./"}{h}">{n}</a>' for h, n in t["nav"])
-    langs = "".join(f'<a class="icon-btn keep" href="{h}" lang="{"ar" if n == "ع" else n.lower()}">{n}</a>' for h, n in t["langs"])
     return f"""<header class="nav" id="nav"><div class="wrap">
   <a href="./" class="logo"><img src="{base}icon.png" alt="">Bztam</a>
   <nav class="nav-links">{links}
-    {langs}
+    {lang_menu(lang, page)}
     <button class="icon-btn" id="theme" aria-label="{t['theme']}">{ic('moon', 'dk-ic')}{ic('sun', 'lt-ic')}</button>
     <span class="btn btn-lime small">{ic('apple')}{t['soon']}</span>
   </nav>
@@ -514,7 +532,7 @@ def legal(lang, page):
     title = {"privacy": ("Bztam privacy policy", "Bztam : confidentialité"), "terms": ("Bztam terms of use", "Bztam : conditions d'utilisation"),
              "support": ("Bztam support", "Bztam : aide")}[page][0 if lang == "en" else 1] if lang != "ar" else \
         {"privacy": "بزطام: سياسة الخصوصية", "terms": "بزطام: شروط الاستعمال", "support": "بزطام: المساعدة"}[page]
-    return head(t, lang, title, t["desc"]) + nav(t, lang, home=False) + \
+    return head(t, lang, title, t["desc"]) + nav(t, lang, home=False, page=page) + \
         f'<main class="wrap doc">{body}</main>\n' + footer(t, lang)
 
 

@@ -24,6 +24,7 @@ struct SettingsView: View {
     @State private var showRecurring = false
     @State private var showExport = false
     @State private var restartNeeded = false
+    @State private var confirmReset = false
     @State private var cloudStatus: CKAccountStatus = .couldNotDetermine
     @AppStorage(CloudSync.enabledKey) private var iCloudSync = true
     @State private var showDart = LaunchOptions.openScreen == "dart"
@@ -144,6 +145,17 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("settings.export")
+                        Button { confirmReset = true } label: {
+                            HStack(spacing: Theme.Space.m) {
+                                IconCircle(symbol: "trash", size: 44)
+                                Text(L10n.t("Delete all data")).font(.bzBodyStrong).foregroundStyle(Theme.Colors.negative)
+                                Spacer()
+                            }
+                            .frame(minHeight: Theme.Size.row)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("settings.reset")
                     }
 
                     section(L10n.t("Privacy")) {
@@ -211,6 +223,20 @@ struct SettingsView: View {
                 Button(L10n.t("Cancel"), role: .cancel) {}
             } message: {
                 Text(L10n.t("Allow Bztam to see your photos in the Settings app to get new screenshots offered."))
+            }
+            .confirmationDialog(L10n.t("Delete all data?"), isPresented: $confirmReset, titleVisibility: .visible) {
+                Button(L10n.t("Delete everything"), role: .destructive) {
+                    Task {
+                        // Same protection as the lock: only the owner can wipe Bztam.
+                        guard !faceIDLock || await AppLock.authenticate(reason: L10n.t("Confirm to delete all data")) else { return }
+                        ResetData.deleteEverything(in: context)
+                    }
+                }
+                Button(L10n.t("Cancel"), role: .cancel) {}
+            } message: {
+                Text(CloudSync.isActive
+                     ? L10n.t("Every expense, money in, category, dart and friend is deleted from this iPhone and from your iCloud. This can't be undone. Export first if you want a copy.")
+                     : L10n.t("Every expense, money in, category, dart and friend is deleted from this iPhone. This can't be undone. Export first if you want a copy."))
             }
             .sheet(isPresented: $showRecurring) { RecurringListView() }
             .sheet(isPresented: $showExport) { ExportView() }

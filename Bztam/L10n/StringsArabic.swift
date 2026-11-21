@@ -10,6 +10,12 @@ enum StringsArabic {
 
     private static let json = #"""
 {
+ "Delete all data": "حذف كل البيانات",
+ "Delete all data?": "حذف كل البيانات؟",
+ "Delete everything": "حذف الكل",
+ "Confirm to delete all data": "أكّد لحذف كل البيانات",
+ "Every expense, money in, category, dart and friend is deleted from this iPhone and from your iCloud. This can't be undone. Export first if you want a copy.": "تُحذف كل المصاريف والمداخيل والفئات والدارت والأصدقاء من هذا الـiPhone ومن iCloud الخاص بك. لا يمكن التراجع عن ذلك. صدّر بياناتك أولاً إن أردت نسخة.",
+ "Every expense, money in, category, dart and friend is deleted from this iPhone. This can't be undone. Export first if you want a copy.": "تُحذف كل المصاريف والمداخيل والفئات والدارت والأصدقاء من هذا الـiPhone. لا يمكن التراجع عن ذلك. صدّر بياناتك أولاً إن أردت نسخة.",
  "\"taxi 20\" is enough.": "يكفي أن تكتب «taxi 20».",
  "%@ budget used up": "نفدت ميزانية %@",
  "%@ collects": "%@ يستلم",

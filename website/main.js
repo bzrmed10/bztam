@@ -21,6 +21,13 @@
     if (!saved) root.dataset.theme = e.matches ? "dark" : "light";
   });
 
+  /* language menu */
+  const langMenu = $(".lang-menu"), langBtn = $("#langBtn");
+  const setLang = open => { langMenu?.classList.toggle("open", open); langBtn?.setAttribute("aria-expanded", open); };
+  langBtn?.addEventListener("click", e => { e.stopPropagation(); setLang(!langMenu.classList.contains("open")); });
+  document.addEventListener("click", e => { if (!langMenu?.contains(e.target)) setLang(false); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") setLang(false); });
+
   /* reveal on scroll */
   const io = new IntersectionObserver(entries => entries.forEach(e => {
     if (!e.isIntersecting) return;
