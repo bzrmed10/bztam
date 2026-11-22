@@ -16,6 +16,21 @@ struct PillButtonStyle: ButtonStyle {
     }
 }
 
+/// Shrinks a little while pressed, with a light tap, so cards and tiles feel like buttons.
+struct PressableButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+            .opacity(configuration.isPressed ? 0.85 : 1)
+            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
+            .sensoryFeedback(.impact(weight: .light), trigger: configuration.isPressed) { _, pressed in pressed }
+    }
+}
+
+extension ButtonStyle where Self == PressableButtonStyle {
+    static var pressable: PressableButtonStyle { PressableButtonStyle() }
+}
+
 extension ButtonStyle where Self == PillButtonStyle {
     static var pillPrimary: PillButtonStyle { PillButtonStyle(kind: .primary) }
     static var pillSecondary: PillButtonStyle { PillButtonStyle(kind: .secondary) }

@@ -157,6 +157,7 @@ struct OnboardingView: View {
 
     /// "Skip": move on without this step's answers.
     func skip() {
+        hideKeyboard()
         switch step {
         case .income: salary = AmountInput(); extras = []
         case .household: household = .alone

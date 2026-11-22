@@ -18,6 +18,43 @@ final class ScreenshotTests: XCTestCase {
         return app
     }
 
+    /// Fixed bills: pick, remove, add your own, skip without amounts, come back, skip again. Used to crash.
+    func testBillsSkipAndRemove() {
+        let app = launch("en", ["-freshStart", "-currency", "mad"])
+        func tap(_ id: String) {
+            let b = app.buttons[id].firstMatch
+            XCTAssertTrue(b.waitForExistence(timeout: 5), id)
+            b.tap()
+            sleep(1)
+        }
+        tap("onboarding.continue")   // currency
+        tap("onboarding.continue")   // payday
+        tap("onboarding.continue")   // money in
+        tap("onboarding.continue")   // household
+        tap("onboarding.continue")   // bills
+        tap("bill.rent")
+        tap("bill.utilities")
+        tap("bill.custom")
+        tap("bill.rent")             // remove it again
+        if app.buttons["keyboard.done"].exists { app.buttons["keyboard.done"].tap(); sleep(1) }
+        tap("onboarding.skip")       // skip with bills that have no amount
+        XCTAssertTrue(app.staticTexts["How do you live?"].waitForExistence(timeout: 5))
+        app.buttons["Back"].firstMatch.tap()
+        sleep(1)
+        tap("bill.phone")
+        let field = app.textFields.firstMatch
+        if field.waitForExistence(timeout: 3) { field.tap(); app.typeText("200") }
+        tap("bill.phone")            // remove while typing
+        tap("onboarding.skip")
+        XCTAssertTrue(app.staticTexts["How do you live?"].waitForExistence(timeout: 5))
+        tap("onboarding.skip")       // how you live
+        tap("onboarding.skip")       // savings
+        tap("onboarding.skip")       // plan
+        XCTAssertTrue(app.buttons["onboarding.finish"].waitForExistence(timeout: 5))
+        app.buttons["onboarding.finish"].tap()
+        XCTAssertTrue(app.staticTexts["Categories"].waitForExistence(timeout: 10))
+    }
+
     private func capture(_ lang: String) {
         var app = launch(lang, ["-demoData"])
         XCTAssertTrue(app.staticTexts["home.left"].waitForExistence(timeout: 15))

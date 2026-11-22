@@ -5,6 +5,20 @@ extension OnboardingView {
 
     // MARK: Shared pieces
 
+    /// A binding to one bill found by id. Unlike `ForEach($bills)`, it can't crash when the bill is removed
+    /// (Skip, the x, or a tile tapped again) while its field is still on screen.
+    func billBinding(_ id: UUID) -> Binding<BillCatalog.Bill> {
+        Binding(
+            get: { bills.first { $0.id == id } ?? BillCatalog.Bill(id: id, kindID: "", day: 1, sameEveryMonth: false) },
+            set: { new in if let i = bills.firstIndex(where: { $0.id == id }) { bills[i] = new } })
+    }
+
+    func extraBinding(_ id: UUID) -> Binding<ExtraIncome> {
+        Binding(
+            get: { extras.first { $0.id == id } ?? ExtraIncome(id: id) },
+            set: { new in if let i = extras.firstIndex(where: { $0.id == id }) { extras[i] = new } })
+    }
+
     func header(_ title: String, _ detail: String) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             ScreenTitle(text: title)
@@ -48,7 +62,7 @@ extension OnboardingView {
             .overlay(RoundedRectangle(cornerRadius: Theme.Radius.small).stroke(selected ? Theme.Colors.ink : .clear, lineWidth: 1.5))
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.pressable)
         .foregroundStyle(Theme.Colors.ink)
         .accessibilityAddTraits(selected ? .isSelected : [])
     }
@@ -67,7 +81,7 @@ extension OnboardingView {
                             .foregroundStyle(on ? Theme.Colors.onInk : Theme.Colors.ink)
                             .background(on ? Theme.Colors.ink : Theme.Colors.surface, in: Capsule())
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.pressable)
                     .accessibilityAddTraits(on ? .isSelected : [])
                 }
             }
@@ -150,7 +164,7 @@ extension OnboardingView {
                             .frame(maxWidth: .infinity, minHeight: 44)
                             .background(day == payday ? Theme.Colors.ink : Theme.Colors.surface, in: Circle())
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.pressable)
                     .accessibilityAddTraits(day == payday ? .isSelected : [])
                 }
             }
@@ -179,13 +193,13 @@ extension OnboardingView {
                         }
                     }
                     .tint(Theme.Colors.positive)
-                    ForEach($extras) { $extra in
+                    ForEach(extras) { extra in
                         HStack(spacing: 8) {
-                            TextField(L10n.t("Freelance, rent…"), text: $extra.name)
+                            TextField(L10n.t("Freelance, rent…"), text: extraBinding(extra.id).name)
                                 .font(.bzBodyStrong)
                                 .padding(.horizontal, 14).frame(height: 44)
                                 .background(Theme.Colors.surface, in: Capsule())
-                            MoneyTextField(value: $extra.amount, width: 130, accessibility: L10n.t("Amount"))
+                            MoneyTextField(value: extraBinding(extra.id).amount, width: 130, accessibility: L10n.t("Amount"))
                             Button {
                                 withAnimation(.snappy) { extras.removeAll { $0.id == extra.id } }
                             } label: {
@@ -246,6 +260,7 @@ extension OnboardingView {
     var billsStep: some View {
         VStack(alignment: .leading, spacing: 16) {
             header(L10n.t("Your fixed bills"), L10n.t("Tap what you pay every month. Bills with the same amount are added by themselves on their day."))
+            ScrollViewReader { proxy in
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
@@ -255,18 +270,23 @@ extension OnboardingView {
                                 .accessibilityIdentifier("bill.\(kind.id)")
                         }
                         billTile(L10n.t("Something else"), symbol: "plus", on: false) {
-                            withAnimation(.snappy) {
-                                bills.append(BillCatalog.Bill(kindID: "", day: payday, sameEveryMonth: true))
+                            let bill = BillCatalog.Bill(kindID: "", day: payday, sameEveryMonth: true)
+                            withAnimation(.snappy) { bills.append(bill) }
+                            // Bring the new card into view; its name field gets the keyboard.
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                withAnimation(.snappy) { proxy.scrollTo(bill.id, anchor: .center) }
                             }
                         }
                         .accessibilityIdentifier("bill.custom")
                     }
                     if !bills.isEmpty {
                         VStack(spacing: 10) {
-                            ForEach($bills) { $bill in
-                                BillCard(bill: $bill) {
+                            ForEach(bills) { bill in
+                                BillCard(bill: billBinding(bill.id), focusName: bill.isCustom && bill.customName.isEmpty) {
+                                    hideKeyboard()
                                     withAnimation(.snappy) { bills.removeAll { $0.id == bill.id } }
                                 }
+                                .id(bill.id)
                                 .transition(.opacity.combined(with: .move(edge: .top)))
                             }
                         }
@@ -283,11 +303,13 @@ extension OnboardingView {
                 .padding(.bottom, 8)
             }
             .scrollDismissesKeyboard(.interactively)
+            }
             continueButton()
         }
     }
 
     private func toggle(_ kind: BillCatalog.Kind) {
+        if bills.contains(where: { $0.kindID == kind.id }) { hideKeyboard() }
         withAnimation(.snappy) {
             if let i = bills.firstIndex(where: { $0.kindID == kind.id }) {
                 bills.remove(at: i)
@@ -318,7 +340,7 @@ extension OnboardingView {
             .background(Theme.Colors.surface.opacity(on ? 1 : 0.55), in: RoundedRectangle(cornerRadius: Theme.Radius.small))
             .overlay(RoundedRectangle(cornerRadius: Theme.Radius.small).stroke(on ? Theme.Colors.ink : .clear, lineWidth: 1.5))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.pressable)
         .foregroundStyle(Theme.Colors.ink)
         .accessibilityAddTraits(on ? .isSelected : [])
     }
@@ -494,13 +516,13 @@ extension OnboardingView {
                     ForEach(extras.filter { $0.amount > 0 }) { e in
                         summaryRow("plus.circle", L10n.t("%@ added every month", (e.name.isEmpty ? L10n.t("Other") : e.name) + " · " + Money.format(e.amount, privacy: .never)))
                     }
-                    ForEach($bills) { $bill in
+                    ForEach(bills) { bill in
                         if bill.amount > 0 && bill.sameEveryMonth {
                             let title = bill.isCustom ? (bill.customName.isEmpty ? L10n.t("Bill") : bill.customName) : L10n.t(bill.kind?.title ?? "")
                             VStack(alignment: .leading, spacing: 6) {
                                 summaryRow(bill.symbol, L10n.t("%@ added every month on day %d", title + " · " + Money.format(bill.amount), bill.day))
                                 if BillCatalog.hasPassed(day: bill.day, period: period) {
-                                    Toggle(isOn: $bill.paidThisMonth) {
+                                    Toggle(isOn: billBinding(bill.id).paidThisMonth) {
                                         Text(L10n.t("Already paid this month")).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
                                     }
                                     .tint(Theme.Colors.positive)
@@ -537,7 +559,7 @@ extension OnboardingView {
                         .padding(12)
                         .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.pressable)
                     .disabled(notificationsAsked)
                     .padding(.top, 8)
                 }
@@ -560,7 +582,9 @@ extension OnboardingView {
 /// One bill you picked: amount, day, and whether it is the same every month.
 struct BillCard: View {
     @Binding var bill: BillCatalog.Bill
+    var focusName = false
     let onRemove: () -> Void
+    @FocusState private var nameFocused: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -570,6 +594,10 @@ struct BillCard: View {
                     TextField(L10n.t("Name of the bill"), text: $bill.customName)
                         .font(.bzBodyStrong)
                         .submitLabel(.done)
+                        .focused($nameFocused)
+                        .onAppear {
+                            if focusName { DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { nameFocused = true } }
+                        }
                 } else {
                     Text(L10n.t(bill.kind?.title ?? "")).font(.bzBodyStrong).lineLimit(1)
                 }
