@@ -123,6 +123,7 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] M13.6 TestFlight build (Deploy Schema Changes in CloudKit Console: user)
 
 ## Next milestone — to do (noted 22 Nov, from TestFlight)
+- [ ] "Send feedback" in Settings: opens an email to support@healus-ai.com with the app version and iOS version filled in.
 - [ ] Onboarding "You're set" page: redesign to be cleaner. The scroll bar runs into the list area and the "Already paid this month" switches are cut off on the right. Idea: one card per bill with the switch inside the card, no visible scroll bar, the list inset from the edges.
 - [ ] Trim spaces in bill names you type ("iCloud " showed as "iCloud  ·").
 - [ ] Add expense: same scroll fix as the summary page. The scroll bar shows over the form; hide it and keep the content inset so nothing touches the edge.
