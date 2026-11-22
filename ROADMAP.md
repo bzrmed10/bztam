@@ -121,3 +121,8 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] M13.4 Siri: "Add to Bztam" → "taxi 20", "What's left in Bztam", Undo under the answer; phrases in 3 languages
 - [x] M13.5 Website, App Store texts, iCloud schema (SavingsGoal, GoalMove)
 - [x] M13.6 TestFlight build (Deploy Schema Changes in CloudKit Console: user)
+
+## Next milestone — to do (noted 22 Nov, from TestFlight)
+- [ ] Onboarding "You're set" page: redesign to be cleaner. The scroll bar runs into the list area and the "Already paid this month" switches are cut off on the right. Idea: one card per bill with the switch inside the card, no visible scroll bar, the list inset from the edges.
+- [ ] Trim spaces in bill names you type ("iCloud " showed as "iCloud  ·").
+- [ ] Check the savings line on the summary when "Add it to savings" is picked (showed "Trip · 10,150 DH a month" on 18,000 DH income): say clearly it's the leftover, or ask before putting it all in one goal.
