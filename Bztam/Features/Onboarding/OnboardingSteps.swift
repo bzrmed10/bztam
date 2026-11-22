@@ -273,7 +273,8 @@ extension OnboardingView {
                             let bill = BillCatalog.Bill(kindID: "", day: payday, sameEveryMonth: true)
                             withAnimation(.snappy) { bills.append(bill) }
                             // Bring the new card into view; its name field gets the keyboard.
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            Task { @MainActor in
+                                try? await Task.sleep(for: .milliseconds(300))
                                 withAnimation(.snappy) { proxy.scrollTo(bill.id, anchor: .center) }
                             }
                         }
@@ -596,7 +597,11 @@ struct BillCard: View {
                         .submitLabel(.done)
                         .focused($nameFocused)
                         .onAppear {
-                            if focusName { DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { nameFocused = true } }
+                            guard focusName else { return }
+                            Task { @MainActor in
+                                try? await Task.sleep(for: .milliseconds(450))
+                                nameFocused = true
+                            }
                         }
                 } else {
                     Text(L10n.t(bill.kind?.title ?? "")).font(.bzBodyStrong).lineLimit(1)
