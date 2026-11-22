@@ -75,7 +75,7 @@ struct AddEntryView: View {
                 HStack(spacing: 10) {
                     Image(systemName: "sparkles").foregroundStyle(Theme.Colors.inkMuted)
                     TextField(L10n.t("Type it: taxi 20, café 38…"), text: $quickText)
-                        .font(.system(size: 15, weight: .medium))
+                        .font(.scaled(size: 15, weight: .medium))
                         .submitLabel(.done)
                         .onSubmit(applyQuickText)
                         .accessibilityIdentifier("add.quick")
@@ -84,7 +84,7 @@ struct AddEntryView: View {
                     } label: {
                         Image(systemName: speech.isListening ? "stop.fill" : "mic")
                             .symbolEffect(.pulse, isActive: speech.isListening)
-                            .font(.system(size: 15, weight: .bold))
+                            .font(.scaled(size: 15, weight: .bold))
                             .foregroundStyle(speech.isListening ? Theme.Colors.onBrand : Theme.Colors.ink)
                             .frame(width: 36, height: 36)
                             .background(speech.isListening ? Theme.Colors.brand : Theme.Colors.canvas, in: Circle())
@@ -107,7 +107,7 @@ struct AddEntryView: View {
             } else if let name = editing?.attachmentName {
                 Button { showReceipt = true } label: {
                     Label(L10n.t("View receipt"), systemImage: "doc.text.image")
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.scaled(size: 15, weight: .semibold))
                         .foregroundStyle(Theme.Colors.ink)
                         .frame(maxWidth: .infinity, minHeight: 44)
                         .background(Theme.Colors.surface, in: Capsule())
@@ -135,7 +135,7 @@ struct AddEntryView: View {
 
             HStack(spacing: 8) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(L10n.t("Date")).font(.system(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                    Text(L10n.t("Date")).font(.scaled(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
                     DatePicker("", selection: $date, in: ...Date.now, displayedComponents: .date)
                         .labelsHidden()
                         .datePickerStyle(.compact)
@@ -146,9 +146,9 @@ struct AddEntryView: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(kind == .expense ? L10n.t("Shop or note") : L10n.t("Note"))
-                        .font(.system(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                        .font(.scaled(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
                     TextField(L10n.t("Optional"), text: $merchant)
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.scaled(size: 15, weight: .semibold))
                         .submitLabel(.done)
                 }
                 .padding(.horizontal, 14).padding(.vertical, 10)
@@ -164,11 +164,11 @@ struct AddEntryView: View {
                     }
                 } label: {
                     HStack(spacing: 10) {
-                        Image(systemName: "arrow.triangle.2.circlepath").font(.system(size: 15, weight: .semibold))
-                        Text(L10n.t("Repeat")).font(.system(size: 15, weight: .semibold))
+                        Image(systemName: "arrow.triangle.2.circlepath").font(.scaled(size: 15, weight: .semibold))
+                        Text(L10n.t("Repeat")).font(.scaled(size: 15, weight: .semibold))
                         Spacer()
-                        Text(repeatFrequency?.title ?? L10n.t("Never")).font(.system(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
-                        Image(systemName: "chevron.up.chevron.down").font(.system(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                        Text(repeatFrequency?.title ?? L10n.t("Never")).font(.scaled(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
+                        Image(systemName: "chevron.up.chevron.down").font(.scaled(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
                     }
                     .foregroundStyle(Theme.Colors.ink)
                     .padding(.horizontal, 16)
@@ -183,10 +183,10 @@ struct AddEntryView: View {
                                                date: date, categoryID: categoryID)
                     } label: {
                         HStack(spacing: 10) {
-                            Image(systemName: "person.2").font(.system(size: 15, weight: .semibold))
-                            Text(L10n.t("Split with friends")).font(.system(size: 15, weight: .semibold))
+                            Image(systemName: "person.2").font(.scaled(size: 15, weight: .semibold))
+                            Text(L10n.t("Split with friends")).font(.scaled(size: 15, weight: .semibold))
                             Spacer()
-                            Image(systemName: "chevron.forward").font(.system(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                            Image(systemName: "chevron.forward").font(.scaled(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
                         }
                         .foregroundStyle(Theme.Colors.ink)
                         .padding(.horizontal, 16)
@@ -208,7 +208,7 @@ struct AddEntryView: View {
             }
             .scrollDismissesKeyboard(.interactively)
             .scrollPosition($scroll)
-            .scrollIndicatorsFlash(trigger: keyboardShown)
+            .scrollIndicators(.hidden)
             .onScrollGeometryChange(for: Bool.self) { g in
                 g.contentSize.height - (g.contentOffset.y + g.containerSize.height) > 24
             } action: { _, more in
@@ -221,7 +221,7 @@ struct AddEntryView: View {
                         withAnimation(.snappy) { scroll.scrollTo(edge: .bottom) }
                     } label: {
                         Label(L10n.t("More below"), systemImage: "chevron.down")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.scaled(size: 13, weight: .semibold))
                             .foregroundStyle(Theme.Colors.ink)
                             .padding(.horizontal, 14)
                             .frame(height: 32)
@@ -253,7 +253,7 @@ struct AddEntryView: View {
                     dismiss()
                     EntryActions.delete(entry, context: context, undo: undo)
                 }
-                .font(.system(size: 16, weight: .semibold))
+                .font(.scaled(size: 16, weight: .semibold))
                 .foregroundStyle(Theme.Colors.negative)
                 .frame(maxWidth: .infinity, minHeight: 44)
             }
@@ -334,7 +334,7 @@ struct AddEntryView: View {
     private func scanButton(_ title: String, symbol: String, fill: Color, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Label(title, systemImage: symbol)
-                .font(.system(size: 14, weight: .semibold))
+                .font(.scaled(size: 14, weight: .semibold))
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
                 .foregroundStyle(Theme.Colors.ink)

@@ -2,6 +2,7 @@ import CloudKit
 import SwiftData
 import SwiftUI
 import UIKit
+import UniformTypeIdentifiers
 
 /// Settings: money, alerts, receipts, privacy and app.
 struct SettingsView: View {
@@ -25,6 +26,11 @@ struct SettingsView: View {
     @State private var showExport = false
     @State private var restartNeeded = false
     @State private var confirmReset = false
+    @State private var importing = false
+    @State private var restorePreview: BackupImport.Preview?
+    @State private var restoreNew = 0
+    @State private var restoreMessage: String?
+    @Environment(\.openURL) private var openURL
     @State private var cloudStatus: CKAccountStatus = .couldNotDetermine
     @AppStorage(CloudSync.enabledKey) private var iCloudSync = true
     @State private var showDart = LaunchOptions.openScreen == "dart"
@@ -147,10 +153,10 @@ struct SettingsView: View {
                         if CloudSync.isActive, let error = SyncMonitor.shared.lastError {
                             VStack(alignment: .leading, spacing: 8) {
                                 Label(L10n.t("iCloud sync isn't working yet"), systemImage: "exclamationmark.icloud")
-                                    .font(.system(size: 14, weight: .semibold)).foregroundStyle(Theme.Colors.negative)
-                                Text(error).font(.system(size: 11).monospaced()).foregroundStyle(Theme.Colors.inkMuted).lineLimit(6)
+                                    .font(.scaled(size: 14, weight: .semibold)).foregroundStyle(Theme.Colors.negative)
+                                Text(error).font(.scaled(size: 11).monospaced()).foregroundStyle(Theme.Colors.inkMuted).lineLimit(6)
                                 Button(L10n.t("Copy details")) { UIPasteboard.general.string = error }
-                                    .font(.system(size: 14, weight: .semibold)).foregroundStyle(Theme.Colors.link)
+                                    .font(.scaled(size: 14, weight: .semibold)).foregroundStyle(Theme.Colors.link)
                             }
                             .padding(12)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -161,6 +167,12 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("settings.export")
+                        Button { importing = true } label: {
+                            SettingsRow(symbol: "square.and.arrow.down", title: L10n.t("Restore from a backup"),
+                                        value: L10n.t("A CSV exported from Bztam"))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("settings.restore")
                         Button { confirmReset = true } label: {
                             HStack(spacing: Theme.Space.m) {
                                 IconCircle(symbol: "trash", size: 44)
@@ -189,11 +201,11 @@ struct SettingsView: View {
                                   }))
                         VStack(alignment: .leading, spacing: 4) {
                             Text(CloudSync.isActive ? L10n.t("Your data stays yours") : L10n.t("Your data stays on this iPhone"))
-                                .font(.system(size: 15, weight: .bold))
+                                .font(.scaled(size: 15, weight: .bold))
                             Text(CloudSync.isActive
                                  ? L10n.t("No Bztam account, no bank connection, no ads. Receipts are read on your phone, and sync goes to your own iCloud.")
                                  : L10n.t("No account, no bank connection, no ads. Receipts are read on your phone."))
-                                .font(.system(size: 14)).foregroundStyle(Theme.Colors.inkMuted)
+                                .font(.scaled(size: 14)).foregroundStyle(Theme.Colors.inkMuted)
                         }
                         .padding(16)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -220,6 +232,12 @@ struct SettingsView: View {
                                         value: (Appearance(rawValue: appearance) ?? .system).title)
                         }
                         .buttonStyle(.plain)
+                        Button { sendFeedback() } label: {
+                            SettingsRow(symbol: "envelope", title: L10n.t("Send feedback"),
+                                        value: L10n.t("Ideas, bugs, anything: we read every message"))
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("settings.feedback")
                         SettingsRow(symbol: "info.circle", title: L10n.t("About Bztam"),
                                     value: L10n.t("Version %@", version), chevron: false)
                     }
@@ -232,6 +250,33 @@ struct SettingsView: View {
             .background(Theme.Colors.canvas)
             .statusBarFade()
             .toolbar(.hidden, for: .navigationBar)
+            .fileImporter(isPresented: $importing, allowedContentTypes: [.commaSeparatedText, .plainText, .text]) { result in
+                readBackup(result)
+            }
+            .confirmationDialog(L10n.t("Restore from a backup"), isPresented: Binding(get: { restorePreview != nil }, set: { if !$0 { restorePreview = nil } }),
+                                titleVisibility: .visible) {
+                if restoreNew > 0 {
+                    Button(L10n.t("Add %d entries", restoreNew)) {
+                        if let rows = restorePreview?.rows {
+                            let added = BackupImport.apply(rows, in: context)
+                            WidgetSync.update(context: context)
+                            restoreMessage = L10n.t("%d entries added.", added)
+                        }
+                        restorePreview = nil
+                    }
+                }
+                Button(L10n.t("Cancel"), role: .cancel) { restorePreview = nil }
+            } message: {
+                if let p = restorePreview {
+                    let skipped = p.rows.count - restoreNew
+                    Text(restoreNew == 0 ? L10n.t("Everything in this file is already in Bztam.")
+                         : skipped > 0 ? L10n.t("%d are already in Bztam and are skipped.", skipped)
+                         : L10n.t("Nothing in Bztam is changed or deleted."))
+                }
+            }
+            .alert(restoreMessage ?? "", isPresented: Binding(get: { restoreMessage != nil }, set: { if !$0 { restoreMessage = nil } })) {
+                Button(L10n.t("OK"), role: .cancel) {}
+            }
             .alert(L10n.t("Photo access is off"), isPresented: $photosDenied) {
                 Button(L10n.t("Open Settings")) {
                     if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
@@ -286,9 +331,41 @@ struct SettingsView: View {
                           : L10n.t("Off: your data is only on this iPhone")
     }
 
+    private func readBackup(_ result: Result<URL, Error>) {
+        guard case let .success(url) = result else { return }
+        let access = url.startAccessingSecurityScopedResource()
+        defer { if access { url.stopAccessingSecurityScopedResource() } }
+        guard let data = try? Data(contentsOf: url),
+              let text = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .isoLatin1) else {
+            restoreMessage = L10n.t("This file couldn't be read.")
+            return
+        }
+        do {
+            let preview = try BackupImport.preview(text)
+            let entries = (try? context.fetch(FetchDescriptor<Entry>())) ?? []
+            let existing = Set(entries.map { BackupImport.key(kind: $0.kind, amount: $0.amount, date: $0.date, title: $0.displayTitle) })
+            restoreNew = BackupImport.newRows(preview.rows, existing: existing).count
+            restorePreview = preview
+        } catch {
+            restoreMessage = L10n.t("This isn't a Bztam backup. Export a CSV from Settings → Export first.")
+        }
+    }
+
+    /// An email to support with the versions filled in, so a bug report says which build it's about.
+    private func sendFeedback() {
+        let info = Bundle.main.infoDictionary
+        let app = (info?["CFBundleShortVersionString"] as? String ?? "") + " (" + (info?["CFBundleVersion"] as? String ?? "") + ")"
+        let body = "\n\n\n—\nBztam \(app) · iOS \(UIDevice.current.systemVersion) · \(L10n.code)"
+        var c = URLComponents()
+        c.scheme = "mailto"
+        c.path = "support@healus-ai.com"
+        c.queryItems = [URLQueryItem(name: "subject", value: L10n.t("Bztam feedback")), URLQueryItem(name: "body", value: body)]
+        if let url = c.url { openURL(url) }
+    }
+
     private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(title).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+            Text(title).font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
             content()
         }
     }
@@ -309,7 +386,7 @@ struct SettingsRow: View {
             }
             Spacer()
             if chevron {
-                Image(systemName: "chevron.forward").font(.system(size: 14, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                Image(systemName: "chevron.forward").font(.scaled(size: 14, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
             }
         }
         .frame(minHeight: Theme.Size.row)

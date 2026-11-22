@@ -14,10 +14,10 @@ struct KeypadView: View {
                 } label: {
                     Group {
                         if key == "⌫" {
-                            Image(systemName: "delete.left").font(.system(size: 22, weight: .medium))
+                            Image(systemName: "delete.left").font(.scaled(size: 22, weight: .medium))
                         } else {
                             Text(key == "," ? (L10n.code == "fr" ? "," : ".") : key)
-                                .font(.system(size: 24, weight: .semibold))
+                                .font(.scaled(size: 24, weight: .semibold))
                         }
                     }
                     .foregroundStyle(Theme.Colors.ink)
@@ -52,7 +52,7 @@ struct SegmentedPill<Value: Hashable>: View {
                     selection = option.0
                 } label: {
                     Text(option.1)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.scaled(size: 14, weight: .semibold))
                         .foregroundStyle(on ? Theme.Colors.onInk : Theme.Colors.inkMuted)
                         .frame(maxWidth: .infinity, minHeight: 36)
                         .background(on ? Theme.Colors.ink : Color.clear, in: Capsule())
@@ -110,14 +110,14 @@ struct AmountField: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(caption).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
                 Text(text)
-                    .font(.system(size: 40, weight: .heavy).monospacedDigit())
+                    .font(.scaled(size: 40, weight: .heavy).monospacedDigit())
                     .foregroundStyle(Theme.Colors.ink)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
             }
             Spacer()
             Text(Money.currencySymbol)
-                .font(.system(size: 15, weight: .bold))
+                .font(.scaled(size: 15, weight: .bold))
                 .foregroundStyle(Theme.Colors.ink)
                 .padding(.horizontal, 14)
                 .frame(height: 36)

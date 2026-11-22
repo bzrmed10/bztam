@@ -260,11 +260,11 @@ struct BZTabBar: View {
                 } label: {
                     VStack(spacing: 2) {
                         Image(systemName: tab.symbol)
-                            .font(.system(size: 18, weight: active ? .semibold : .regular))
+                            .font(.scaled(size: 18, weight: active ? .semibold : .regular))
                             .symbolEffect(.bounce, value: active)
                             .frame(height: 24)
                         Text(tab.title)
-                            .font(.system(size: 11, weight: active ? .bold : .medium))
+                            .font(.scaled(size: 11, weight: active ? .bold : .medium))
                             .lineLimit(1)
                             .minimumScaleFactor(0.8)
                     }

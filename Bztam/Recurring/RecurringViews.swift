@@ -106,7 +106,7 @@ struct RecurringEditSheet: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(rule.kind == .expense ? L10n.t("Shop or note") : L10n.t("Note"))
-                        .font(.system(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                        .font(.scaled(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
                     TextField(L10n.t("Optional"), text: rule.kind == .expense ? $rule.merchant : $rule.note)
                         .font(.bzBodyStrong)
                 }
@@ -114,7 +114,7 @@ struct RecurringEditSheet: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
 
-                Text(L10n.t("Repeat")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                Text(L10n.t("Repeat")).font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
                 FlowLayout(spacing: 8) {
                     ForEach(Frequency.allCases) { f in
                         Chip(title: f.title, selected: rule.frequency == f) { rule.frequency = f }
@@ -122,7 +122,7 @@ struct RecurringEditSheet: View {
                 }
 
                 if rule.kind == .expense {
-                    Text(L10n.t("Category")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                    Text(L10n.t("Category")).font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
                     FlowLayout(spacing: 8) {
                         ForEach(categories) { c in
                             Chip(title: c.displayName, selected: rule.category?.id == c.id) { rule.category = c }
@@ -138,7 +138,7 @@ struct RecurringEditSheet: View {
                 .buttonStyle(.pillPrimary)
 
                 Button(L10n.t("Stop repeating")) { confirmStop = true }
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.scaled(size: 16, weight: .semibold))
                     .foregroundStyle(Theme.Colors.negative)
                     .frame(maxWidth: .infinity, minHeight: 44)
             }
@@ -170,25 +170,25 @@ struct SubscriptionCard: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "arrow.triangle.2.circlepath")
-                .font(.system(size: 17, weight: .semibold))
+                .font(.scaled(size: 17, weight: .semibold))
                 .frame(width: 40, height: 40)
                 .background(Theme.Colors.canvas, in: Circle())
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
-                Text(L10n.t("%@ every month?", candidate.merchant)).font(.system(size: 15, weight: .semibold)).lineLimit(1)
+                Text(L10n.t("%@ every month?", candidate.merchant)).font(.scaled(size: 15, weight: .semibold)).lineLimit(1)
                 Text(L10n.t("%@ each time. Add it automatically?", Money.format(candidate.amount)))
                     .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
             }
             Spacer(minLength: 4)
             Button(L10n.t("Yes"), action: onYes)
-                .font(.system(size: 14, weight: .bold))
+                .font(.scaled(size: 14, weight: .bold))
                 .padding(.horizontal, 14)
                 .frame(height: 36)
                 .foregroundStyle(Theme.Colors.onBrand)
                 .background(Theme.Colors.brand, in: Capsule())
                 .buttonStyle(.plain)
             Button(action: onDismiss) {
-                Image(systemName: "xmark").font(.system(size: 13, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                Image(systemName: "xmark").font(.scaled(size: 13, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
                     .frame(width: 32, height: 32)
             }
             .buttonStyle(.plain)

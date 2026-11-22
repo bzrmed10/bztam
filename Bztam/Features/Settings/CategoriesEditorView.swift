@@ -31,7 +31,7 @@ struct CategoriesEditorView: View {
                     Button(editMode == .active ? L10n.t("Done") : L10n.t("Reorder")) {
                         withAnimation { editMode = editMode == .active ? .inactive : .active }
                     }
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.scaled(size: 14, weight: .semibold))
                     .foregroundStyle(Theme.Colors.ink)
                     .padding(.horizontal, 16)
                     .frame(height: 40)
@@ -40,17 +40,17 @@ struct CategoriesEditorView: View {
                 }
                 ScreenTitle(text: L10n.t("Categories and budgets"))
                 HStack {
-                    Text(L10n.t("Planned")).font(.system(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
+                    Text(L10n.t("Planned")).font(.scaled(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
                     Spacer()
                     Text(Money.format(planned)).font(.bzAmount)
                 }
                 if !suggestions.isEmpty {
                     HStack(spacing: 12) {
-                        Image(systemName: "sparkles").font(.system(size: 16, weight: .semibold))
-                        Text(L10n.t("Budgets suggested from your last months")).font(.system(size: 14, weight: .semibold))
+                        Image(systemName: "sparkles").font(.scaled(size: 16, weight: .semibold))
+                        Text(L10n.t("Budgets suggested from your last months")).font(.scaled(size: 14, weight: .semibold))
                         Spacer(minLength: 4)
                         Button(L10n.t("Use all")) { apply(suggestions) }
-                            .font(.system(size: 14, weight: .bold))
+                            .font(.scaled(size: 14, weight: .bold))
                             .padding(.horizontal, 14)
                             .frame(height: 36)
                             .foregroundStyle(Theme.Colors.onBrand)
@@ -62,7 +62,7 @@ struct CategoriesEditorView: View {
                 }
                 if income > 0 {
                     HStack {
-                        Text(L10n.t("Not planned yet")).font(.system(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
+                        Text(L10n.t("Not planned yet")).font(.scaled(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
                         Spacer()
                         TagPill(text: Money.format(max(0, income - planned), privacy: .income))
                     }
@@ -82,9 +82,9 @@ struct CategoriesEditorView: View {
                             Text(c.displayName).font(.bzBodyStrong)
                             if let s = suggestions.first(where: { $0.categoryID == c.id }) {
                                 Text(L10n.t("Suggested: %@", Money.format(s.amount)))
-                                    .font(.system(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.link)
+                                    .font(.scaled(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.link)
                             } else if c.isFixed {
-                                Text(L10n.t("Planned first")).font(.system(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.positive)
+                                Text(L10n.t("Planned first")).font(.scaled(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.positive)
                             }
                         }
                         Spacer()
@@ -104,7 +104,7 @@ struct CategoriesEditorView: View {
 
             Button { adding = true } label: {
                 Label(L10n.t("Add a category"), systemImage: "plus")
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.scaled(size: 16, weight: .bold))
                     .foregroundStyle(Theme.Colors.ink)
                     .frame(maxWidth: .infinity, minHeight: 56)
                     .background(Theme.Colors.surface, in: Capsule())
@@ -174,14 +174,14 @@ struct CategoryEditSheet: View {
                 field(L10n.t("Monthly budget (%@)", Money.currencySymbol)) {
                     TextField("0", text: $budgetText)
                         .keyboardType(.numberPad)
-                        .font(.system(size: 20, weight: .heavy).monospacedDigit())
+                        .font(.scaled(size: 20, weight: .heavy).monospacedDigit())
                         .onChange(of: budgetText) { _, new in
                             let digits = String(new.filter(\.isNumber).prefix(7))
                             if digits != new { budgetText = digits }
                         }
                 }
 
-                Text(L10n.t("Icon")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                Text(L10n.t("Icon")).font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 6), spacing: 8) {
                     ForEach(Self.symbols, id: \.self) { s in
                         Button { symbol = s } label: {
@@ -204,7 +204,7 @@ struct CategoryEditSheet: View {
 
                 if category != nil {
                     Button(L10n.t("Archive category")) { confirmArchive = true }
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.scaled(size: 16, weight: .semibold))
                         .foregroundStyle(Theme.Colors.negative)
                         .frame(maxWidth: .infinity, minHeight: 44)
                 }
@@ -235,7 +235,7 @@ struct CategoryEditSheet: View {
 
     private func field<Content: View>(_ label: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(label).font(.system(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+            Text(label).font(.scaled(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
             content()
         }
         .padding(.horizontal, 16)

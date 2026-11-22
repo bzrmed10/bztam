@@ -62,7 +62,7 @@ struct ScanReviewView: View {
                                 .foregroundStyle(Theme.Colors.ink)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.6)
-                            Image(systemName: "pencil").font(.system(size: 18, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                            Image(systemName: "pencil").font(.scaled(size: 18, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -92,7 +92,7 @@ struct ScanReviewView: View {
                                 }
                             } label: {
                                 Text(categories.first(where: { $0.id == categoryID })?.displayName ?? L10n.t("Choose"))
-                                    .font(.system(size: 14, weight: .semibold))
+                                    .font(.scaled(size: 14, weight: .semibold))
                                     .foregroundStyle(.white)
                                     .padding(.horizontal, 14)
                                     .frame(height: 36)
@@ -158,7 +158,7 @@ struct ScanReviewView: View {
 
     private func row<Content: View>(_ label: String, @ViewBuilder content: () -> Content) -> some View {
         HStack {
-            Text(label).font(.system(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
+            Text(label).font(.scaled(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
             Spacer(minLength: 16)
             content()
         }

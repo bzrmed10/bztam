@@ -103,7 +103,7 @@ struct OnboardingView: View {
                     CircleIconButton(symbol: "xmark", label: L10n.t("Close")) { dismiss() }
                 } else {
                     Button { back() } label: {
-                        Image(systemName: "chevron.backward").font(.system(size: 17, weight: .semibold))
+                        Image(systemName: "chevron.backward").font(.scaled(size: 17, weight: .semibold))
                             .frame(width: 44, height: 44)
                             .background(Theme.Colors.surface, in: Circle())
                     }
@@ -126,7 +126,7 @@ struct OnboardingView: View {
                 }
                 if step != .ready {
                     Button(L10n.t("Skip")) { skip() }
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.scaled(size: 15, weight: .semibold))
                         .foregroundStyle(Theme.Colors.link)
                         .frame(minWidth: 44, minHeight: 44)
                         .accessibilityIdentifier("onboarding.skip")
@@ -288,7 +288,7 @@ struct OnboardingView: View {
         // Bills with the same amount every month become recurring expenses.
         for bill in bills where bill.amount > 0 && bill.sameEveryMonth {
             guard let c = byKey[bill.categoryKey] else { continue }
-            let title = bill.isCustom ? bill.customName : L10n.t(bill.kind?.title ?? "")
+            let title = bill.isCustom ? bill.customName.trimmingCharacters(in: .whitespacesAndNewlines) : L10n.t(bill.kind?.title ?? "")
             if rules.contains(where: { $0.kind == .expense && $0.category?.id == c.id && $0.amount == bill.amount }) { continue }
             context.insert(RecurringRule(kind: .expense, amount: bill.amount, merchant: title, category: c,
                                          frequency: .monthly, startDate: BillCatalog.startDate(for: bill, period: period)))

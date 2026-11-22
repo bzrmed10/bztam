@@ -17,7 +17,7 @@ struct DartListView: View {
                         CircleIconButton(symbol: "xmark", label: L10n.t("Close")) { dismiss() }
                         Spacer()
                         Button(L10n.t("New dart")) { creating = true }
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.scaled(size: 14, weight: .semibold))
                             .padding(.horizontal, 16).frame(height: 40)
                             .foregroundStyle(Theme.Colors.onBrand)
                             .background(Theme.Colors.brand, in: Capsule())
@@ -110,7 +110,7 @@ struct DartDetailView: View {
                     CircleIconButton(symbol: "chevron.backward", label: L10n.t("Back")) { dismiss() }
                     Spacer()
                     Button(L10n.t("Edit")) { editing = true }
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.scaled(size: 14, weight: .semibold))
                         .padding(.horizontal, 16).frame(height: 40)
                         .background(Theme.Colors.surface, in: Capsule())
                         .buttonStyle(.plain)
@@ -122,7 +122,7 @@ struct DartDetailView: View {
                         .font(.bzAmountHero).tracking(-1.2)
                         .lineLimit(1).minimumScaleFactor(0.6)
                     Text(L10n.t("%@ each a month · %d people", Money.format(plan.amount), plan.count))
-                        .font(.system(size: 15, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                        .font(.scaled(size: 15, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
                 }
 
                 if let current { thisTurn(current, started: status != .notStarted(first: plan.start)) }
@@ -173,7 +173,7 @@ struct DartDetailView: View {
                     } label: {
                         HStack(spacing: Theme.Space.m) {
                             Image(systemName: paid ? "checkmark.circle.fill" : "circle")
-                                .font(.system(size: 24))
+                                .font(.scaled(size: 24))
                                 .foregroundStyle(paid ? Theme.Colors.positive : Theme.Colors.line)
                             Text(dart.displayName(m)).font(.bzBodyStrong)
                             if m == collector { TagPill(text: L10n.t("Collects")) }
@@ -210,7 +210,7 @@ struct DartDetailView: View {
     private func stat(_ title: String, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
-            Text(value).font(.system(size: 20, weight: .bold).monospacedDigit()).lineLimit(1).minimumScaleFactor(0.7)
+            Text(value).font(.scaled(size: 20, weight: .bold).monospacedDigit()).lineLimit(1).minimumScaleFactor(0.7)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -225,7 +225,7 @@ struct DartDetailView: View {
                 let done = plan.paidCount(round: r) == plan.count
                 HStack(spacing: Theme.Space.m) {
                     Text("\(r + 1)")
-                        .font(.system(size: 15, weight: .bold))
+                        .font(.scaled(size: 15, weight: .bold))
                         .frame(width: 36, height: 36)
                         .foregroundStyle(r == current ? Theme.Colors.onBrand : Theme.Colors.ink)
                         .background(r == current ? Theme.Colors.brand : Theme.Colors.surface, in: Circle())
@@ -235,7 +235,7 @@ struct DartDetailView: View {
                     }
                     Spacer()
                     if done {
-                        Image(systemName: "checkmark").font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.positive)
+                        Image(systemName: "checkmark").font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.positive)
                             .accessibilityLabel(L10n.t("Everyone paid"))
                     } else if let current, r <= current {
                         Text(L10n.t("%d of %d paid", plan.paidCount(round: r), plan.count))
@@ -303,7 +303,7 @@ struct DartEditSheet: View {
 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        Text(L10n.t("Members in turn order")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                        Text(L10n.t("Members in turn order")).font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
                         Spacer()
                         if amount.centimes > 0 && members.count > 1 {
                             Text(L10n.t("%@ per turn", Money.format(amount.centimes * members.count)))
@@ -321,7 +321,7 @@ struct DartEditSheet: View {
                             .onSubmit { addMember() }
                             .accessibilityIdentifier("dart.member")
                         Button { addMember() } label: {
-                            Image(systemName: "plus").font(.system(size: 15, weight: .bold))
+                            Image(systemName: "plus").font(.scaled(size: 15, weight: .bold))
                                 .frame(width: 36, height: 36)
                                 .foregroundStyle(Theme.Colors.onBrand)
                                 .background(Theme.Colors.brand, in: Circle())
@@ -340,7 +340,7 @@ struct DartEditSheet: View {
                               detail: L10n.t("A notification at 9:00 on each turn day"), isOn: $reminders)
                 }
                 if tracksMoney {
-                    Text(L10n.t("Category for your payments")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                    Text(L10n.t("Category for your payments")).font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
                     FlowLayout(spacing: 8) {
                         ForEach(categories) { c in
                             Chip(title: c.displayName, selected: categoryKey == c.key) { categoryKey = c.key }
@@ -356,7 +356,7 @@ struct DartEditSheet: View {
 
                 if dart != nil {
                     Button(L10n.t("Delete dart")) { confirmDelete = true }
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.scaled(size: 16, weight: .semibold))
                         .foregroundStyle(Theme.Colors.negative)
                         .frame(maxWidth: .infinity, minHeight: 44)
                 }
@@ -384,7 +384,7 @@ struct DartEditSheet: View {
 
     private func field<Content: View>(_ caption: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(caption).font(.system(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+            Text(caption).font(.scaled(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
             content()
         }
         .padding(.horizontal, 16).padding(.vertical, 12)
@@ -395,7 +395,7 @@ struct DartEditSheet: View {
     private func memberRow(_ index: Int, _ m: MemberDraft) -> some View {
         HStack(spacing: 10) {
             Text("\(index + 1)")
-                .font(.system(size: 14, weight: .bold))
+                .font(.scaled(size: 14, weight: .bold))
                 .frame(width: 32, height: 32)
                 .foregroundStyle(m.isMe ? Theme.Colors.onBrand : Theme.Colors.ink)
                 .background(m.isMe ? Theme.Colors.brand : Theme.Colors.surface, in: Circle())
@@ -414,7 +414,7 @@ struct DartEditSheet: View {
                 .accessibilityLabel(L10n.t("Remove"))
             }
         }
-        .font(.system(size: 14, weight: .semibold))
+        .font(.scaled(size: 14, weight: .semibold))
         .buttonStyle(.plain)
         .frame(minHeight: 44)
     }
@@ -481,19 +481,19 @@ struct DartCard: View {
         let plan = dart.plan
         HStack(spacing: 12) {
             Image(systemName: "person.3")
-                .font(.system(size: 15, weight: .semibold))
+                .font(.scaled(size: 15, weight: .semibold))
                 .frame(width: 40, height: 40)
                 .background(Theme.Colors.canvas, in: Circle())
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text(collect ? L10n.t("Your turn to collect %@", Money.format(plan.pot))
                              : L10n.t("Pay %@ for %@", Money.format(plan.amount), dart.name))
-                    .font(.system(size: 15, weight: .semibold)).lineLimit(1).minimumScaleFactor(0.85)
+                    .font(.scaled(size: 15, weight: .semibold)).lineLimit(1).minimumScaleFactor(0.85)
                 Text(DartText.status(dart)).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted).lineLimit(1)
             }
             Spacer(minLength: 4)
             Button(collect ? L10n.t("Collected") : L10n.t("Paid"), action: action)
-                .font(.system(size: 14, weight: .bold))
+                .font(.scaled(size: 14, weight: .bold))
                 .padding(.horizontal, 14)
                 .frame(height: 36)
                 .foregroundStyle(Theme.Colors.onBrand)

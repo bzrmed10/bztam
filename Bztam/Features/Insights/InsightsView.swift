@@ -46,7 +46,7 @@ struct InsightsView: View {
                         .disabled(offset >= 0).opacity(offset >= 0 ? 0.3 : 1)
                         .accessibilityLabel(L10n.t("Next period"))
                 }
-                .font(.system(size: 15, weight: .semibold))
+                .font(.scaled(size: 15, weight: .semibold))
                 .foregroundStyle(Theme.Colors.ink)
 
                 Text(DateText.period(period))
@@ -96,8 +96,8 @@ struct InsightsView: View {
                     .onAppear { withAnimation(.spring(response: 0.8, dampingFraction: 0.8).delay(0.15)) { chartShown = true } }
                     .overlay {
                         VStack(spacing: 0) {
-                            Text(Money.format(total, symbol: false)).font(.system(size: 20, weight: .heavy).monospacedDigit())
-                            Text(L10n.t("%@ spent", Money.currencySymbol)).font(.system(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                            Text(Money.format(total, symbol: false)).font(.scaled(size: 20, weight: .heavy).monospacedDigit())
+                            Text(L10n.t("%@ spent", Money.currencySymbol)).font(.scaled(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
                         }
                     }
                     .accessibilityLabel(L10n.t("Spending by category"))
@@ -107,9 +107,9 @@ struct InsightsView: View {
                             let slice = item.element
                             HStack(spacing: 8) {
                                 Circle().fill(Self.palette[item.offset % Self.palette.count]).frame(width: 10, height: 10)
-                                Text(name(slice.categoryID)).font(.system(size: 14, weight: .medium)).lineLimit(1)
+                                Text(name(slice.categoryID)).font(.scaled(size: 14, weight: .medium)).lineLimit(1)
                                 Spacer(minLength: 4)
-                                Text(percent(slice.amount, of: total)).font(.system(size: 14, weight: .bold).monospacedDigit())
+                                Text(percent(slice.amount, of: total)).font(.scaled(size: 14, weight: .bold).monospacedDigit())
                             }
                             .accessibilityElement(children: .combine)
                         }
@@ -137,9 +137,9 @@ struct InsightsView: View {
     private func bar(_ label: String, _ value: String, _ color: Color, value fraction: Double, fill: Color) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text(label).font(.system(size: 14, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                Text(label).font(.scaled(size: 14, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
                 Spacer()
-                Text(value).font(.system(size: 14, weight: .bold).monospacedDigit()).foregroundStyle(color)
+                Text(value).font(.scaled(size: 14, weight: .bold).monospacedDigit()).foregroundStyle(color)
             }
             ProgressPill(value: fraction, height: 10, fill: fill)
         }
@@ -158,10 +158,10 @@ struct InsightsView: View {
                 ForEach(changes, id: \.categoryID) { change in
                     let p = Int((abs(change.ratio) * 100).rounded())
                     HStack {
-                        Text(name(change.categoryID)).font(.system(size: 16, weight: .medium))
+                        Text(name(change.categoryID)).font(.scaled(size: 16, weight: .medium))
                         Spacer()
                         Text(change.ratio > 0 ? L10n.t("+%d%% more", p) : L10n.t("%d%% less", p))
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.scaled(size: 16, weight: .bold))
                             .foregroundStyle(change.ratio > 0 ? Theme.Colors.negative : Theme.Colors.positive)
                     }
                     .frame(minHeight: 44)
@@ -183,7 +183,7 @@ struct InsightsView: View {
                 ForEach(sentences, id: \.self) { line in
                     HStack(alignment: .firstTextBaseline, spacing: 10) {
                         Circle().fill(Theme.Colors.brand).frame(width: 8, height: 8)
-                        Text(line).font(.system(size: 16, weight: .medium)).fixedSize(horizontal: false, vertical: true)
+                        Text(line).font(.scaled(size: 16, weight: .medium)).fixedSize(horizontal: false, vertical: true)
                     }
                 }
             }

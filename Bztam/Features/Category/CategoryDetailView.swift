@@ -31,14 +31,14 @@ struct CategoryDetailView: View {
                     Spacer()
                     Button(L10n.t("Move money")) { moving = true }
                         .buttonStyle(.plain)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.scaled(size: 14, weight: .semibold))
                         .foregroundStyle(Theme.Colors.ink)
                         .padding(.horizontal, 16)
                         .frame(height: 40)
                         .background(Theme.Colors.surface, in: Capsule())
                     Button(L10n.t("Edit budget")) { editingBudget = true }
                         .buttonStyle(.plain)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.scaled(size: 14, weight: .semibold))
                         .foregroundStyle(Theme.Colors.ink)
                         .padding(.horizontal, 16)
                         .frame(height: 40)
@@ -54,11 +54,11 @@ struct CategoryDetailView: View {
                             .foregroundStyle(heroColor(status))
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)
-                        Text(detail(status)).font(.system(size: 15, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                        Text(detail(status)).font(.scaled(size: 15, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
                         let back = SplitActions.comingBack(categoryID: category.id, in: period, context: context)
                         if back > 0 {
                             Label(L10n.t("%@ coming back from friends", Money.format(back)), systemImage: "arrow.uturn.backward")
-                                .font(.system(size: 14, weight: .semibold))
+                                .font(.scaled(size: 14, weight: .semibold))
                                 .foregroundStyle(Theme.Colors.positive)
                                 .padding(.top, 2)
                         }
@@ -74,7 +74,7 @@ struct CategoryDetailView: View {
                         onAdd(AddRequest(kind: .expense, categoryID: category.id))
                     } label: {
                         Image(systemName: "plus")
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.scaled(size: 16, weight: .bold))
                             .foregroundStyle(Theme.Colors.onBrand)
                             .frame(width: 36, height: 36)
                             .background(Theme.Colors.brand, in: Circle())

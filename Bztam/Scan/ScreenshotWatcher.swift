@@ -86,14 +86,14 @@ struct ScreenshotSuggestionCard: View {
             }
             Spacer(minLength: 4)
             Button(L10n.t("Add"), action: onAdd)
-                .font(.system(size: 14, weight: .bold))
+                .font(.scaled(size: 14, weight: .bold))
                 .foregroundStyle(Theme.Colors.onBrand)
                 .padding(.horizontal, 14)
                 .frame(height: 36)
                 .background(Theme.Colors.brand, in: Capsule())
                 .buttonStyle(.plain)
             Button(action: onDismiss) {
-                Image(systemName: "xmark").font(.system(size: 13, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                Image(systemName: "xmark").font(.scaled(size: 13, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
                     .frame(width: 32, height: 32)
             }
             .buttonStyle(.plain)

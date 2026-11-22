@@ -22,7 +22,7 @@ struct GoalsView: View {
                         Spacer()
                         Button { creating = true } label: {
                             Label(L10n.t("New goal"), systemImage: "plus")
-                                .font(.system(size: 15, weight: .bold))
+                                .font(.scaled(size: 15, weight: .bold))
                                 .foregroundStyle(Theme.Colors.onBrand)
                                 .padding(.horizontal, 16).frame(height: 40)
                                 .background(Theme.Colors.brand, in: Capsule())
@@ -39,7 +39,7 @@ struct GoalsView: View {
                     } else {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(L10n.t("Saved in total")).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
-                            Text(Money.format(total, privacy: .income)).font(.system(size: 34, weight: .heavy)).tracking(-0.8)
+                            Text(Money.format(total, privacy: .income)).font(.scaled(size: 34, weight: .heavy)).tracking(-0.8)
                         }
                         VStack(spacing: 4) {
                             ForEach(goals) { g in
@@ -128,7 +128,7 @@ struct GoalDetailView: View {
                     CircleIconButton(symbol: "chevron.backward", label: L10n.t("Back")) { dismiss() }
                     Spacer()
                     Button(L10n.t("Edit")) { editing = true }
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.scaled(size: 15, weight: .semibold))
                         .padding(.horizontal, 16).frame(height: 40)
                         .background(Theme.Colors.surface, in: Capsule())
                         .buttonStyle(.plain)
@@ -144,7 +144,7 @@ struct GoalDetailView: View {
                         .animation(.snappy, value: saved)
                     if goal.target > 0 {
                         Text(goal.reachedAt != nil ? L10n.t("Goal reached") : L10n.t("%@ to go", Money.format(max(0, goal.target - saved), privacy: .income)))
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.scaled(size: 15, weight: .semibold))
                             .foregroundStyle(goal.reachedAt != nil ? Theme.Colors.positive : Theme.Colors.inkMuted)
                         ProgressPill(value: GoalMath.progress(saved: saved, target: goal.target))
                             .padding(.top, 4)
@@ -161,7 +161,7 @@ struct GoalDetailView: View {
                             Label(L10n.t("Plan: %@ a month", Money.format(goal.monthlyPlan)), systemImage: "arrow.down.to.line")
                         }
                     }
-                    .font(.system(size: 15, weight: .medium))
+                    .font(.scaled(size: 15, weight: .medium))
                     .padding(14)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Theme.Colors.brandTint, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
@@ -198,7 +198,7 @@ struct GoalDetailView: View {
                     }
                 }
                 Button(L10n.t("Delete goal"), role: .destructive) { confirmDelete = true }
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.scaled(size: 15, weight: .semibold))
                     .foregroundStyle(Theme.Colors.negative)
                     .frame(maxWidth: .infinity, minHeight: 44)
             }
@@ -261,7 +261,7 @@ struct GoalEditSheet: View {
                     ForEach(GoalMath.symbols, id: \.self) { s in
                         Button { symbol = s } label: {
                             Image(systemName: s)
-                                .font(.system(size: 18, weight: .medium))
+                                .font(.scaled(size: 18, weight: .medium))
                                 .foregroundStyle(s == symbol ? Theme.Colors.onInk : Theme.Colors.ink)
                                 .frame(maxWidth: .infinity, minHeight: 46)
                                 .background(s == symbol ? Theme.Colors.ink : Theme.Colors.surface, in: Circle())
@@ -320,7 +320,7 @@ struct GoalEditSheet: View {
 
     private func field<Content: View>(_ caption: String, @ViewBuilder _ content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(caption).font(.system(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+            Text(caption).font(.scaled(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
             content()
         }
         .padding(.horizontal, 14).padding(.vertical, 10)
@@ -423,17 +423,17 @@ struct GoalCard: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: goal.symbol)
-                .font(.system(size: 17, weight: .semibold))
+                .font(.scaled(size: 17, weight: .semibold))
                 .frame(width: 40, height: 40)
                 .background(Theme.Colors.canvas, in: Circle())
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
-                Text(L10n.t("Put %@ aside", Money.format(amount))).font(.system(size: 15, weight: .semibold)).lineLimit(1)
+                Text(L10n.t("Put %@ aside", Money.format(amount))).font(.scaled(size: 15, weight: .semibold)).lineLimit(1)
                 Text(L10n.t("For %@", goal.name)).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted).lineLimit(1)
             }
             Spacer(minLength: 4)
             Button(L10n.t("Put aside"), action: onPutAside)
-                .font(.system(size: 14, weight: .bold))
+                .font(.scaled(size: 14, weight: .bold))
                 .foregroundStyle(Theme.Colors.onBrand)
                 .padding(.horizontal, 14).frame(height: 36)
                 .background(Theme.Colors.brand, in: Capsule())

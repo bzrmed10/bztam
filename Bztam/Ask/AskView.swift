@@ -61,13 +61,13 @@ struct AskView: View {
                         }
                         if turns.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
-                                Text(L10n.t("Try")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                                Text(L10n.t("Try")).font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
                                 ForEach(suggestions, id: \.self) { s in
                                     Button { submit(s) } label: {
                                         HStack {
-                                            Text(s).font(.system(size: 15, weight: .semibold)).multilineTextAlignment(.leading)
+                                            Text(s).font(.scaled(size: 15, weight: .semibold)).multilineTextAlignment(.leading)
                                             Spacer(minLength: 8)
-                                            Image(systemName: "arrow.up.right").font(.system(size: 13, weight: .bold))
+                                            Image(systemName: "arrow.up.right").font(.scaled(size: 13, weight: .bold))
                                                 .foregroundStyle(Theme.Colors.inkMuted)
                                         }
                                         .padding(.horizontal, 16).padding(.vertical, 14)
@@ -125,7 +125,7 @@ struct AskView: View {
             Button { Task { await speech.toggle() } } label: {
                 Image(systemName: speech.isListening ? "stop.fill" : "mic")
                     .symbolEffect(.pulse, isActive: speech.isListening)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.scaled(size: 16, weight: .semibold))
                     .frame(width: 40, height: 40)
                     .foregroundStyle(speech.isListening ? Theme.Colors.onBrand : Theme.Colors.ink)
                     .background(speech.isListening ? Theme.Colors.brand : Theme.Colors.canvas, in: Circle())
@@ -134,7 +134,7 @@ struct AskView: View {
             .accessibilityLabel(speech.isListening ? L10n.t("Stop") : L10n.t("Say it"))
             Button { submit(question) } label: {
                 Image(systemName: "arrow.up")
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.scaled(size: 16, weight: .bold))
                     .frame(width: 40, height: 40)
                     .foregroundStyle(Theme.Colors.onBrand)
                     .background(Theme.Colors.brand, in: Circle())
@@ -184,14 +184,14 @@ private struct AskTurnView: View {
             HStack {
                 Spacer(minLength: 48)
                 Text(turn.question)
-                    .font(.system(size: 15, weight: .medium))
+                    .font(.scaled(size: 15, weight: .medium))
                     .padding(.horizontal, 14).padding(.vertical, 10)
                     .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: 18))
             }
             VStack(alignment: .leading, spacing: 10) {
                 if let amount = turn.answer.amount {
                     Text(Money.format(amount, privacy: turn.answer.sensitive ? .income : .any))
-                        .font(.system(size: 34, weight: .heavy).monospacedDigit())
+                        .font(.scaled(size: 34, weight: .heavy).monospacedDigit())
                         .tracking(-0.8)
                         .foregroundStyle(amount < 0 ? Theme.Colors.negative : Theme.Colors.ink)
                         .lineLimit(1).minimumScaleFactor(0.6)
@@ -209,7 +209,7 @@ private struct AskTurnView: View {
                             let e = item.element
                             HStack {
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text(title(e)).font(.system(size: 15, weight: .semibold)).lineLimit(1)
+                                    Text(title(e)).font(.scaled(size: 15, weight: .semibold)).lineLimit(1)
                                     Text(DateText.day(e.date)).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
                                 }
                                 Spacer()
@@ -243,8 +243,8 @@ struct AskField: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 10) {
-                Image(systemName: "sparkles").font(.system(size: 16, weight: .semibold))
-                Text(L10n.t("Ask about your money")).font(.system(size: 15, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                Image(systemName: "sparkles").font(.scaled(size: 16, weight: .semibold))
+                Text(L10n.t("Ask about your money")).font(.scaled(size: 15, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
                 Spacer()
             }
             .foregroundStyle(Theme.Colors.ink)

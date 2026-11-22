@@ -57,7 +57,7 @@ struct ActivityView: View {
                 ScreenTitle(text: L10n.t("Activity"))
                 Button(action: onAdd) {
                     Image(systemName: "plus")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.scaled(size: 18, weight: .bold))
                         .foregroundStyle(Theme.Colors.onBrand)
                         .frame(width: 44, height: 44)
                         .background(Theme.Colors.brand, in: Circle())
@@ -75,7 +75,7 @@ struct ActivityView: View {
                     HStack(spacing: 10) {
                         Image(systemName: "magnifyingglass").foregroundStyle(Theme.Colors.inkMuted)
                         TextField(L10n.t("Search shop, note or amount"), text: $search)
-                            .font(.system(size: 15, weight: .medium))
+                            .font(.scaled(size: 15, weight: .medium))
                             .submitLabel(.search)
                             .accessibilityIdentifier("activity.search")
                         if !search.isEmpty {
@@ -102,9 +102,9 @@ struct ActivityView: View {
                             } label: {
                                 HStack(spacing: 4) {
                                     Text(categoryChipTitle)
-                                    Image(systemName: "chevron.down").font(.system(size: 11, weight: .bold))
+                                    Image(systemName: "chevron.down").font(.scaled(size: 11, weight: .bold))
                                 }
-                                .font(.system(size: 14, weight: .semibold))
+                                .font(.scaled(size: 14, weight: .semibold))
                                 .foregroundStyle(isCategoryFilter ? Theme.Colors.onInk : Theme.Colors.ink)
                                 .padding(.horizontal, 14)
                                 .frame(height: 36)
@@ -147,11 +147,11 @@ struct ActivityView: View {
                     }
                 } header: {
                     HStack {
-                        Text(DateText.day(day)).font(.system(size: 14, weight: .bold))
+                        Text(DateText.day(day)).font(.scaled(size: 14, weight: .bold))
                         Spacer()
                         let spent = items.filter { $0.kind == .expense }.reduce(0) { $0 + $1.amount }
                         if spent > 0 {
-                            Text(Money.format(spent)).font(.system(size: 14, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                            Text(Money.format(spent)).font(.scaled(size: 14, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
                         }
                     }
                     .foregroundStyle(Theme.Colors.ink)

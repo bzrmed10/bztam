@@ -107,19 +107,19 @@ struct InsightCard: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: symbol)
-                .font(.system(size: 17, weight: .semibold))
+                .font(.scaled(size: 17, weight: .semibold))
                 .frame(width: 40, height: 40)
                 .background(Theme.Colors.canvas, in: Circle())
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.system(size: 15, weight: .semibold)).lineLimit(2)
+                Text(title).font(.scaled(size: 15, weight: .semibold)).lineLimit(2)
                 if !detail.isEmpty {
                     Text(detail).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted).lineLimit(2)
                 }
             }
             Spacer(minLength: 4)
             Button(action: onDismiss) {
-                Image(systemName: "xmark").font(.system(size: 13, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                Image(systemName: "xmark").font(.scaled(size: 13, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
                     .frame(width: 32, height: 32)
             }
             .buttonStyle(.plain)

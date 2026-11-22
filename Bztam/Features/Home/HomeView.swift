@@ -195,7 +195,7 @@ struct HomeView: View {
                 SectionTitle(text: L10n.t("Savings goals"))
                 Spacer()
                 Button(L10n.t("See all")) { openGoalID = nil; showGoals = true }
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.scaled(size: 15, weight: .semibold))
                     .foregroundStyle(Theme.Colors.link)
                     .accessibilityIdentifier("home.goals")
             }
@@ -219,24 +219,24 @@ struct HomeView: View {
                     .foregroundStyle(Theme.Colors.inkMuted)
                 Spacer()
                 Button { amountsHidden.toggle() } label: {
-                    Image(systemName: amountsHidden ? "eye.slash" : "eye").frame(width: 36, height: 36)
+                    Image(systemName: amountsHidden ? "eye.slash" : "eye").frame(width: 40, height: 44)
                         .contentTransition(.symbolEffect(.replace))
                 }
                 .sensoryFeedback(.selection, trigger: amountsHidden)
                 .accessibilityLabel(amountsHidden ? L10n.t("Show amounts") : L10n.t("Hide amounts"))
                 .accessibilityIdentifier("home.privacy")
                 Button { offset -= 1 } label: {
-                    Image(systemName: "chevron.backward").frame(width: 36, height: 36)
+                    Image(systemName: "chevron.backward").frame(width: 40, height: 44)
                 }
                 .accessibilityLabel(L10n.t("Previous period"))
                 Button { offset += 1 } label: {
-                    Image(systemName: "chevron.forward").frame(width: 36, height: 36)
+                    Image(systemName: "chevron.forward").frame(width: 40, height: 44)
                 }
                 .disabled(offset >= 0)
                 .opacity(offset >= 0 ? 0.3 : 1)
                 .accessibilityLabel(L10n.t("Next period"))
             }
-            .font(.system(size: 15, weight: .semibold))
+            .font(.scaled(size: 15, weight: .semibold))
             .foregroundStyle(Theme.Colors.ink)
 
             Text(Money.format(s.left, privacy: .income))
@@ -252,7 +252,7 @@ struct HomeView: View {
             (Text(Money.format(s.moneyIn, sign: true, privacy: .income) + " " + L10n.t("in")).foregroundColor(Theme.Colors.positive).fontWeight(.semibold)
              + Text(" · " + Money.format(s.spent) + " " + L10n.t("spent")).foregroundColor(Theme.Colors.inkMuted)
              + Text(s.saved > 0 ? " · " + Money.format(s.saved, privacy: .income) + " " + L10n.t("saved") : "").foregroundColor(Theme.Colors.inkMuted))
-                .font(.system(size: 15, weight: .medium))
+                .font(.scaled(size: 15, weight: .medium))
 
             ProgressPill(value: s.progress)
                 .padding(.top, 10)
@@ -279,12 +279,12 @@ private struct QuickAction: View {
         Button(action: action) {
             VStack(spacing: 8) {
                 Image(systemName: symbol)
-                    .font(.system(size: 22, weight: .semibold))
+                    .font(.scaled(size: 22, weight: .semibold))
                     .foregroundStyle(highlighted ? Theme.Colors.onBrand : Theme.Colors.ink)
                     .frame(width: Theme.Size.quickAction, height: Theme.Size.quickAction)
                     .background(highlighted ? Theme.Colors.brand : Theme.Colors.surface, in: Circle())
                 Text(title)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.scaled(size: 13, weight: .semibold))
                     .foregroundStyle(Theme.Colors.ink)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
@@ -365,11 +365,11 @@ struct PaceCard: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "gauge.with.dots.needle.67percent")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.scaled(size: 18, weight: .semibold))
                 .frame(width: 40, height: 40)
                 .background(Theme.Colors.canvas, in: Circle())
                 .accessibilityHidden(true)
-            Text(text).font(.system(size: 15, weight: .semibold))
+            Text(text).font(.scaled(size: 15, weight: .semibold))
             Spacer(minLength: 0)
         }
         .padding(12)

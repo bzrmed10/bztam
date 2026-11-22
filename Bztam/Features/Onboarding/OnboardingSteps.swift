@@ -53,7 +53,7 @@ extension OnboardingView {
                 }
                 Spacer()
                 Image(systemName: selected ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 22))
+                    .font(.scaled(size: 22))
                     .foregroundStyle(selected ? Theme.Colors.positive : Theme.Colors.line)
                     .contentTransition(.symbolEffect(.replace))
             }
@@ -69,13 +69,13 @@ extension OnboardingView {
 
     func levels(_ title: String, _ options: [String], selection: Binding<BudgetPlanner.Level>) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(title).font(.system(size: 17, weight: .bold))
+            Text(title).font(.scaled(size: 17, weight: .bold))
             HStack(spacing: 8) {
                 ForEach(BudgetPlanner.Level.allCases, id: \.rawValue) { level in
                     let on = selection.wrappedValue == level
                     Button { withAnimation(.snappy) { selection.wrappedValue = level } } label: {
                         Text(options[level.rawValue])
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.scaled(size: 15, weight: .semibold))
                             .lineLimit(1).minimumScaleFactor(0.75)
                             .frame(maxWidth: .infinity, minHeight: 48)
                             .foregroundStyle(on ? Theme.Colors.onInk : Theme.Colors.ink)
@@ -97,7 +97,7 @@ extension OnboardingView {
             Image("AppIconImage").resizable().frame(width: 84, height: 84).clipShape(RoundedRectangle(cornerRadius: 20))
             VStack(alignment: .leading, spacing: 10) {
                 Text(L10n.t("Know what's left to spend."))
-                    .font(.system(size: 40, weight: .heavy)).tracking(-1)
+                    .font(.scaled(size: 40, weight: .heavy)).tracking(-1)
                 Text(L10n.t("Bztam shows what came in, what you spent and what's left in every category."))
                     .font(.bzBody).foregroundStyle(Theme.Colors.inkMuted)
             }
@@ -110,7 +110,7 @@ extension OnboardingView {
             VStack(spacing: 6) {
                 continueButton(L10n.t("Get started"))
                 Button(L10n.t("Skip setup, I'll look around")) { skipEverything() }
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.scaled(size: 15, weight: .semibold))
                     .foregroundStyle(Theme.Colors.link)
                     .frame(maxWidth: .infinity, minHeight: 44)
                     .accessibilityIdentifier("onboarding.skipAll")
@@ -159,7 +159,7 @@ extension OnboardingView {
                         withAnimation(.snappy) { payday = day }
                     } label: {
                         Text("\(day)")
-                            .font(.system(size: 16, weight: .semibold).monospacedDigit())
+                            .font(.scaled(size: 16, weight: .semibold).monospacedDigit())
                             .foregroundStyle(day == payday ? Theme.Colors.onInk : Theme.Colors.ink)
                             .frame(maxWidth: .infinity, minHeight: 44)
                             .background(day == payday ? Theme.Colors.ink : Theme.Colors.surface, in: Circle())
@@ -203,7 +203,7 @@ extension OnboardingView {
                             Button {
                                 withAnimation(.snappy) { extras.removeAll { $0.id == extra.id } }
                             } label: {
-                                Image(systemName: "xmark").font(.system(size: 13, weight: .bold)).frame(width: 32, height: 44)
+                                Image(systemName: "xmark").font(.scaled(size: 13, weight: .bold)).frame(width: 32, height: 44)
                             }
                             .buttonStyle(.plain)
                             .accessibilityLabel(L10n.t("Remove"))
@@ -213,7 +213,7 @@ extension OnboardingView {
                         withAnimation(.snappy) { extras.append(ExtraIncome()) }
                     } label: {
                         Label(L10n.t("Other money in every month"), systemImage: "plus")
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.scaled(size: 15, weight: .semibold))
                             .foregroundStyle(Theme.Colors.link)
                     }
                     .buttonStyle(.plain)
@@ -294,7 +294,7 @@ extension OnboardingView {
                         let total = bills.reduce(0) { $0 + $1.amount }
                         if total > 0 {
                             HStack {
-                                Text(L10n.t("Fixed bills each month")).font(.system(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
+                                Text(L10n.t("Fixed bills each month")).font(.scaled(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
                                 Spacer()
                                 Text(Money.format(total)).font(.bzAmount)
                             }
@@ -324,12 +324,12 @@ extension OnboardingView {
         Button(action: action) {
             VStack(spacing: 8) {
                 Image(systemName: symbol)
-                    .font(.system(size: 20, weight: .medium))
+                    .font(.scaled(size: 20, weight: .medium))
                     .foregroundStyle(on ? Theme.Colors.onBrand : Theme.Colors.ink)
                     .frame(width: 44, height: 44)
                     .background(on ? Theme.Colors.brand : Theme.Colors.canvas, in: Circle())
                 Text(title)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.scaled(size: 13, weight: .semibold))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                     .minimumScaleFactor(0.85)
@@ -367,7 +367,7 @@ extension OnboardingView {
                 VStack(alignment: .leading, spacing: 20) {
                     levels(L10n.t("Each month"), [L10n.t("Not now"), L10n.t("A little"), L10n.t("A lot")], selection: $saving)
                     VStack(alignment: .leading, spacing: 12) {
-                        Text(L10n.t("Saving for something?")).font(.system(size: 17, weight: .bold))
+                        Text(L10n.t("Saving for something?")).font(.scaled(size: 17, weight: .bold))
                         TextField(L10n.t("Summer trip, Eid, new phone…"), text: $goalName)
                             .font(.bzBodyStrong)
                             .submitLabel(.done)
@@ -389,7 +389,7 @@ extension OnboardingView {
                             let monthly = GoalMath.suggestedMonthly(target: goalTarget, saved: 0, deadline: goalHasDate ? goalDate : nil)
                             if monthly > 0 {
                                 Label(L10n.t("%@ a month gets you there", Money.format(monthly)), systemImage: "leaf")
-                                    .font(.system(size: 15, weight: .semibold)).foregroundStyle(Theme.Colors.positive)
+                                    .font(.scaled(size: 15, weight: .semibold)).foregroundStyle(Theme.Colors.positive)
                             }
                         }
                     }
@@ -424,7 +424,7 @@ extension OnboardingView {
                         if base.leftover > 0 {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(L10n.t("%@ nobody claimed", Money.format(base.leftover, privacy: .never)))
-                                    .font(.system(size: 15, weight: .bold))
+                                    .font(.scaled(size: 15, weight: .bold))
                                 FlowLayout(spacing: 8) {
                                     Chip(title: L10n.t("Keep it as a cushion"), selected: leftover == .buffer) { leftover = .buffer; buildPlan() }
                                     Chip(title: L10n.t("Add it to savings"), selected: leftover == .savings) { leftover = .savings; buildPlan() }
@@ -503,80 +503,117 @@ extension OnboardingView {
         let period = BudgetCalculator.period(containing: .now, payday: payday)
         let repeating = bills.filter { $0.amount > 0 && $0.sameEveryMonth }
         let variable = bills.filter { $0.amount > 0 && !$0.sameEveryMonth }
-        let name = goalName.trimmingCharacters(in: .whitespaces)
+        let extrasIn = extras.filter { $0.amount > 0 }
+        let name = goalName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let hasGoal = !name.isEmpty || (planSavings > 0 && !trackFirst)
         return VStack(alignment: .leading, spacing: 18) {
             header(L10n.t("You're set"), L10n.t("Here's what Bztam set up. You can change all of it later."))
             ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    summaryRow("calendar", L10n.t("Your month starts on day %d", payday))
-                    if salary.centimes > 0 {
-                        summaryRow("arrow.down.to.line", salaryRepeats
-                                   ? L10n.t("Salary of %@ added every month on payday", Money.format(salary.centimes, privacy: .never))
-                                   : L10n.t("%@ added as this month's money in", Money.format(salary.centimes, privacy: .never)))
+                VStack(alignment: .leading, spacing: 14) {
+                    summaryCard(L10n.t("Your month")) {
+                        summaryLine("calendar", L10n.t("Payday"), L10n.t("Day %d of the month", payday))
+                        if salary.centimes > 0 {
+                            summaryLine("arrow.down.to.line", L10n.t("Salary"),
+                                        salaryRepeats ? L10n.t("Every month on payday") : L10n.t("This month only"),
+                                        amount: salary.centimes)
+                        }
+                        ForEach(extrasIn) { e in
+                            let title = e.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                            summaryLine("plus.circle", title.isEmpty ? L10n.t("Other") : title, L10n.t("Every month on payday"), amount: e.amount)
+                        }
                     }
-                    ForEach(extras.filter { $0.amount > 0 }) { e in
-                        summaryRow("plus.circle", L10n.t("%@ added every month", (e.name.isEmpty ? L10n.t("Other") : e.name) + " · " + Money.format(e.amount, privacy: .never)))
-                    }
-                    ForEach(bills) { bill in
-                        if bill.amount > 0 && bill.sameEveryMonth {
-                            let title = bill.isCustom ? (bill.customName.isEmpty ? L10n.t("Bill") : bill.customName) : L10n.t(bill.kind?.title ?? "")
-                            VStack(alignment: .leading, spacing: 6) {
-                                summaryRow(bill.symbol, L10n.t("%@ added every month on day %d", title + " · " + Money.format(bill.amount), bill.day))
-                                if BillCatalog.hasPassed(day: bill.day, period: period) {
-                                    Toggle(isOn: billBinding(bill.id).paidThisMonth) {
-                                        Text(L10n.t("Already paid this month")).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
+                    if !repeating.isEmpty {
+                        summaryCard(L10n.t("Added every month")) {
+                            ForEach(repeating) { bill in
+                                VStack(alignment: .leading, spacing: 8) {
+                                    summaryLine(bill.symbol, billTitle(bill), L10n.t("Day %d of the month", bill.day), amount: bill.amount)
+                                    if BillCatalog.hasPassed(day: bill.day, period: period) {
+                                        HStack(spacing: 10) {
+                                            Text(L10n.t("Already paid this month"))
+                                                .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
+                                            Spacer(minLength: 8)
+                                            Toggle(L10n.t("Already paid this month"), isOn: billBinding(bill.id).paidThisMonth)
+                                                .labelsHidden()
+                                                .tint(Theme.Colors.positive)
+                                        }
+                                        .padding(.leading, 50)
                                     }
-                                    .tint(Theme.Colors.positive)
-                                    .padding(.leading, 50)
                                 }
                             }
                         }
                     }
-                    ForEach(variable) { bill in
-                        summaryRow(bill.symbol, L10n.t("%@: a budget of %@, it changes each month", L10n.t(bill.kind?.title ?? ""), Money.format(bill.amount)))
-                    }
-                    if !name.isEmpty || (planSavings > 0 && !trackFirst) {
-                        summaryRow("leaf", L10n.t("Goal: %@", name.isEmpty ? L10n.t("Savings") : name)
-                                   + (planSavings > 0 && !trackFirst ? " · " + L10n.t("%@ a month", Money.format(planSavings)) : ""))
-                    }
-                    summaryRow("square.grid.2x2", trackFirst
-                               ? L10n.t("Budgets only for your bills. After a month, Bztam suggests the rest.")
-                               : L10n.t("%d categories with a budget", planBudgets.values.filter { $0 > 0 }.count))
-                    if repeating.isEmpty && variable.isEmpty && salary.centimes == 0 {
-                        Text(L10n.t("Nothing to set up yet. Add your first expense and Bztam takes it from there."))
-                            .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
+                    summaryCard(L10n.t("Your plan")) {
+                        ForEach(variable) { bill in
+                            summaryLine(bill.symbol, billTitle(bill), L10n.t("Budget, it changes each month"), amount: bill.amount)
+                        }
+                        if hasGoal {
+                            summaryLine("leaf", name.isEmpty ? L10n.t("Savings") : name,
+                                        planSavings > 0 && !trackFirst ? L10n.t("%@ a month", Money.format(planSavings)) : L10n.t("Savings goal"))
+                        }
+                        summaryLine("square.grid.2x2", trackFirst
+                                    ? L10n.t("Budgets for your bills")
+                                    : L10n.t("%d categories with a budget", planBudgets.values.filter { $0 > 0 }.count),
+                                    trackFirst ? L10n.t("After a month, Bztam suggests the rest.") : L10n.t("Change them any time in Settings"))
                     }
                     Button {
                         askNotifications()
                     } label: {
                         HStack(spacing: 14) {
-                            IconCircle(symbol: notificationsAsked ? "checkmark" : "bell", size: 44, fill: Theme.Colors.brandTint)
+                            IconCircle(symbol: notificationsAsked ? "checkmark" : "bell", size: 40, fill: Theme.Colors.brandTint)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(notificationsAsked ? L10n.t("Reminders are set") : L10n.t("Turn on reminders")).font(.bzBodyStrong)
                                 Text(L10n.t("Budget alerts, bills and your Monday recap")).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
                             }
-                            Spacer()
+                            Spacer(minLength: 0)
                         }
-                        .padding(12)
+                        .padding(14)
                         .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
                     }
                     .buttonStyle(.pressable)
                     .disabled(notificationsAsked)
-                    .padding(.top, 8)
                 }
+                .padding(.bottom, 8)
             }
+            .scrollIndicators(.hidden)
             Button(L10n.t("Start using Bztam")) { finish() }
                 .buttonStyle(.pillPrimary)
                 .accessibilityIdentifier("onboarding.finish")
         }
     }
 
-    private func summaryRow(_ symbol: String, _ text: String) -> some View {
-        HStack(spacing: 14) {
-            IconCircle(symbol: symbol, size: 36)
-            Text(text).font(.system(size: 15, weight: .medium)).fixedSize(horizontal: false, vertical: true)
-            Spacer(minLength: 0)
+    private func billTitle(_ bill: BillCatalog.Bill) -> String {
+        if bill.isCustom {
+            let name = bill.customName.trimmingCharacters(in: .whitespacesAndNewlines)
+            return name.isEmpty ? L10n.t("Bill") : name
         }
+        return L10n.t(bill.kind?.title ?? "")
+    }
+
+    /// A titled group on the summary page.
+    private func summaryCard<Content: View>(_ title: String, @ViewBuilder _ content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(title).font(.scaled(size: 13, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+            content()
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Theme.Colors.surface.opacity(0.6), in: RoundedRectangle(cornerRadius: Theme.Radius.small))
+    }
+
+    /// Icon, title and detail, with an amount on the trailing side.
+    private func summaryLine(_ symbol: String, _ title: String, _ detail: String, amount: Centimes? = nil) -> some View {
+        HStack(spacing: 12) {
+            IconCircle(symbol: symbol, size: 38, fill: Theme.Colors.canvas)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.bzBodyStrong).lineLimit(2)
+                Text(detail).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted).lineLimit(2)
+            }
+            Spacer(minLength: 8)
+            if let amount {
+                Text(Money.format(amount, privacy: .never)).font(.bzAmount).lineLimit(1).fixedSize()
+            }
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -595,6 +632,7 @@ struct BillCard: View {
                     TextField(L10n.t("Name of the bill"), text: $bill.customName)
                         .font(.bzBodyStrong)
                         .submitLabel(.done)
+                        .onSubmit { bill.customName = bill.customName.trimmingCharacters(in: .whitespacesAndNewlines) }
                         .focused($nameFocused)
                         .onAppear {
                             guard focusName else { return }
@@ -609,7 +647,7 @@ struct BillCard: View {
                 Spacer(minLength: 4)
                 MoneyTextField(value: $bill.amount, width: 124, accessibility: L10n.t("Amount"))
                 Button(action: onRemove) {
-                    Image(systemName: "xmark").font(.system(size: 12, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                    Image(systemName: "xmark").font(.scaled(size: 12, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
                         .frame(width: 28, height: 44)
                 }
                 .buttonStyle(.plain)
@@ -624,16 +662,16 @@ struct BillCard: View {
                     HStack(spacing: 4) {
                         Image(systemName: "calendar")
                         Text(L10n.t("Day %d", bill.day))
-                        Image(systemName: "chevron.up.chevron.down").font(.system(size: 10, weight: .semibold))
+                        Image(systemName: "chevron.up.chevron.down").font(.scaled(size: 10, weight: .semibold))
                     }
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.scaled(size: 13, weight: .semibold))
                     .foregroundStyle(Theme.Colors.ink)
                     .padding(.horizontal, 12).frame(height: 32)
                     .background(Theme.Colors.canvas, in: Capsule())
                 }
                 Spacer()
                 Toggle(isOn: $bill.sameEveryMonth) {
-                    Text(L10n.t("Same every month")).font(.system(size: 13, weight: .semibold))
+                    Text(L10n.t("Same every month")).font(.scaled(size: 13, weight: .semibold))
                 }
                 .tint(Theme.Colors.positive)
                 .fixedSize()
@@ -680,7 +718,7 @@ struct PlanBar: View {
                         Circle().fill(parts[i].2).frame(width: 9, height: 9)
                             .overlay(Circle().stroke(Theme.Colors.line, lineWidth: i == 3 ? 1 : 0))
                         Text(parts[i].0 + " " + Money.format(parts[i].1, privacy: .never))
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(.scaled(size: 12, weight: .semibold))
                             .foregroundStyle(Theme.Colors.inkMuted)
                     }
                 }

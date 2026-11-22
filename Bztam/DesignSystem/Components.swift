@@ -7,7 +7,7 @@ struct PillButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.system(size: 16, weight: .bold))
+            .font(.scaled(size: 16, weight: .bold))
             .foregroundStyle(kind == .primary ? Theme.Colors.onBrand : Theme.Colors.ink)
             .frame(maxWidth: .infinity, minHeight: Theme.Size.button)
             .background(kind == .primary ? Theme.Colors.brand : Theme.Colors.surface, in: Capsule())
@@ -45,7 +45,7 @@ struct IconCircle: View {
 
     var body: some View {
         Image(systemName: symbol)
-            .font(.system(size: size * 0.42, weight: .medium))
+            .font(.scaled(size: size * 0.42, weight: .medium))
             .foregroundStyle(tint)
             .frame(width: size, height: size)
             .background(fill, in: Circle())
@@ -60,7 +60,7 @@ struct LetterCircle: View {
 
     var body: some View {
         Text(String(text.prefix(1)).uppercased())
-            .font(.system(size: 17, weight: .bold))
+            .font(.scaled(size: 17, weight: .bold))
             .foregroundStyle(Theme.Colors.ink)
             .frame(width: size, height: size)
             .background(Theme.Colors.surface, in: Circle())
@@ -102,7 +102,7 @@ struct Chip: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.system(size: 14, weight: .semibold))
+                .font(.scaled(size: 14, weight: .semibold))
                 .foregroundStyle(selected ? Theme.Colors.onInk : Theme.Colors.ink)
                 .padding(.horizontal, 14)
                 .frame(height: 36)
@@ -123,7 +123,7 @@ struct CircleIconButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: symbol)
-                .font(.system(size: 17, weight: .semibold))
+                .font(.scaled(size: 17, weight: .semibold))
                 .foregroundStyle(Theme.Colors.ink)
                 .frame(width: 44, height: 44)
                 .background(fill, in: Circle())
@@ -140,7 +140,7 @@ struct TagPill: View {
 
     var body: some View {
         Text(text)
-            .font(.system(size: 13, weight: .semibold))
+            .font(.scaled(size: 13, weight: .semibold))
             .foregroundStyle(Theme.Colors.ink)
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
@@ -193,12 +193,12 @@ struct EmptyState: View {
                 RoundedRectangle(cornerRadius: 22).fill(Theme.Colors.surface)
                     .overlay(RoundedRectangle(cornerRadius: 22).stroke(Theme.Colors.line, lineWidth: 1))
                     .frame(width: 92, height: 72)
-                    .overlay(Image(systemName: symbol).font(.system(size: 28, weight: .semibold)).foregroundStyle(Theme.Colors.ink))
+                    .overlay(Image(systemName: symbol).font(.scaled(size: 28, weight: .semibold)).foregroundStyle(Theme.Colors.ink))
                     .offset(y: float ? -4 : 0)
             }
             .frame(height: 96)
             .accessibilityHidden(true)
-            Text(title).font(.system(size: 20, weight: .bold)).foregroundStyle(Theme.Colors.ink)
+            Text(title).font(.scaled(size: 20, weight: .bold)).foregroundStyle(Theme.Colors.ink)
                 .multilineTextAlignment(.center)
             Text(message)
                 .font(.bzCaption)
@@ -207,7 +207,7 @@ struct EmptyState: View {
                 .frame(maxWidth: 300)
             if let actionTitle, let action {
                 Button(actionTitle, action: action)
-                    .font(.system(size: 15, weight: .bold))
+                    .font(.scaled(size: 15, weight: .bold))
                     .padding(.horizontal, 22)
                     .frame(height: 44)
                     .background(Theme.Colors.brand, in: Capsule())

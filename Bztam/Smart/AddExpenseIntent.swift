@@ -131,18 +131,18 @@ struct AddedSnippet: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "checkmark")
-                .font(.system(size: 16, weight: .bold))
+                .font(.scaled(size: 16, weight: .bold))
                 .foregroundStyle(Theme.Colors.onBrand)
                 .frame(width: 40, height: 40)
                 .background(Theme.Colors.brand, in: Circle())
             VStack(alignment: .leading, spacing: 2) {
-                Text(Money.format(added.amount)).font(.system(size: 20, weight: .heavy))
-                Text(added.title + " · " + added.categoryName).font(.system(size: 13, weight: .medium)).foregroundStyle(.secondary)
+                Text(Money.format(added.amount)).font(.scaled(size: 20, weight: .heavy))
+                Text(added.title + " · " + added.categoryName).font(.scaled(size: 13, weight: .medium)).foregroundStyle(.secondary)
                     .lineLimit(1)
             }
             Spacer()
             Button(intent: UndoAddIntent(entryID: added.entryID)) {
-                Text(L10n.t("Undo")).font(.system(size: 14, weight: .semibold))
+                Text(L10n.t("Undo")).font(.scaled(size: 14, weight: .semibold))
             }
             .buttonStyle(.bordered)
         }

@@ -36,7 +36,7 @@ struct MoveMoneySheet: View {
                                 : L10n.t("From another category to %@, for this month only.", category.displayName))
                         .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
                     AmountField(caption: L10n.t("Amount"), text: amount.display())
-                    Text(giving ? L10n.t("To") : L10n.t("From")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+                    Text(giving ? L10n.t("To") : L10n.t("From")).font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
                     FlowLayout(spacing: 8) {
                         ForEach(others) { c in
                             Chip(title: c.displayName, selected: otherID == c.id) { otherID = c.id }

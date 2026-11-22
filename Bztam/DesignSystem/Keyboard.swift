@@ -24,7 +24,7 @@ struct KeyboardDoneButton: ViewModifier {
                                 Image(systemName: "keyboard.chevron.compact.down")
                                 Text(L10n.t("Done"))
                             }
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.scaled(size: 15, weight: .semibold))
                             .foregroundStyle(Theme.Colors.ink)
                             .padding(.horizontal, 14)
                             .frame(height: 36)
@@ -58,7 +58,7 @@ extension View {
 struct MoneyTextField: View {
     @Binding var value: Centimes
     var placeholder: String = ""
-    var font: Font = .system(size: 17, weight: .bold).monospacedDigit()
+    var font: Font = .scaled(size: 17, weight: .bold).monospacedDigit()
     var width: CGFloat? = 120
     var accessibility: String = ""
 
@@ -109,7 +109,7 @@ struct MoneyTextField: View {
 
     private var symbol: some View {
         Text(Money.currencySymbol)
-            .font(.system(size: 14, weight: .semibold))
+            .font(.scaled(size: 14, weight: .semibold))
             .foregroundStyle(Theme.Colors.inkMuted)
             .fixedSize()
     }

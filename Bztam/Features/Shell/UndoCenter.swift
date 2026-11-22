@@ -42,7 +42,7 @@ struct UndoToast: View {
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: success ? "checkmark.circle.fill" : "trash")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.scaled(size: 18, weight: .semibold))
                 .foregroundStyle(success ? Theme.Colors.brand : .white.opacity(0.8))
                 .symbolEffect(.bounce, value: shown)
             Text(message)
@@ -50,7 +50,7 @@ struct UndoToast: View {
                 .foregroundStyle(.white)
             Spacer()
             Button(L10n.t("Undo"), action: undo)
-                .font(.system(size: 16, weight: .bold))
+                .font(.scaled(size: 16, weight: .bold))
                 .foregroundStyle(Theme.Colors.brand)
         }
         .padding(.horizontal, 20)

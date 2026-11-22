@@ -91,7 +91,7 @@ struct SplitSheet: View {
                             .onSubmit(addFriend)
                             .accessibilityIdentifier("split.friend")
                         Button(action: addFriend) {
-                            Image(systemName: "plus").font(.system(size: 15, weight: .bold))
+                            Image(systemName: "plus").font(.scaled(size: 15, weight: .bold))
                                 .frame(width: 36, height: 36)
                                 .background(Theme.Colors.brand, in: Circle())
                                 .foregroundStyle(Theme.Colors.onBrand)
@@ -136,7 +136,7 @@ struct SplitSheet: View {
                 if canSave {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(L10n.t("%@ each · %d people", Money.format(each), people))
-                            .font(.system(size: 20, weight: .bold))
+                            .font(.scaled(size: 20, weight: .bold))
                         Text(payerID == nil
                              ? L10n.t("The %@ leaves your money now. What friends pay back comes back into %@.",
                                       Money.format(amount.centimes), categoryName)
@@ -178,7 +178,7 @@ struct SplitSheet: View {
             Spacer(minLength: 0)
             ShareLink(item: saved.message) {
                 Label(L10n.t("Share on WhatsApp"), systemImage: "square.and.arrow.up")
-                    .font(.system(size: 17, weight: .bold))
+                    .font(.scaled(size: 17, weight: .bold))
                     .frame(maxWidth: .infinity, minHeight: Theme.Size.button)
                     .background(Theme.Colors.brand, in: Capsule())
                     .foregroundStyle(Theme.Colors.onBrand)
@@ -188,7 +188,7 @@ struct SplitSheet: View {
                 dismiss()
                 onDone()
             }
-            .font(.system(size: 16, weight: .semibold))
+            .font(.scaled(size: 16, weight: .semibold))
             .frame(maxWidth: .infinity, minHeight: 44)
         }
         .padding(Theme.Space.l)
@@ -197,12 +197,12 @@ struct SplitSheet: View {
     private var categoryName: String { categories.first { $0.id == categoryID }?.displayName ?? L10n.t("Other") }
 
     private func label(_ text: String) -> some View {
-        Text(text).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+        Text(text).font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
     }
 
     private func field<Content: View>(_ caption: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(caption).font(.system(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+            Text(caption).font(.scaled(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
             content()
         }
         .padding(.horizontal, 16).padding(.vertical, 12)
@@ -269,7 +269,7 @@ struct FriendsView: View {
                     CircleIconButton(symbol: "xmark", label: L10n.t("Close")) { dismiss() }
                     Spacer()
                     Button(L10n.t("New split")) { splitting = SplitDraft() }
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.scaled(size: 14, weight: .semibold))
                         .padding(.horizontal, 16).frame(height: 40)
                         .background(Theme.Colors.brand, in: Capsule())
                         .foregroundStyle(Theme.Colors.onBrand)
@@ -299,7 +299,7 @@ struct FriendsView: View {
                         .submitLabel(.done)
                         .onSubmit(add)
                     Button(action: add) {
-                        Image(systemName: "plus").font(.system(size: 15, weight: .bold))
+                        Image(systemName: "plus").font(.scaled(size: 15, weight: .bold))
                             .frame(width: 36, height: 36)
                             .background(Theme.Colors.brand, in: Circle())
                             .foregroundStyle(Theme.Colors.onBrand)
@@ -325,7 +325,7 @@ struct FriendsView: View {
     private func stat(_ title: String, _ value: Centimes, _ color: Color) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
-            Text(Money.format(value)).font(.system(size: 22, weight: .bold).monospacedDigit()).foregroundStyle(color)
+            Text(Money.format(value)).font(.scaled(size: 22, weight: .bold).monospacedDigit()).foregroundStyle(color)
                 .lineLimit(1).minimumScaleFactor(0.7)
         }
         .padding(16)
@@ -346,7 +346,7 @@ struct FriendsView: View {
                     .font(.bzAmount)
                     .foregroundStyle(b.net > 0 ? Theme.Colors.positive : Theme.Colors.negative)
             }
-            Image(systemName: "chevron.forward").font(.system(size: 13, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+            Image(systemName: "chevron.forward").font(.scaled(size: 13, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
         }
         .frame(minHeight: Theme.Size.row)
         .contentShape(Rectangle())
@@ -403,13 +403,13 @@ struct FriendDetailSheet: View {
                     CircleIconButton(symbol: "xmark", label: L10n.t("Close")) { dismiss() }
                     Spacer()
                     Button(L10n.t("Rename")) { newName = friend.name; renaming = true }
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.scaled(size: 14, weight: .semibold))
                         .padding(.horizontal, 16).frame(height: 40)
                         .background(Theme.Colors.surface, in: Capsule())
                         .buttonStyle(.plain)
                 }
                 ScreenTitle(text: friend.name)
-                Text(FriendText.status(b)).font(.system(size: 17, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                Text(FriendText.status(b)).font(.scaled(size: 17, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
 
                 if b.owesYou > 0 {
                     VStack(spacing: 10) {
@@ -417,12 +417,12 @@ struct FriendDetailSheet: View {
                             .buttonStyle(.pillPrimary)
                         ShareLink(item: SplitActions.reminderMessage(for: friend, context: context)) {
                             Label(L10n.t("Remind on WhatsApp"), systemImage: "bubble.left")
-                                .font(.system(size: 16, weight: .semibold))
+                                .font(.scaled(size: 16, weight: .semibold))
                                 .frame(maxWidth: .infinity, minHeight: 48)
                                 .background(Theme.Colors.surface, in: Capsule())
                         }
                         Button(L10n.t("Forget what %@ owes", friend.name)) { confirmForget = true }
-                            .font(.system(size: 15, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                            .font(.scaled(size: 15, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
                             .frame(maxWidth: .infinity, minHeight: 40)
                     }
                 }
@@ -431,7 +431,7 @@ struct FriendDetailSheet: View {
                         Button(L10n.t("I paid %@ back", friend.name)) { paying = PayBack(fromFriend: false, open: b.youOwe) }
                             .buttonStyle(b.owesYou > 0 ? .pillSecondary : .pillPrimary)
                         Button(L10n.t("%@ said forget it", friend.name)) { confirmForget = false }
-                            .font(.system(size: 15, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                            .font(.scaled(size: 15, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
                             .frame(maxWidth: .infinity, minHeight: 40)
                     }
                 }
@@ -448,7 +448,7 @@ struct FriendDetailSheet: View {
                                 }
                                 Spacer()
                                 Text(item.owesYou > 0 ? L10n.t("owes %@", Money.format(item.owesYou)) : L10n.t("you owe %@", Money.format(item.youOwe)))
-                                    .font(.system(size: 14, weight: .semibold))
+                                    .font(.scaled(size: 14, weight: .semibold))
                                     .foregroundStyle(item.owesYou > 0 ? Theme.Colors.positive : Theme.Colors.negative)
                             }
                             .frame(minHeight: 56)
@@ -458,7 +458,7 @@ struct FriendDetailSheet: View {
 
                 if b.owesYou == 0 && b.youOwe == 0 {
                     Button(L10n.t("Delete %@", friend.name)) { confirmDelete = true }
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.scaled(size: 16, weight: .semibold))
                         .foregroundStyle(Theme.Colors.negative)
                         .frame(maxWidth: .infinity, minHeight: 44)
                 }
@@ -552,18 +552,18 @@ struct FriendsCard: View {
         Button(action: action) {
             HStack(spacing: 12) {
                 Image(systemName: "person.2")
-                    .font(.system(size: 15, weight: .semibold))
+                    .font(.scaled(size: 15, weight: .semibold))
                     .frame(width: 40, height: 40)
                     .background(Theme.Colors.canvas, in: Circle())
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(owed > 0 ? L10n.t("%@ owed to you", Money.format(owed)) : L10n.t("You owe %@", Money.format(owe)))
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.scaled(size: 15, weight: .semibold))
                     Text(owed > 0 && owe > 0 ? L10n.t("You owe %@ · Friends", Money.format(owe)) : L10n.t("Friends and split bills"))
                         .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
                 }
                 Spacer()
-                Image(systemName: "chevron.forward").font(.system(size: 13, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                Image(systemName: "chevron.forward").font(.scaled(size: 13, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
             }
             .padding(12)
             .foregroundStyle(Theme.Colors.ink)

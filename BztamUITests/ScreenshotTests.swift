@@ -229,6 +229,19 @@ final class ScreenshotTests: XCTestCase {
         app.terminate()
     }
 
+    /// The biggest text size: Home, Add and Settings must stay readable and not overlap.
+    func testLargeText() {
+        let app = launch("en", ["-demoData", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXL"])
+        XCTAssertTrue(app.staticTexts["Categories"].waitForExistence(timeout: 15))
+        sleep(1)
+        save("en-33-large-home")
+        app.terminate()
+        let add = launch("en", ["-demoData", "-openScreen", "add", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXL"])
+        sleep(3)
+        save("en-34-large-add")
+        add.terminate()
+    }
+
     func testScreenshotsEnglish() { capture("en") }
     func testScreenshotsFrench() { capture("fr") }
 

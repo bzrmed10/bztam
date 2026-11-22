@@ -28,11 +28,11 @@ struct ExportView: View {
             Text(L10n.t("A PDF report to read or print, or a CSV file for Excel and Numbers. The file is made on your iPhone."))
                 .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
 
-            Text(L10n.t("Period")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+            Text(L10n.t("Period")).font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
             FlowLayout(spacing: 8) {
                 ForEach(ExportRange.allCases) { r in Chip(title: r.title, selected: range == r) { range = r } }
             }
-            Text(L10n.t("Format")).font(.system(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+            Text(L10n.t("Format")).font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
             FlowLayout(spacing: 8) {
                 ForEach(ExportFormat.allCases) { f in Chip(title: f.title, selected: format == f) { format = f } }
             }

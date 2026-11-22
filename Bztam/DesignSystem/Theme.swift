@@ -59,13 +59,13 @@ enum Theme {
 
 /// Type styles. SF Pro with tabular figures for amounts.
 extension Font {
-    static let bzAmountHero = Font.system(size: 48, weight: .heavy).monospacedDigit()
-    static let bzTitleXL = Font.system(size: 32, weight: .heavy)
-    static let bzTitle = Font.system(size: 20, weight: .bold)
-    static let bzBodyStrong = Font.system(size: 16, weight: .semibold)
-    static let bzBody = Font.system(size: 16, weight: .regular)
-    static let bzCaption = Font.system(size: 13, weight: .medium)
-    static let bzAmount = Font.system(size: 16, weight: .semibold).monospacedDigit()
+    static var bzAmountHero: Font { Font.scaled(size: 48, weight: .heavy).monospacedDigit() }
+    static var bzTitleXL: Font { Font.scaled(size: 32, weight: .heavy) }
+    static var bzTitle: Font { Font.scaled(size: 20, weight: .bold) }
+    static var bzBodyStrong: Font { Font.scaled(size: 16, weight: .semibold) }
+    static var bzBody: Font { Font.scaled(size: 16, weight: .regular) }
+    static var bzCaption: Font { Font.scaled(size: 13, weight: .medium) }
+    static var bzAmount: Font { Font.scaled(size: 16, weight: .semibold).monospacedDigit() }
 }
 
 extension Color {
@@ -112,5 +112,21 @@ enum Appearance: String, CaseIterable, Identifiable {
         case .light: .light
         case .dark: .dark
         }
+    }
+}
+
+extension Font {
+    /// A system font that follows the iPhone's text size setting (Settings → Display → Text Size),
+    /// between a little smaller and about a third larger, so layouts stay clean at every size.
+    static func scaled(size: CGFloat, weight: Font.Weight = .regular, design: Font.Design = .default) -> Font {
+        .system(size: (size * TextScale.factor).rounded(), weight: weight, design: design)
+    }
+}
+
+enum TextScale {
+    /// 1 at the default text size; clamped so the biggest accessibility sizes don't break fixed layouts.
+    static var factor: CGFloat {
+        let raw = UIFontMetrics(forTextStyle: .body).scaledValue(for: 100) / 100
+        return min(1.3, max(0.88, raw))
     }
 }

@@ -49,6 +49,7 @@ struct RootView: View {
     @Environment(\.scenePhase) private var phase
     @State private var lock = AppLock()
 
+    @Environment(\.dynamicTypeSize) private var typeSize
     var body: some View {
         ZStack {
             Group {
@@ -59,7 +60,8 @@ struct RootView: View {
                 }
             }
             // Changing the language or currency in Settings redraws every screen with the new text.
-            .id(language + currency + (amountsHidden ? "·hidden" : ""))
+            // Rebuilt when the language, currency, privacy or the iPhone's text size changes.
+            .id(language + currency + (amountsHidden ? "·hidden" : "") + "\(typeSize)")
             .environment(\.layoutDirection, L10n.isRightToLeft ? .rightToLeft : .leftToRight)
             .environment(\.locale, L10n.locale)
             .environment(\.locale, L10n.locale)
