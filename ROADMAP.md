@@ -122,11 +122,12 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] M13.5 Website, App Store texts, iCloud schema (SavingsGoal, GoalMove)
 - [x] M13.6 TestFlight build (Deploy Schema Changes in CloudKit Console: user)
 
-## Next milestone — to do (noted 22 Nov, from TestFlight)
-- [ ] "Send feedback" in Settings: opens an email to support@healus-ai.com with the app version and iOS version filled in.
-- [ ] Onboarding "You're set" page: redesign to be cleaner. The scroll bar runs into the list area and the "Already paid this month" switches are cut off on the right. Idea: one card per bill with the switch inside the card, no visible scroll bar, the list inset from the edges.
-- [ ] Trim spaces in bill names you type ("iCloud " showed as "iCloud  ·").
-- [ ] Add expense: same scroll fix as the summary page. The scroll bar shows over the form; hide it and keep the content inset so nothing touches the edge.
+## Milestone 14 — Ready for the App Store
+- [x] M14.1 Cleaner "You're set" page (cards, switches inside, no scroll bar over the content), trimmed bill names, Add expense without a scroll bar over the form
+- [x] M14.2 Send feedback (email to support@healus-ai.com with versions) and Restore from a backup (Bztam CSV, any language, skips duplicates)
+- [x] M14.3 Accessibility: text follows the iPhone's text size (up to about +30%), 44 pt touch targets on Home, large-text screenshots
+- [x] M14.4 App Store page: Arabic and en-GB texts, screenshots in Bztam's look (EN, FR, AR), metadata upload workflow
+- [ ] M14.5 Upload texts and screenshots, TestFlight build, external testers
 
 ## Parked (decided 22 Nov)
 - Automatic tracking (Apple Pay via Shortcuts Wallet automation, bank SMS, bank app notifications, review screen, duplicate matching). Parked: users may worry about "connecting" Apple Pay or their bank to an app, even though nothing leaves the phone. Notes kept: no API in Morocco (FinanceKit is US Apple Card only); iOS 27 can install a shared shortcut with its automation in ~3 taps; would be optional in Settings, never in onboarding.

@@ -116,3 +116,12 @@ Once the secrets are fixed, run Actions -> TestFlight -> Run workflow, then inst
 - Keyboard: a floating Done button above number pads in onboarding, goals, categories, splits, darts and recurring. Add expense hides its keypad while the keyboard is open and shows "More below" when the form continues under it.
 - iCloud schema: two new record types, SavingsGoal and GoalMove (deploy to Production after testing).
 - Tests: GoalTests, OnboardingSetupTests, new planner tests (household, transport pass, leftover).
+
+## Milestone 14: Ready for the App Store
+- "You're set" page: three cards (your month, added every month, your plan) plus reminders; the "Already paid this month" switch sits inside its card; no scroll bar over the content. Names you type are trimmed. Add expense hides its scroll bar ("More below" shows when the form continues).
+- Settings → App → Send feedback: an email to support@healus-ai.com with the app version, iOS version and language filled in.
+- Settings → Data → Restore from a backup: picks a CSV exported from Bztam (English, French or Arabic, "," or ";"), shows how many entries are new, adds them and skips the ones already there. Categories are matched by name in any language, or created.
+- Text size: every font follows Settings → Display → Text Size, from a little smaller to about 30% larger (capped so layouts stay clean). Home's eye and period arrows are 44 pt touch targets. New large-text screenshots.
+- Website: support@, privacy@ and legal@healus-ai.com on the matching pages.
+- App Store: en-GB (the app's primary language), en-US, fr-FR and ar-SA texts; screenshots made by scripts/appstore/compose.py from the CI captures, in Bztam's lime and forest look, 8 per language (7 in Arabic until the goals capture lands); `App Store metadata` workflow uploads texts and screenshots (check mode prints what App Store Connect holds).
+- Tests: BackupImportTests (round trip in 3 languages, duplicates, other files), testLargeText, testBillsSkipAndRemove.
