@@ -125,4 +125,4 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 ## Next milestone — to do (noted 22 Nov, from TestFlight)
 - [ ] Onboarding "You're set" page: redesign to be cleaner. The scroll bar runs into the list area and the "Already paid this month" switches are cut off on the right. Idea: one card per bill with the switch inside the card, no visible scroll bar, the list inset from the edges.
 - [ ] Trim spaces in bill names you type ("iCloud " showed as "iCloud  ·").
-- [ ] Check the savings line on the summary when "Add it to savings" is picked (showed "Trip · 10,150 DH a month" on 18,000 DH income): say clearly it's the leftover, or ask before putting it all in one goal.
+- [ ] Add expense: same scroll fix as the summary page. The scroll bar shows over the form; hide it and keep the content inset so nothing touches the edge.
