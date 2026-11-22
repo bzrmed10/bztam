@@ -1,0 +1,58 @@
+Bztam ("wallet" in Darija) shows you three things at a glance: what came in, what you spent, and what's left in each category.
+
+ADD EXPENSES IN SECONDS
+• Snap a receipt: the amount, shop and date are read on your iPhone.
+• Share a screenshot or a PDF bill from any app.
+• Type "taxi 20" or just say it.
+• Bztam remembers the category you pick for each shop and warns you about duplicates.
+
+BUDGETS THAT FOLLOW YOUR PAYDAY
+• Your month starts on your payday, not on the 1st.
+• Money left per category, with a pace warning before you overspend.
+• Move money between categories for one month.
+• A first plan in two minutes: your income, household and bills, and Bztam suggests your budgets. Fixed bills are added by themselves.
+• Budget suggestions from your last months.
+
+SAVINGS GOALS
+• Save for a trip, Eid or a new phone, with what to put aside each month.
+• Money put aside comes off what's left, so it doesn't get spent by accident.
+
+RENT, SALARY AND SUBSCRIPTIONS
+• Repeat any entry every week, month or year.
+• Bztam spots shops you pay every month and offers to add them automatically.
+
+ASK BZTAM
+• "How much did I spend on food last month?"
+• "What's left?" "Biggest expense this year?"
+• Ask in English, French or Darija. Every number comes from your own entries.
+• "Hey Siri, add to Bztam": say "taxi 20" and it's added without opening the app.
+
+SPLIT WITH FRIENDS
+• Scan the ticket, pick who was there, split equally.
+• Send everyone their share on WhatsApp.
+• Counted like your bank: paybacks come back into the category.
+• See who owes you and whom you owe, with reminders.
+
+YOUR DART (TONTINE)
+• Members in turn order, who paid this turn, whose turn it is to collect.
+• Reminders on each turn day, and payments added to your money.
+
+WIDGETS AND ACTION BUTTON
+• See what's left on your Home Screen and Lock Screen.
+• Add an expense or scan a receipt from Control Center or the Action button.
+
+BZTAM NOTICES FOR YOU
+• A weekly recap every Monday.
+• An alert when a bill or a category is well above usual.
+
+INSIGHTS AND EXPORT
+• Where your money goes, money in vs. out, this period vs. the last.
+• Export a PDF report or a CSV for Excel and Numbers.
+
+PRIVATE BY DESIGN
+• No account, no bank connection, no ads, no tracking.
+• Receipts, voice and questions are processed on your iPhone.
+• Privacy mode: one tap hides amounts, or only your money in.
+• Optional iCloud sync to your own iCloud. Face ID lock.
+• Dirham, euro, dollar, pound, Canadian dollar, Swiss franc, riyal and UAE dirham.
+• Dark mode, English, French and Arabic.

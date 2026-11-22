@@ -260,6 +260,12 @@ final class ScreenshotTests: XCTestCase {
         sleep(1)
         save("ar-02-add")
         app.terminate()
+        app = launch("ar", ["-demoData", "-openScreen", "goals"])
+        XCTAssertTrue(app.buttons["goals.new"].waitForExistence(timeout: 15))
+        sleep(1)
+        save("ar-32-goals")
+        app.terminate()
+
         app = launch("ar", ["-demoData", "-openScreen", "friends"])
         sleep(3)
         save("ar-24-friends")
