@@ -34,8 +34,8 @@ final class ScreenshotTests: XCTestCase {
         tap("onboarding.continue")   // bills
         tap("bill.rent")
         tap("bill.utilities")
-        tap("bill.custom")
         tap("bill.rent")             // remove it again
+        tap("bill.custom")           // scrolls down to its card
         if app.buttons["keyboard.done"].exists { app.buttons["keyboard.done"].tap(); sleep(1) }
         tap("onboarding.skip")       // skip with bills that have no amount
         XCTAssertTrue(app.staticTexts["How do you live?"].waitForExistence(timeout: 5))
