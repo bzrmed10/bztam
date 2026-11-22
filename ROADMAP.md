@@ -126,3 +126,7 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [ ] Onboarding "You're set" page: redesign to be cleaner. The scroll bar runs into the list area and the "Already paid this month" switches are cut off on the right. Idea: one card per bill with the switch inside the card, no visible scroll bar, the list inset from the edges.
 - [ ] Trim spaces in bill names you type ("iCloud " showed as "iCloud  ·").
 - [ ] Add expense: same scroll fix as the summary page. The scroll bar shows over the form; hide it and keep the content inset so nothing touches the edge.
+
+## Parked (decided 22 Nov)
+- Automatic tracking (Apple Pay via Shortcuts Wallet automation, bank SMS, bank app notifications, review screen, duplicate matching). Parked: users may worry about "connecting" Apple Pay or their bank to an app, even though nothing leaves the phone. Notes kept: no API in Morocco (FinanceKit is US Apple Card only); iOS 27 can install a shared shortcut with its automation in ~3 taps; would be optional in Settings, never in onboarding.
+- Idea to decide: import a bank statement PDF shared from the bank app (user-initiated, like sharing a bill; read on the phone, skips what's already there).
