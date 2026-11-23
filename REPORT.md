@@ -125,3 +125,10 @@ Once the secrets are fixed, run Actions -> TestFlight -> Run workflow, then inst
 - Website: support@, privacy@ and legal@healus-ai.com on the matching pages.
 - App Store: en-GB (the app's primary language), en-US, fr-FR and ar-SA texts; screenshots made by scripts/appstore/compose.py from the CI captures, in Bztam's lime and forest look, 8 per language (7 in Arabic until the goals capture lands); `App Store metadata` workflow uploads texts and screenshots (check mode prints what App Store Connect holds).
 - Tests: BackupImportTests (round trip in 3 languages, duplicates, other files), testLargeText, testBillsSkipAndRemove.
+
+## Milestone 15: Easier
+- Plan tab (5 tabs: Home, Activity, Plan, Insights, Settings): budgets (planned of income, without a budget), savings goals, Every month, Dart, Friends, Plan my month again. Settings keeps only settings: your month, privacy, alerts, receipts, data, app.
+- Home: period arrows around the dates, the eye on its own; three wide actions (Add, Scan, Import → screenshot or PDF); each category shows one number ("90 DH left", "40 DH over", "Paid") with "310 of 400 DH spent" under the bar; "without a budget".
+- Add expense: Scan and Import at the top, Type it with the mic, the amount big in the middle, categories in one sideways row (most used first; the picked one scrolls into view), shop or note, then Today / Repeat / Split side by side (Today opens a small date sheet with Today and Yesterday). When the system keyboard is up, a "Keypad" button brings the number keypad back.
+- Check the receipt: one big Add expense button; Split with friends small; Retake photo as a link.
+- Words: "left over", "Move to another category". Friends: what you owe a friend in normal text (red only for the total). Split: Include me / Remind me folded under Options. Onboarding: a picked bill scrolls into view.

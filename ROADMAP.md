@@ -134,10 +134,10 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - Idea to decide: import a bank statement PDF shared from the bank app (user-initiated, like sharing a bill; read on the phone, skips what's already there).
 
 ## Milestone 15 — Easier (design approved 23 Nov: canvas "Bztam: easier screens")
-- [ ] Plan tab (budgets, savings goals, every month, dart, friends); Settings shortened to settings only
-- [ ] Home: arrows around the dates, eye alone; 3 actions (Add, Scan, Import); one clear number per category ("90 DH left"); "without a budget"
-- [ ] Add expense: amount first; categories in one sideways row (suggested first); shop field; Today / Repeat / Split buttons that open small sheets; Type it with mic at the top; Scan and Import buttons at the top
-- [ ] Add expense keyboard: a "Back to keypad" button above the system keyboard (today the only ways back are the return key or dragging the list, which people don't find)
-- [ ] Check the receipt: one big button; Split smaller; Retake photo as a link
-- [ ] Plain words: "without a budget", "left over", "Move to another category"
-- [ ] Friends: small amounts you owe in normal text; Split options folded; onboarding bills card scrolls above the number pad
+- [x] Plan tab (budgets, savings goals, every month, dart, friends); Settings shortened to settings only
+- [x] Home: arrows around the dates, eye alone; 3 actions (Add, Scan, Import); one clear number per category ("90 DH left"); "without a budget"
+- [x] Add expense: amount first; categories in one sideways row (suggested first); shop field; Today / Repeat / Split buttons that open small sheets; Type it with mic at the top; Scan and Import buttons at the top
+- [x] Add expense keyboard: a "Back to keypad" button above the system keyboard (today the only ways back are the return key or dragging the list, which people don't find)
+- [x] Check the receipt: one big button; Split smaller; Retake photo as a link
+- [x] Plain words: "without a budget", "left over", "Move to another category"
+- [x] Friends: small amounts you owe in normal text; Split options folded; onboarding bills card scrolls above the number pad
