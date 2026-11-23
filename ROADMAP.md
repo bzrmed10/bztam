@@ -132,3 +132,12 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 ## Parked (decided 22 Nov)
 - Automatic tracking (Apple Pay via Shortcuts Wallet automation, bank SMS, bank app notifications, review screen, duplicate matching). Parked: users may worry about "connecting" Apple Pay or their bank to an app, even though nothing leaves the phone. Notes kept: no API in Morocco (FinanceKit is US Apple Card only); iOS 27 can install a shared shortcut with its automation in ~3 taps; would be optional in Settings, never in onboarding.
 - Idea to decide: import a bank statement PDF shared from the bank app (user-initiated, like sharing a bill; read on the phone, skips what's already there).
+
+## Milestone 15 — Easier (design approved 23 Nov: canvas "Bztam: easier screens")
+- [ ] Plan tab (budgets, savings goals, every month, dart, friends); Settings shortened to settings only
+- [ ] Home: arrows around the dates, eye alone; 3 actions (Add, Scan, Import); one clear number per category ("90 DH left"); "without a budget"
+- [ ] Add expense: amount first; categories in one sideways row (suggested first); shop field; Today / Repeat / Split buttons that open small sheets; Type it with mic at the top; Scan and Import buttons at the top
+- [ ] Add expense keyboard: a "Back to keypad" button above the system keyboard (today the only ways back are the return key or dragging the list, which people don't find)
+- [ ] Check the receipt: one big button; Split smaller; Retake photo as a link
+- [ ] Plain words: "without a budget", "left over", "Move to another category"
+- [ ] Friends: small amounts you owe in normal text; Split options folded; onboarding bills card scrolls above the number pad
