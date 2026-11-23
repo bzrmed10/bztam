@@ -29,7 +29,7 @@ struct CategoryDetailView: View {
                 HStack {
                     CircleIconButton(symbol: "chevron.backward", label: L10n.t("Back")) { dismiss() }
                     Spacer()
-                    Button(L10n.t("Move money")) { moving = true }
+                    Button(L10n.t("Move to another category")) { moving = true }
                         .buttonStyle(.plain)
                         .font(.scaled(size: 14, weight: .semibold))
                         .foregroundStyle(Theme.Colors.ink)

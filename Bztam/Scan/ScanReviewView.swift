@@ -108,22 +108,33 @@ struct ScanReviewView: View {
                         .disabled(!canSave)
                         .opacity(canSave ? 1 : 0.5)
                         .accessibilityIdentifier("scan.save")
-                    Button {
-                        splitting = SplitDraft(amount: amount.centimes,
-                                               merchant: merchant.trimmingCharacters(in: .whitespacesAndNewlines),
-                                               date: date, categoryID: categoryID)
-                    } label: {
-                        Label(L10n.t("Split with friends"), systemImage: "person.2")
-                    }
-                    .buttonStyle(.pillSecondary)
-                    .disabled(!canSave)
-                    .accessibilityIdentifier("scan.split")
-                    if draft.source == .camera || draft.source == .screenshot {
-                        Button(draft.source == .camera ? L10n.t("Retake photo") : L10n.t("Choose another image")) {
-                            dismiss()
-                            onRetake()
+                    // One big button; the rest stays small.
+                    HStack {
+                        Button {
+                            splitting = SplitDraft(amount: amount.centimes,
+                                                   merchant: merchant.trimmingCharacters(in: .whitespacesAndNewlines),
+                                                   date: date, categoryID: categoryID)
+                        } label: {
+                            Label(L10n.t("Split with friends"), systemImage: "person.2")
+                                .font(.scaled(size: 15, weight: .semibold))
+                                .foregroundStyle(Theme.Colors.ink)
+                                .padding(.horizontal, 16)
+                                .frame(height: 44)
+                                .background(Theme.Colors.surface, in: Capsule())
                         }
-                        .buttonStyle(.pillSecondary)
+                        .buttonStyle(.pressable)
+                        .disabled(!canSave)
+                        .accessibilityIdentifier("scan.split")
+                        Spacer(minLength: 8)
+                        if draft.source == .camera || draft.source == .screenshot {
+                            Button(draft.source == .camera ? L10n.t("Retake photo") : L10n.t("Choose another image")) {
+                                dismiss()
+                                onRetake()
+                            }
+                            .font(.scaled(size: 15, weight: .semibold))
+                            .foregroundStyle(Theme.Colors.link)
+                            .frame(minHeight: 44)
+                        }
                     }
                 }
                 .padding(.top, 8)

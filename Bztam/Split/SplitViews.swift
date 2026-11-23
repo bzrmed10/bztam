@@ -21,6 +21,7 @@ struct SplitSheet: View {
     @Query(sort: \Friend.name) private var friends: [Friend]
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
 
+    @State private var showOptions = false
     @State private var amount = AmountInput()
     @State private var merchant = ""
     @State private var date = Date()
@@ -115,12 +116,18 @@ struct SplitSheet: View {
                 }
 
                 if payerID == nil {
-                    VStack(spacing: 0) {
-                        ToggleRow(symbol: "person", title: L10n.t("Include me"),
-                                  detail: L10n.t("Off if you paid for the others only"), isOn: $includesMe)
-                        ToggleRow(symbol: "bell", title: L10n.t("Remind me in 3 days"),
-                                  detail: L10n.t("If friends haven't paid you back"), isOn: $remind)
+                    // Most people never change these: folded under "Options".
+                    DisclosureGroup(isExpanded: $showOptions) {
+                        VStack(spacing: 0) {
+                            ToggleRow(symbol: "person", title: L10n.t("Include me"),
+                                      detail: L10n.t("Off if you paid for the others only"), isOn: $includesMe)
+                            ToggleRow(symbol: "bell", title: L10n.t("Remind me in 3 days"),
+                                      detail: L10n.t("If friends haven't paid you back"), isOn: $remind)
+                        }
+                    } label: {
+                        Text(L10n.t("Options")).font(.bzBodyStrong).foregroundStyle(Theme.Colors.ink)
                     }
+                    .tint(Theme.Colors.ink)
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
@@ -344,7 +351,7 @@ struct FriendsView: View {
             if b.net != 0 {
                 Text(Money.format(abs(b.net), sign: b.net > 0))
                     .font(.bzAmount)
-                    .foregroundStyle(b.net > 0 ? Theme.Colors.positive : Theme.Colors.negative)
+                    .foregroundStyle(b.net > 0 ? Theme.Colors.positive : Theme.Colors.ink)
             }
             Image(systemName: "chevron.forward").font(.scaled(size: 13, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
         }

@@ -266,7 +266,16 @@ extension OnboardingView {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
                         ForEach(BillCatalog.kinds) { kind in
                             let on = bills.contains { $0.kindID == kind.id }
-                            billTile(L10n.t(kind.title), symbol: kind.symbol, on: on) { toggle(kind) }
+                            billTile(L10n.t(kind.title), symbol: kind.symbol, on: on) {
+                                toggle(kind)
+                                // Bring the new card into view, above the number pad.
+                                if let added = bills.last, added.kindID == kind.id, !on {
+                                    Task { @MainActor in
+                                        try? await Task.sleep(for: .milliseconds(300))
+                                        withAnimation(.snappy) { proxy.scrollTo(added.id, anchor: .center) }
+                                    }
+                                }
+                            }
                                 .accessibilityIdentifier("bill.\(kind.id)")
                         }
                         billTile(L10n.t("Something else"), symbol: "plus", on: false) {
@@ -423,7 +432,7 @@ extension OnboardingView {
                         }
                         if base.leftover > 0 {
                             VStack(alignment: .leading, spacing: 8) {
-                                Text(L10n.t("%@ nobody claimed", Money.format(base.leftover, privacy: .never)))
+                                Text(L10n.t("%@ left over", Money.format(base.leftover, privacy: .never)))
                                     .font(.scaled(size: 15, weight: .bold))
                                 FlowLayout(spacing: 8) {
                                     Chip(title: L10n.t("Keep it as a cushion"), selected: leftover == .buffer) { leftover = .buffer; buildPlan() }

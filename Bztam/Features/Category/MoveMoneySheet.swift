@@ -31,7 +31,7 @@ struct MoveMoneySheet: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    ScreenTitle(text: L10n.t("Move money"))
+                    ScreenTitle(text: L10n.t("Move to another category"))
                     Text(giving ? L10n.t("From %@ to another category, for this month only.", category.displayName)
                                 : L10n.t("From another category to %@, for this month only.", category.displayName))
                         .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)

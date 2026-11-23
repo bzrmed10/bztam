@@ -7,13 +7,14 @@ import UIKit
 import UniformTypeIdentifiers
 
 enum AppTab: String, CaseIterable, Identifiable {
-    case home, activity, insights, settings
+    case home, activity, plan, insights, settings
     var id: String { rawValue }
 
     var title: String {
         switch self {
         case .home: L10n.t("Home")
         case .activity: L10n.t("Activity")
+        case .plan: L10n.t("Plan")
         case .insights: L10n.t("Insights")
         case .settings: L10n.t("Settings")
         }
@@ -23,6 +24,7 @@ enum AppTab: String, CaseIterable, Identifiable {
         switch self {
         case .home: "house"
         case .activity: "list.bullet"
+        case .plan: "list.bullet.clipboard"
         case .insights: "chart.pie"
         case .settings: "slider.horizontal.3"
         }
@@ -39,7 +41,7 @@ struct AddRequest: Identifiable, Equatable {
     var categoryID: UUID?
 }
 
-/// The four tabs with the flat Wise-style tab bar, plus the Add sheet and the Undo toast.
+/// The five tabs with the flat Wise-style tab bar, plus the Add sheet and the Undo toast.
 struct MainTabView: View {
     @State private var tab: AppTab = AppTab(rawValue: LaunchOptions.startTab ?? "") ?? .home
     @State private var addRequest: AddRequest?
@@ -66,6 +68,7 @@ struct MainTabView: View {
                          subscription: subscription, onSubscriptionYes: makeRecurring,
                          onSubscriptionDismiss: { SubscriptionDetector.dismiss($0.key); refreshSubscription() })
             case .activity: ActivityView(onAdd: { addRequest = AddRequest() })
+            case .plan: PlanView()
             case .insights: InsightsView(onAsk: { asking = true })
             case .settings: SettingsView()
             }
@@ -172,7 +175,7 @@ struct MainTabView: View {
             runPendingAction()
             if LaunchOptions.openScreen == "add" { addRequest = AddRequest() }
             if LaunchOptions.openScreen == "ask" { tab = .insights; asking = true }
-            if LaunchOptions.openScreen == "dart" { tab = .settings }
+            if LaunchOptions.openScreen == "dart" { tab = .plan }
             if LaunchOptions.openScreen == "scan" {
                 await scanner.read([DemoReceipt.image()], source: .camera)
             }
@@ -286,7 +289,7 @@ struct BZTabBar: View {
         }
         .padding(5)
         .glassEffect(.regular.interactive(), in: .capsule)
-        .padding(.horizontal, Theme.Space.l)
+        .padding(.horizontal, 14)
         .padding(.top, 6)
         .padding(.bottom, 2)
         .sensoryFeedback(.selection, trigger: selection)

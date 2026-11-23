@@ -8,7 +8,6 @@ import UniformTypeIdentifiers
 struct SettingsView: View {
     @Environment(\.modelContext) private var context
     @Query private var settingsRows: [AppSettings]
-    @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }) private var categories: [BudgetCategory]
 
     @AppStorage(ScreenshotWatcher.enabledKey) private var suggestScreenshots = false
     @AppStorage(BudgetAlerts.enabledKey) private var budgetAlerts = true
@@ -21,8 +20,6 @@ struct SettingsView: View {
     @AppStorage(Appearance.storageKey) private var appearance = Appearance.system.rawValue
     @AppStorage(Money.currencyKey) private var currency = Currency.mad.rawValue
     @State private var photosDenied = false
-    @State private var showCategories = false
-    @State private var showRecurring = false
     @State private var showExport = false
     @State private var restartNeeded = false
     @State private var confirmReset = false
@@ -33,14 +30,6 @@ struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @State private var cloudStatus: CKAccountStatus = .couldNotDetermine
     @AppStorage(CloudSync.enabledKey) private var iCloudSync = true
-    @State private var showDart = LaunchOptions.openScreen == "dart"
-    @State private var showFriends = false
-    @State private var showGoals = false
-    @State private var showSetup = false
-    @Query(filter: #Predicate<SavingsGoal> { !$0.isArchived }) private var goalRows: [SavingsGoal]
-    @Query private var friendRows: [Friend]
-    @Query private var darts: [Dart]
-    @Query(filter: #Predicate<RecurringRule> { $0.isActive }) private var rules: [RecurringRule]
 
     private var version: String {
         let v = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
@@ -50,13 +39,12 @@ struct SettingsView: View {
 
     var body: some View {
         let settings = settingsRows.first
-        let planned = categories.reduce(0) { $0 + $1.budget }
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
                     ScreenTitle(text: L10n.t("Settings"))
 
-                    section(L10n.t("Money")) {
+                    section(L10n.t("Your month")) {
                         Menu {
                             Picker(L10n.t("Payday"), selection: Binding(
                                 get: { settings?.payday ?? 1 },
@@ -80,45 +68,33 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
 
-                        Button { showCategories = true } label: {
-                            SettingsRow(symbol: "square.grid.2x2", title: L10n.t("Categories and budgets"),
-                                        value: L10n.t("%d categories · %@ planned", categories.count, Money.format(planned)))
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityIdentifier("settings.categories")
+                    }
 
-                        Button { showGoals = true } label: {
-                            SettingsRow(symbol: "leaf", title: L10n.t("Savings goals"),
-                                        value: goalRows.isEmpty ? L10n.t("Save for a trip, Eid, a new phone") : goalRows.map(\.name).joined(separator: ", "))
+                    section(L10n.t("Privacy")) {
+                        ToggleRow(symbol: "eye.slash", title: L10n.t("Hide amounts when Bztam opens"),
+                                  detail: L10n.t("Tap the eye on Home to show them"), isOn: $hideOnOpen)
+                        ToggleRow(symbol: "banknote", title: L10n.t("Only hide money in"),
+                                  detail: L10n.t("Your salary and what's left stay private; expenses stay visible"), isOn: $hideIncomeOnly)
+                        ToggleRow(symbol: "faceid", title: L10n.t("Lock with Face ID"),
+                                  detail: L10n.t("Asks for Face ID or your passcode when Bztam opens"),
+                                  isOn: Binding(get: { faceIDLock }, set: { on in
+                                      Task {
+                                          // Confirm it's really the owner before turning the lock on or off.
+                                          if await AppLock.authenticate(reason: L10n.t("Confirm to change the lock")) { faceIDLock = on }
+                                      }
+                                  }))
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(CloudSync.isActive ? L10n.t("Your data stays yours") : L10n.t("Your data stays on this iPhone"))
+                                .font(.scaled(size: 15, weight: .bold))
+                            Text(CloudSync.isActive
+                                 ? L10n.t("No Bztam account, no bank connection, no ads. Receipts are read on your phone, and sync goes to your own iCloud.")
+                                 : L10n.t("No account, no bank connection, no ads. Receipts are read on your phone."))
+                                .font(.scaled(size: 14)).foregroundStyle(Theme.Colors.inkMuted)
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityIdentifier("settings.goals")
-
-                        Button { showSetup = true } label: {
-                            SettingsRow(symbol: "wand.and.stars", title: L10n.t("Plan my month again"),
-                                        value: L10n.t("Income, bills and a suggested plan"))
-                        }
-                        .buttonStyle(.plain)
-
-                        Button { showRecurring = true } label: {
-                            SettingsRow(symbol: "arrow.triangle.2.circlepath", title: L10n.t("Recurring"),
-                                        value: rules.isEmpty ? L10n.t("Rent, salary, subscriptions") : L10n.t("%d active", rules.count))
-                        }
-                        .buttonStyle(.plain)
-
-                        Button { showDart = true } label: {
-                            SettingsRow(symbol: "person.3", title: L10n.t("Dart"),
-                                        value: darts.isEmpty ? L10n.t("Track your dart (tontine)") : darts.map(\.name).joined(separator: ", "))
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityIdentifier("settings.dart")
-
-                        Button { showFriends = true } label: {
-                            SettingsRow(symbol: "person.2", title: L10n.t("Friends"),
-                                        value: friendRows.isEmpty ? L10n.t("Split bills with friends") : L10n.t("%d friends", friendRows.count))
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityIdentifier("settings.friends")
+                        .padding(16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
+                        .padding(.top, 8)
                     }
 
                     section(L10n.t("Alerts")) {
@@ -184,33 +160,6 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("settings.reset")
-                    }
-
-                    section(L10n.t("Privacy")) {
-                        ToggleRow(symbol: "eye.slash", title: L10n.t("Hide amounts when Bztam opens"),
-                                  detail: L10n.t("Tap the eye on Home to show them"), isOn: $hideOnOpen)
-                        ToggleRow(symbol: "banknote", title: L10n.t("Only hide money in"),
-                                  detail: L10n.t("Your salary and what's left stay private; expenses stay visible"), isOn: $hideIncomeOnly)
-                        ToggleRow(symbol: "faceid", title: L10n.t("Lock with Face ID"),
-                                  detail: L10n.t("Asks for Face ID or your passcode when Bztam opens"),
-                                  isOn: Binding(get: { faceIDLock }, set: { on in
-                                      Task {
-                                          // Confirm it's really the owner before turning the lock on or off.
-                                          if await AppLock.authenticate(reason: L10n.t("Confirm to change the lock")) { faceIDLock = on }
-                                      }
-                                  }))
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(CloudSync.isActive ? L10n.t("Your data stays yours") : L10n.t("Your data stays on this iPhone"))
-                                .font(.scaled(size: 15, weight: .bold))
-                            Text(CloudSync.isActive
-                                 ? L10n.t("No Bztam account, no bank connection, no ads. Receipts are read on your phone, and sync goes to your own iCloud.")
-                                 : L10n.t("No account, no bank connection, no ads. Receipts are read on your phone."))
-                                .font(.scaled(size: 14)).foregroundStyle(Theme.Colors.inkMuted)
-                        }
-                        .padding(16)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
-                        .padding(.top, 8)
                     }
 
                     section(L10n.t("App")) {
@@ -302,7 +251,6 @@ struct SettingsView: View {
                      ? L10n.t("Every expense, money in, category, dart and friend is deleted from this iPhone and from your iCloud. This can't be undone. Export first if you want a copy.")
                      : L10n.t("Every expense, money in, category, dart and friend is deleted from this iPhone. This can't be undone. Export first if you want a copy."))
             }
-            .sheet(isPresented: $showRecurring) { RecurringListView() }
             .sheet(isPresented: $showExport) { ExportView() }
             .alert(L10n.t("Restart Bztam to apply"), isPresented: $restartNeeded) {
                 Button(L10n.t("OK"), role: .cancel) {}
@@ -310,13 +258,6 @@ struct SettingsView: View {
                 Text(L10n.t("Close Bztam from the app switcher and open it again."))
             }
             .task { cloudStatus = await CloudSync.accountStatus() }
-            .sheet(isPresented: $showDart) { DartListView() }
-            .sheet(isPresented: $showFriends) { FriendsView() }
-            .sheet(isPresented: $showGoals) { GoalsView() }
-            .fullScreenCover(isPresented: $showSetup) { OnboardingView(setupMode: true) }
-            .sheet(isPresented: $showCategories) {
-                CategoriesEditorView(income: settings?.expectedIncome ?? 0)
-            }
         }
     }
 

@@ -64,7 +64,7 @@ struct HomeView: View {
                             SectionTitle(text: L10n.t("Categories"))
                             Spacer()
                             if summary.notPlanned > 0 && offset == 0 {
-                                TagPill(text: L10n.t("%@ not planned", Money.format(summary.notPlanned)))
+                                TagPill(text: L10n.t("%@ without a budget", Money.format(summary.notPlanned)))
                             }
                         }
                         ForEach(lines) { line in
@@ -213,31 +213,38 @@ struct HomeView: View {
 
     private func hero(_ s: PeriodSummary) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 4) {
-                Text(L10n.t("Left to spend") + " · " + DateText.period(period))
-                    .font(.bzCaption)
-                    .foregroundStyle(Theme.Colors.inkMuted)
+            HStack(spacing: 0) {
+                Button { offset -= 1 } label: {
+                    Image(systemName: "chevron.backward").frame(width: 36, height: 44)
+                }
+                .padding(.leading, -10)
+                .accessibilityLabel(L10n.t("Previous period"))
+                Text(DateText.period(period))
+                    .font(.scaled(size: 14, weight: .semibold))
+                    .contentTransition(.numericText())
+                Button { offset += 1 } label: {
+                    Image(systemName: "chevron.forward").frame(width: 36, height: 44)
+                }
+                .disabled(offset >= 0)
+                .opacity(offset >= 0 ? 0.3 : 1)
+                .accessibilityLabel(L10n.t("Next period"))
                 Spacer()
                 Button { amountsHidden.toggle() } label: {
-                    Image(systemName: amountsHidden ? "eye.slash" : "eye").frame(width: 40, height: 44)
+                    Image(systemName: amountsHidden ? "eye.slash" : "eye")
+                        .frame(width: 44, height: 44)
+                        .background(Theme.Colors.surface, in: Circle())
                         .contentTransition(.symbolEffect(.replace))
                 }
                 .sensoryFeedback(.selection, trigger: amountsHidden)
                 .accessibilityLabel(amountsHidden ? L10n.t("Show amounts") : L10n.t("Hide amounts"))
                 .accessibilityIdentifier("home.privacy")
-                Button { offset -= 1 } label: {
-                    Image(systemName: "chevron.backward").frame(width: 40, height: 44)
-                }
-                .accessibilityLabel(L10n.t("Previous period"))
-                Button { offset += 1 } label: {
-                    Image(systemName: "chevron.forward").frame(width: 40, height: 44)
-                }
-                .disabled(offset >= 0)
-                .opacity(offset >= 0 ? 0.3 : 1)
-                .accessibilityLabel(L10n.t("Next period"))
             }
             .font(.scaled(size: 15, weight: .semibold))
             .foregroundStyle(Theme.Colors.ink)
+
+            Text(L10n.t("Left to spend"))
+                .font(.scaled(size: 14, weight: .medium))
+                .foregroundStyle(Theme.Colors.inkMuted)
 
             Text(Money.format(s.left, privacy: .income))
                 .contentTransition(.numericText(value: Double(s.left)))
@@ -260,39 +267,52 @@ struct HomeView: View {
     }
 
     private var quickActions: some View {
-        HStack(alignment: .top, spacing: 8) {
-            QuickAction(title: L10n.t("Add"), symbol: "plus", highlighted: true) { onAdd(AddRequest()) }
-            QuickAction(title: L10n.t("Scan"), symbol: "camera") { onScan(.camera) }
-            QuickAction(title: L10n.t("Screenshot"), symbol: "photo") { onScan(.screenshot) }
-            QuickAction(title: L10n.t("Money in"), symbol: "arrow.down.to.line") { onAdd(AddRequest(kind: .income)) }
+        HStack(spacing: 10) {
+            QuickAction(title: L10n.t("Add"), symbol: "plus", highlighted: true, id: "quick.plus") { onAdd(AddRequest()) }
+            QuickAction(title: L10n.t("Scan"), symbol: "camera", id: "quick.camera") { onScan(.camera) }
+            Menu {
+                Button { onScan(.screenshot) } label: { Label(L10n.t("Screenshot or photo"), systemImage: "photo") }
+                Button { onScan(.pdf) } label: { Label(L10n.t("PDF bill"), systemImage: "doc") }
+            } label: {
+                QuickActionLabel(title: L10n.t("Import"), symbol: "square.and.arrow.down", highlighted: false)
+            }
+            .buttonStyle(.pressable)
+            .accessibilityIdentifier("quick.import")
         }
     }
 }
 
+/// Add, Scan, Import on Home: wide rounded buttons.
 private struct QuickAction: View {
     let title: String
     let symbol: String
     var highlighted = false
+    var id: String
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 8) {
-                Image(systemName: symbol)
-                    .font(.scaled(size: 22, weight: .semibold))
-                    .foregroundStyle(highlighted ? Theme.Colors.onBrand : Theme.Colors.ink)
-                    .frame(width: Theme.Size.quickAction, height: Theme.Size.quickAction)
-                    .background(highlighted ? Theme.Colors.brand : Theme.Colors.surface, in: Circle())
-                Text(title)
-                    .font(.scaled(size: 13, weight: .semibold))
-                    .foregroundStyle(Theme.Colors.ink)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-            }
-            .frame(maxWidth: .infinity)
+            QuickActionLabel(title: title, symbol: symbol, highlighted: highlighted)
         }
-        .buttonStyle(.plain)
-        .accessibilityIdentifier("quick.\(symbol)")
+        .buttonStyle(.pressable)
+        .accessibilityIdentifier(id)
+    }
+}
+
+private struct QuickActionLabel: View {
+    let title: String
+    let symbol: String
+    let highlighted: Bool
+
+    var body: some View {
+        VStack(spacing: 4) {
+            Image(systemName: symbol).font(.scaled(size: 20, weight: .semibold))
+            Text(title).font(.scaled(size: 13, weight: .bold)).lineLimit(1).minimumScaleFactor(0.8)
+        }
+        .foregroundStyle(highlighted ? Theme.Colors.onBrand : Theme.Colors.ink)
+        .frame(maxWidth: .infinity, minHeight: 64)
+        .background(highlighted ? Theme.Colors.brand : Theme.Colors.surface, in: RoundedRectangle(cornerRadius: 20))
+        .contentShape(RoundedRectangle(cornerRadius: 20))
     }
 }
 
@@ -300,27 +320,22 @@ private struct QuickAction: View {
 struct CategoryRow: View {
     let line: CategoryLine
 
+    /// One clear number: "90 DH left", "40 DH over", "Paid".
     private var right: (String, Color) {
         switch line.status.state {
-        case .left(let x): (Money.format(x), Theme.Colors.ink)
-        case .over(let x): (Money.format(x), Theme.Colors.negative)
+        case .left(let x): (L10n.t("%@ left", Money.format(x)), Theme.Colors.ink)
+        case .over(let x): (L10n.t("%@ over", Money.format(x)), Theme.Colors.negative)
         case .paid: (L10n.t("Paid"), Theme.Colors.positive)
-        case .noBudget: (Money.format(line.status.spent), Theme.Colors.ink)
-        }
-    }
-
-    private var caption: (String, Color) {
-        switch line.status.state {
-        case .left: (L10n.t("left"), Theme.Colors.inkMuted)
-        case .over: (L10n.t("over"), Theme.Colors.negative)
-        case .paid: (Money.format(line.status.budget), Theme.Colors.inkMuted)
-        case .noBudget: (L10n.t("spent"), Theme.Colors.inkMuted)
+        case .noBudget: (L10n.t("%@ spent", Money.format(line.status.spent)), Theme.Colors.ink)
         }
     }
 
     private var sub: String {
-        if case .noBudget = line.status.state { return L10n.t("No budget") }
-        return L10n.t("%@ of %@", Money.format(line.status.spent, symbol: false), Money.format(line.status.budget))
+        switch line.status.state {
+        case .noBudget: return L10n.t("No budget")
+        case .paid: return Money.format(line.status.budget)
+        default: return L10n.t("%@ of %@ spent", Money.format(line.status.spent, symbol: false), Money.format(line.status.budget))
+        }
     }
 
     private var barColor: Color {
@@ -334,21 +349,16 @@ struct CategoryRow: View {
     var body: some View {
         HStack(spacing: Theme.Space.m) {
             IconCircle(symbol: line.category.symbol)
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 6) {
                 HStack(alignment: .firstTextBaseline) {
                     Text(line.category.displayName).font(.bzBodyStrong).lineLimit(1)
                     Spacer(minLength: 8)
-                    Text(right.0).font(.bzAmount).foregroundStyle(right.1)
+                    Text(right.0).font(.bzAmount).foregroundStyle(right.1).lineLimit(1)
                 }
-                HStack {
-                    Text(sub)
-                    Spacer(minLength: 8)
-                    Text(caption.0).foregroundStyle(caption.1)
-                }
-                .font(.bzCaption)
-                .foregroundStyle(Theme.Colors.inkMuted)
-                ProgressPill(value: line.status.progress, height: 4, fill: barColor)
-                    .padding(.top, 2)
+                ProgressPill(value: line.status.progress, height: 5, fill: barColor)
+                Text(sub)
+                    .font(.bzCaption)
+                    .foregroundStyle(Theme.Colors.inkMuted)
             }
             .foregroundStyle(Theme.Colors.ink)
         }

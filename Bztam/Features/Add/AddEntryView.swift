@@ -30,8 +30,7 @@ struct AddEntryView: View {
     @State private var repeatFrequency: Frequency?
     @State private var splitting: SplitDraft?
     @State private var keyboardShown = false
-    @State private var moreBelow = false
-    @State private var scroll = ScrollPosition(edge: .top)
+    @State private var pickingDate = false
 
     init(request: AddRequest, onScan: ((ScanKind) -> Void)? = nil) {
         editing = nil
@@ -56,210 +55,76 @@ struct AddEntryView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                CircleIconButton(symbol: "xmark", label: L10n.t("Close")) { dismiss() }
-                Spacer()
-                SegmentedPill(options: [(EntryKind.expense, L10n.t("Expense")), (EntryKind.income, L10n.t("Money in"))],
-                              selection: $kind)
-                    .frame(width: 220)
-                Spacer()
-                Color.clear.frame(width: 44, height: 44)
-            }
-            .padding(.bottom, 12)
+            topBar
+                .padding(.bottom, 12)
 
-            ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-            ScreenTitle(text: title)
-
-            if editing == nil {
-                HStack(spacing: 10) {
-                    Image(systemName: "sparkles").foregroundStyle(Theme.Colors.inkMuted)
-                    TextField(L10n.t("Type it: taxi 20, café 38…"), text: $quickText)
-                        .font(.scaled(size: 15, weight: .medium))
-                        .submitLabel(.done)
-                        .onSubmit(applyQuickText)
-                        .accessibilityIdentifier("add.quick")
-                    Button {
-                        Task { await speech.toggle() }
-                    } label: {
-                        Image(systemName: speech.isListening ? "stop.fill" : "mic")
-                            .symbolEffect(.pulse, isActive: speech.isListening)
-                            .font(.scaled(size: 15, weight: .bold))
-                            .foregroundStyle(speech.isListening ? Theme.Colors.onBrand : Theme.Colors.ink)
-                            .frame(width: 36, height: 36)
-                            .background(speech.isListening ? Theme.Colors.brand : Theme.Colors.canvas, in: Circle())
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(speech.isListening ? L10n.t("Stop") : L10n.t("Say it"))
-                }
-                .padding(.leading, 16)
-                .padding(.trailing, 6)
-                .frame(height: 48)
-                .background(Theme.Colors.surface, in: Capsule())
-            }
-
-            if let onScan, kind == .expense {
-                HStack(spacing: 8) {
-                    scanButton(L10n.t("Scan"), symbol: "camera", fill: Theme.Colors.brandTint) { onScan(.camera) }
-                    scanButton(L10n.t("Screenshot"), symbol: "photo", fill: Theme.Colors.surface) { onScan(.screenshot) }
-                    scanButton(L10n.t("PDF"), symbol: "doc", fill: Theme.Colors.surface) { onScan(.pdf) }
-                }
-            } else if let name = editing?.attachmentName {
-                Button { showReceipt = true } label: {
-                    Label(L10n.t("View receipt"), systemImage: "doc.text.image")
-                        .font(.scaled(size: 15, weight: .semibold))
-                        .foregroundStyle(Theme.Colors.ink)
-                        .frame(maxWidth: .infinity, minHeight: 44)
-                        .background(Theme.Colors.surface, in: Capsule())
-                }
-                .buttonStyle(.plain)
-                .fullScreenCover(isPresented: $showReceipt) {
-                    ImageViewer(image: AttachmentStore.image(named: name))
-                }
-            }
-
-            AmountField(caption: L10n.t("Amount"), text: amount.display())
-                .accessibilityIdentifier("add.amount")
-
-            FlowLayout(spacing: 8) {
-                if kind == .expense {
-                    ForEach(categories) { c in
-                        Chip(title: c.displayName, selected: c.id == categoryID) { categoryID = c.id; userPickedCategory = true }
-                    }
-                } else {
-                    ForEach(IncomeSource.allCases) { s in
-                        Chip(title: s.title, selected: s == incomeSource) { incomeSource = s }
-                    }
-                }
-            }
-
-            HStack(spacing: 8) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(L10n.t("Date")).font(.scaled(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
-                    DatePicker("", selection: $date, in: ...Date.now, displayedComponents: .date)
-                        .labelsHidden()
-                        .datePickerStyle(.compact)
-                }
-                .padding(.horizontal, 14).padding(.vertical, 8)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(kind == .expense ? L10n.t("Shop or note") : L10n.t("Note"))
-                        .font(.scaled(size: 12, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
-                    TextField(L10n.t("Optional"), text: $merchant)
-                        .font(.scaled(size: 15, weight: .semibold))
-                        .submitLabel(.done)
-                }
-                .padding(.horizontal, 14).padding(.vertical, 10)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
-            }
-
-            if editing == nil {
-                Menu {
-                    Picker(L10n.t("Repeat"), selection: $repeatFrequency) {
-                        Text(L10n.t("Never")).tag(Frequency?.none)
-                        ForEach(Frequency.allCases) { Text($0.title).tag(Frequency?.some($0)) }
-                    }
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: "arrow.triangle.2.circlepath").font(.scaled(size: 15, weight: .semibold))
-                        Text(L10n.t("Repeat")).font(.scaled(size: 15, weight: .semibold))
-                        Spacer()
-                        Text(repeatFrequency?.title ?? L10n.t("Never")).font(.scaled(size: 15)).foregroundStyle(Theme.Colors.inkMuted)
-                        Image(systemName: "chevron.up.chevron.down").font(.scaled(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
-                    }
-                    .foregroundStyle(Theme.Colors.ink)
-                    .padding(.horizontal, 16)
-                    .frame(height: 48)
-                    .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
-                }
-                .accessibilityIdentifier("add.repeat")
-
-                if kind == .expense {
-                    Button {
-                        splitting = SplitDraft(amount: amount.centimes, merchant: merchant.trimmingCharacters(in: .whitespacesAndNewlines),
-                                               date: date, categoryID: categoryID)
-                    } label: {
-                        HStack(spacing: 10) {
-                            Image(systemName: "person.2").font(.scaled(size: 15, weight: .semibold))
-                            Text(L10n.t("Split with friends")).font(.scaled(size: 15, weight: .semibold))
-                            Spacer()
-                            Image(systemName: "chevron.forward").font(.scaled(size: 12, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 14) {
+                        if editing != nil { ScreenTitle(text: title) }
+                        if editing == nil { quickField }
+                        amountView
+                        categoryRow(proxy)
+                        shopField
+                        optionsRow
+                        if editing?.splitID != nil {
+                            Label(L10n.t("Part of a split with friends. Balances are in Friends."), systemImage: "person.2")
+                                .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
+                        } else if editing?.recurringID != nil {
+                            Label(L10n.t("Repeats automatically. Change it in Plan → Every month."), systemImage: "arrow.triangle.2.circlepath")
+                                .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
                         }
-                        .foregroundStyle(Theme.Colors.ink)
-                        .padding(.horizontal, 16)
-                        .frame(height: 48)
-                        .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("add.split")
+                    .padding(.bottom, 12)
                 }
-            } else if editing?.splitID != nil {
-                Label(L10n.t("Part of a split with friends. Balances are in Friends."), systemImage: "person.2")
-                    .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
-            } else if editing?.recurringID != nil {
-                Label(L10n.t("Repeats automatically. Change it in Settings → Recurring."), systemImage: "arrow.triangle.2.circlepath")
-                    .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
-            }
-            }
-            .padding(.bottom, 12)
-            }
-            .scrollDismissesKeyboard(.interactively)
-            .scrollPosition($scroll)
-            .scrollIndicators(.hidden)
-            .onScrollGeometryChange(for: Bool.self) { g in
-                g.contentSize.height - (g.contentOffset.y + g.containerSize.height) > 24
-            } action: { _, more in
-                withAnimation(.snappy) { moreBelow = more }
-            }
-            // When the keyboard covers part of the form, say there is more below.
-            .overlay(alignment: .bottom) {
-                if moreBelow {
-                    Button {
-                        withAnimation(.snappy) { scroll.scrollTo(edge: .bottom) }
-                    } label: {
-                        Label(L10n.t("More below"), systemImage: "chevron.down")
-                            .font(.scaled(size: 13, weight: .semibold))
-                            .foregroundStyle(Theme.Colors.ink)
-                            .padding(.horizontal, 14)
-                            .frame(height: 32)
-                            .background(.regularMaterial, in: Capsule())
-                            .overlay(Capsule().stroke(Theme.Colors.line, lineWidth: 1))
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.bottom, 6)
-                    .transition(.opacity.combined(with: .move(edge: .bottom)))
-                    .accessibilityIdentifier("add.more")
+                .scrollDismissesKeyboard(.interactively)
+                .scrollIndicators(.hidden)
+                .onChange(of: categoryID) { _, id in
+                    guard let id else { return }
+                    withAnimation(.snappy) { proxy.scrollTo(id, anchor: .center) }
                 }
             }
 
             VStack(spacing: 10) {
-            // The system keyboard replaces the amount keypad while typing a shop or a sentence.
-            if !keyboardShown {
-                KeypadView { amount.press($0) }
-                    .transition(.opacity.combined(with: .move(edge: .bottom)))
-            }
-
-            Button(editing == nil ? title : L10n.t("Save")) { checkThenSave() }
-                .buttonStyle(.pillPrimary)
-                .disabled(!canSave)
-                .opacity(canSave ? 1 : 0.5)
-                .accessibilityIdentifier("add.save")
-
-            if let entry = editing {
-                Button(L10n.t("Delete")) {
-                    dismiss()
-                    EntryActions.delete(entry, context: context, undo: undo)
+                if keyboardShown {
+                    // The system keyboard is up (typing a shop or a sentence): one tap brings the keypad back.
+                    HStack {
+                        Spacer()
+                        Button(action: hideKeyboard) {
+                            Label(L10n.t("Keypad"), systemImage: "keyboard.chevron.compact.down")
+                                .font(.scaled(size: 15, weight: .semibold))
+                                .foregroundStyle(Theme.Colors.ink)
+                                .padding(.horizontal, 16)
+                                .frame(height: 40)
+                                .background(Theme.Colors.surface, in: Capsule())
+                        }
+                        .buttonStyle(.pressable)
+                        .accessibilityLabel(L10n.t("Back to the keypad"))
+                        .accessibilityIdentifier("add.keypad")
+                    }
+                    .transition(.opacity)
+                } else {
+                    KeypadView { amount.press($0) }
+                        .transition(.opacity.combined(with: .move(edge: .bottom)))
                 }
-                .font(.scaled(size: 16, weight: .semibold))
-                .foregroundStyle(Theme.Colors.negative)
-                .frame(maxWidth: .infinity, minHeight: 44)
-            }
+
+                Button(editing == nil ? title : L10n.t("Save")) { checkThenSave() }
+                    .buttonStyle(.pillPrimary)
+                    .disabled(!canSave)
+                    .opacity(canSave ? 1 : 0.5)
+                    .accessibilityIdentifier("add.save")
+
+                if let entry = editing {
+                    Button(L10n.t("Delete")) {
+                        dismiss()
+                        EntryActions.delete(entry, context: context, undo: undo)
+                    }
+                    .font(.scaled(size: 16, weight: .semibold))
+                    .foregroundStyle(Theme.Colors.negative)
+                    .frame(maxWidth: .infinity, minHeight: 44)
+                }
             }
             .padding(.top, 8)
-            .overlay(alignment: .top) { Rectangle().fill(Theme.Colors.line).frame(height: 1).padding(.horizontal, -Theme.Space.l) }
         }
         .padding(.horizontal, Theme.Space.l)
         .padding(.top, Theme.Space.m)
@@ -270,6 +135,10 @@ struct AddEntryView: View {
         .presentationCornerRadius(Theme.Radius.large)
         .sheet(item: $splitting) { d in
             SplitSheet(draft: d) { dismiss() }
+        }
+        .sheet(isPresented: $pickingDate) { dateSheet }
+        .fullScreenCover(isPresented: $showReceipt) {
+            ImageViewer(image: AttachmentStore.image(named: editing?.attachmentName ?? ""))
         }
         .onAppear(perform: load)
         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
@@ -302,6 +171,209 @@ struct AddEntryView: View {
         }
     }
 
+    // MARK: Pieces
+
+    private var topBar: some View {
+        HStack(spacing: 8) {
+            CircleIconButton(symbol: "xmark", label: L10n.t("Close")) { dismiss() }
+            SegmentedPill(options: [(EntryKind.expense, L10n.t("Expense")), (EntryKind.income, L10n.t("Money in"))],
+                          selection: $kind)
+                .frame(maxWidth: 210)
+            Spacer(minLength: 0)
+            if let onScan, kind == .expense {
+                CircleIconButton(symbol: "camera", label: L10n.t("Scan a receipt")) { onScan(.camera) }
+                Menu {
+                    Button { onScan(.screenshot) } label: { Label(L10n.t("Screenshot or photo"), systemImage: "photo") }
+                    Button { onScan(.pdf) } label: { Label(L10n.t("PDF bill"), systemImage: "doc") }
+                } label: {
+                    Image(systemName: "square.and.arrow.down")
+                        .font(.scaled(size: 16, weight: .semibold))
+                        .foregroundStyle(Theme.Colors.ink)
+                        .frame(width: 44, height: 44)
+                        .background(Theme.Colors.surface, in: Circle())
+                }
+                .accessibilityLabel(L10n.t("Import a screenshot or PDF"))
+                .accessibilityIdentifier("add.import")
+            } else if editing?.attachmentName != nil {
+                CircleIconButton(symbol: "doc.text.image", label: L10n.t("View receipt")) { showReceipt = true }
+            }
+        }
+    }
+
+    private var quickField: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "sparkles").foregroundStyle(Theme.Colors.inkMuted)
+            TextField(L10n.t("Type it: taxi 20, café 38…"), text: $quickText)
+                .font(.scaled(size: 15, weight: .medium))
+                .submitLabel(.done)
+                .onSubmit(applyQuickText)
+                .accessibilityIdentifier("add.quick")
+            Button {
+                Task { await speech.toggle() }
+            } label: {
+                Image(systemName: speech.isListening ? "stop.fill" : "mic")
+                    .symbolEffect(.pulse, isActive: speech.isListening)
+                    .font(.scaled(size: 15, weight: .bold))
+                    .foregroundStyle(speech.isListening ? Theme.Colors.onBrand : Theme.Colors.ink)
+                    .frame(width: 36, height: 36)
+                    .background(speech.isListening ? Theme.Colors.brand : Theme.Colors.canvas, in: Circle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(speech.isListening ? L10n.t("Stop") : L10n.t("Say it"))
+        }
+        .padding(.leading, 16)
+        .padding(.trailing, 6)
+        .frame(height: 48)
+        .background(Theme.Colors.surface, in: Capsule())
+    }
+
+    private var amountView: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            Text(amount.display())
+                .font(.scaled(size: 56, weight: .heavy).monospacedDigit())
+                .tracking(-1.5)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+                .contentTransition(.numericText())
+                .animation(.snappy, value: amount.display())
+            Text(Money.currencySymbol)
+                .font(.scaled(size: 22, weight: .bold))
+                .foregroundStyle(Theme.Colors.inkMuted)
+        }
+        .environment(\.layoutDirection, .leftToRight)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 2)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(L10n.t("Amount"))
+        .accessibilityValue(amount.display() + " " + Money.currencySymbol)
+        .accessibilityIdentifier("add.amount")
+    }
+
+    /// One sideways row: the categories you use most first, the one picked always visible.
+    private func categoryRow(_ proxy: ScrollViewProxy) -> some View {
+        ScrollView(.horizontal) {
+            HStack(spacing: 8) {
+                if kind == .expense {
+                    ForEach(orderedCategories) { c in
+                        Chip(title: c.displayName, selected: c.id == categoryID) { categoryID = c.id; userPickedCategory = true }
+                            .id(c.id)
+                    }
+                } else {
+                    ForEach(IncomeSource.allCases) { s in
+                        Chip(title: s.title, selected: s == incomeSource) { incomeSource = s }
+                    }
+                }
+            }
+            .padding(.horizontal, Theme.Space.l)
+        }
+        .scrollIndicators(.hidden)
+        .padding(.horizontal, -Theme.Space.l)
+    }
+
+    private var shopField: some View {
+        HStack(spacing: 10) {
+            Image(systemName: kind == .expense ? "bag" : "text.alignleft")
+                .font(.scaled(size: 15, weight: .medium))
+                .foregroundStyle(Theme.Colors.inkMuted)
+            TextField(kind == .expense ? L10n.t("Shop or note") : L10n.t("Note"), text: $merchant)
+                .font(.scaled(size: 15, weight: .semibold))
+                .submitLabel(.done)
+                .accessibilityIdentifier("add.shop")
+        }
+        .padding(.horizontal, 14)
+        .frame(height: 48)
+        .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
+    }
+
+    /// Date, Repeat and Split side by side; each opens a small sheet or menu.
+    private var optionsRow: some View {
+        HStack(spacing: 8) {
+            Button { hideKeyboard(); pickingDate = true } label: {
+                optionLabel("calendar", dateTitle, active: !Calendar.current.isDateInToday(date))
+            }
+            .buttonStyle(.pressable)
+            .accessibilityIdentifier("add.date")
+            if editing == nil {
+                Menu {
+                    Picker(L10n.t("Repeat"), selection: $repeatFrequency) {
+                        Text(L10n.t("Never")).tag(Frequency?.none)
+                        ForEach(Frequency.allCases) { Text($0.title).tag(Frequency?.some($0)) }
+                    }
+                } label: {
+                    optionLabel("arrow.triangle.2.circlepath", repeatFrequency?.title ?? L10n.t("Repeat"), active: repeatFrequency != nil)
+                }
+                .accessibilityIdentifier("add.repeat")
+                if kind == .expense {
+                    Button {
+                        hideKeyboard()
+                        splitting = SplitDraft(amount: amount.centimes, merchant: merchant.trimmingCharacters(in: .whitespacesAndNewlines),
+                                               date: date, categoryID: categoryID)
+                    } label: {
+                        optionLabel("person.2", L10n.t("Split"), active: false)
+                    }
+                    .buttonStyle(.pressable)
+                    .accessibilityLabel(L10n.t("Split with friends"))
+                    .accessibilityIdentifier("add.split")
+                }
+            }
+        }
+    }
+
+    private func optionLabel(_ symbol: String, _ text: String, active: Bool) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: symbol).font(.scaled(size: 14, weight: .semibold))
+            Text(text).font(.scaled(size: 14, weight: .semibold)).lineLimit(1).minimumScaleFactor(0.8)
+        }
+        .foregroundStyle(active ? Theme.Colors.onInk : Theme.Colors.ink)
+        .frame(maxWidth: .infinity, minHeight: 44)
+        .background(active ? Theme.Colors.ink : Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
+    }
+
+    private var dateTitle: String {
+        let cal = Calendar.current
+        if cal.isDateInToday(date) { return L10n.t("Today") }
+        if cal.isDateInYesterday(date) { return L10n.t("Yesterday") }
+        return DateText.short(date)
+    }
+
+    private var dateSheet: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text(L10n.t("Date")).font(.bzTitle)
+                Spacer()
+                Button(L10n.t("Done")) { pickingDate = false }
+                    .font(.scaled(size: 16, weight: .semibold))
+                    .foregroundStyle(Theme.Colors.link)
+            }
+            HStack(spacing: 8) {
+                Chip(title: L10n.t("Today"), selected: Calendar.current.isDateInToday(date)) { date = .now; pickingDate = false }
+                Chip(title: L10n.t("Yesterday"), selected: Calendar.current.isDateInYesterday(date)) {
+                    date = Calendar.current.date(byAdding: .day, value: -1, to: .now) ?? .now
+                    pickingDate = false
+                }
+            }
+            DatePicker(L10n.t("Date"), selection: $date, in: ...Date.now, displayedComponents: .date)
+                .datePickerStyle(.graphical)
+                .tint(Theme.Colors.positive)
+        }
+        .padding(Theme.Space.l)
+        .foregroundStyle(Theme.Colors.ink)
+        .presentationDetents([.medium, .large])
+    }
+
+    /// Most used in the last 60 days first, then the usual order.
+    private var orderedCategories: [BudgetCategory] {
+        let since = Calendar.current.date(byAdding: .day, value: -60, to: .now) ?? .distantPast
+        var uses: [UUID: Int] = [:]
+        for e in entries where e.kind == .expense && e.date >= since {
+            if let id = e.category?.id { uses[id, default: 0] += 1 }
+        }
+        return categories.enumerated().sorted { a, b in
+            let ua = uses[a.element.id] ?? 0, ub = uses[b.element.id] ?? 0
+            return ua != ub ? ua > ub : a.offset < b.offset
+        }.map(\.element)
+    }
+
     /// Fills the form from "taxi 20", "+8000 salaire", "khlst 50 f l9hwa".
     private func applyQuickText() {
         let q = QuickEntryParser.parse(quickText)
@@ -329,19 +401,6 @@ struct AddEntryView: View {
         } else {
             save()
         }
-    }
-
-    private func scanButton(_ title: String, symbol: String, fill: Color, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Label(title, systemImage: symbol)
-                .font(.scaled(size: 14, weight: .semibold))
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-                .foregroundStyle(Theme.Colors.ink)
-                .frame(maxWidth: .infinity, minHeight: 48)
-                .background(fill, in: Capsule())
-        }
-        .buttonStyle(.plain)
     }
 
     private func load() {
