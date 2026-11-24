@@ -141,3 +141,9 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] Check the receipt: one big button; Split smaller; Retake photo as a link
 - [x] Plain words: "without a budget", "left over", "Move to another category"
 - [x] Friends: small amounts you owe in normal text; Split options folded; onboarding bills card scrolls above the number pad
+
+## Next — to do (noted 24 Nov, from TestFlight)
+- [ ] Category management is hard to find since the Plan tab: add a clear "Categories" row in Plan (add, rename, reorder, archive), not only behind the Budgets card.
+- [ ] "Move to another category" is too long for the category screen button: use "Move" (keep the full sentence as the sheet's subtitle).
+- [ ] Date sheet in Add/Edit expense opens half-way, so its "Date" title and "Done" are hidden: open it fully, or put Done where it is always visible.
+- [ ] Move sheet still has the old design: categories in one sideways row like Add expense, amount big in the middle.
