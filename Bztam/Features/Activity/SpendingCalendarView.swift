@@ -22,6 +22,9 @@ enum SpendingCalendar {
         return 3
     }
 
+    /// Rounded to whole units, so the grid stays easy to read.
+    static func whole(_ value: Centimes) -> Centimes { (value + 50) / 100 * 100 }
+
     /// The month's cells, Monday or Sunday first as the iPhone is set: nil for the blanks before day 1.
     static func cells(month: Date, calendar: Calendar = .current) -> [Date?] {
         guard let interval = calendar.dateInterval(of: .month, for: month),
@@ -83,7 +86,7 @@ struct SpendingCalendarView: View {
                     Text(Money.format(total)).font(.scaled(size: 34, weight: .heavy)).tracking(-0.8)
                         .contentTransition(.numericText(value: Double(total)))
                     if elapsed > 0 && total > 0 {
-                        Text(L10n.t("About %@ a day", Money.format(total / max(1, elapsed)))
+                        Text(L10n.t("About %@ a day", Money.format(SpendingCalendar.whole(total / max(1, elapsed))))
                              + (zeroDays > 0 ? " · " + (zeroDays == 1 ? L10n.t("1 day with nothing spent") : L10n.t("%d days with nothing spent", zeroDays)) : ""))
                             .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
                     }
@@ -189,7 +192,7 @@ private struct DayCell: View {
             VStack(spacing: 2) {
                 Text("\(day)").font(.scaled(size: 13, weight: .bold))
                 if !future {
-                    Text(value > 0 ? Money.format(value, symbol: false) : "0")
+                    Text(value > 0 ? Money.format(SpendingCalendar.whole(value), symbol: false) : " ")
                         .font(.scaled(size: 10, weight: .semibold))
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)

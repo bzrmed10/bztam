@@ -23,6 +23,12 @@ struct SpendingCalendarTests {
         #expect(daily.count == 1)
     }
 
+    @Test func wholeRounding() {
+        #expect(SpendingCalendar.whole(30_350) == 30_400)
+        #expect(SpendingCalendar.whole(10_791) == 10_800)
+        #expect(SpendingCalendar.whole(15_449) == 15_400)
+    }
+
     @Test func levels() {
         #expect(SpendingCalendar.level(0, average: 20_000) == 0)
         #expect(SpendingCalendar.level(5_000, average: 20_000) == 1)

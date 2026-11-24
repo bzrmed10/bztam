@@ -132,3 +132,11 @@ Once the secrets are fixed, run Actions -> TestFlight -> Run workflow, then inst
 - Add expense: Scan and Import at the top, Type it with the mic, the amount big in the middle, categories in one sideways row (most used first; the picked one scrolls into view), shop or note, then Today / Repeat / Split side by side (Today opens a small date sheet with Today and Yesterday). When the system keyboard is up, a "Keypad" button brings the number keypad back.
 - Check the receipt: one big Add expense button; Split with friends small; Retake photo as a link.
 - Words: "left over", "Move to another category". Friends: what you owe a friend in normal text (red only for the total). Split: Include me / Remind me folded under Options. Onboarding: a picked bill scrolls into view.
+
+## M16 — Small fixes and the spending calendar (24 Nov 2026)
+- Plan: a "Categories" row (add, rename, reorder, hide).
+- Category screen: "Move" button; icon small next to the name; big "left" amount with days to go; rows without repeated icons; split rows say "Split with friends".
+- Move sheet: big amount in the middle, categories in one sideways row.
+- Add/Edit expense: the date sheet opens fully, so Date and Done are visible.
+- Spending calendar (Home, next to the eye, and in Activity): month grid with what was spent each day in lime shades, month total, daily average, days with nothing spent; tap a day for its expenses. Refunds from friends count back. Amounts rounded to whole units.
+- Tests: SpendingCalendarTests (daily totals, levels, grid start, rounding). Screenshot 36-calendar.

@@ -142,10 +142,10 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] Plain words: "without a budget", "left over", "Move to another category"
 - [x] Friends: small amounts you owe in normal text; Split options folded; onboarding bills card scrolls above the number pad
 
-## Next — to do (noted 24 Nov, from TestFlight)
-- [ ] Category management is hard to find since the Plan tab: add a clear "Categories" row in Plan (add, rename, reorder, archive), not only behind the Budgets card.
-- [ ] "Move to another category" is too long for the category screen button: use "Move" (keep the full sentence as the sheet's subtitle).
-- [ ] Date sheet in Add/Edit expense opens half-way, so its "Date" title and "Done" are hidden: open it fully, or put Done where it is always visible.
-- [ ] Move sheet still has the old design: categories in one sideways row like Add expense, amount big in the middle.
-- [ ] Category screen: no icon on the rows (all the same category); the category icon sits small next to the name at the top; "730 DH left" big under it; split rows say "split with 3 friends". Mockup: canvas "Bztam: easier screens", artboard Category.
-- [ ] Spending calendar (idea, 24 Nov, mockup: canvas artboard Calendar): calendar button next to the eye on Home, also as a List / Calendar switch in Activity. Month grid with what was spent each day, lime shades for more or less (no category colors), month total and daily average; tap a day to see its expenses. Decided: privacy keeps the dots.
+## M16 — Small fixes and the spending calendar (done 24 Nov)
+- [x] Category management is hard to find since the Plan tab: add a clear "Categories" row in Plan (add, rename, reorder, archive), not only behind the Budgets card.
+- [x] "Move to another category" is too long for the category screen button: use "Move" (keep the full sentence as the sheet's subtitle).
+- [x] Date sheet in Add/Edit expense opens half-way, so its "Date" title and "Done" are hidden: open it fully, or put Done where it is always visible.
+- [x] Move sheet still has the old design: categories in one sideways row like Add expense, amount big in the middle.
+- [x] Category screen: no icon on the rows (all the same category); the category icon sits small next to the name at the top; "730 DH left" big under it; split rows say "split with 3 friends". Mockup: canvas "Bztam: easier screens", artboard Category.
+- [x] Spending calendar (idea, 24 Nov, mockup: canvas artboard Calendar): calendar button next to the eye on Home, also as a calendar button in the Activity header. Month grid with what was spent each day, lime shades for more or less (no category colors), month total and daily average; tap a day to see its expenses. Decided: privacy keeps the dots.
