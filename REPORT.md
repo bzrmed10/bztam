@@ -140,3 +140,12 @@ Once the secrets are fixed, run Actions -> TestFlight -> Run workflow, then inst
 - Add/Edit expense: the date sheet opens fully, so Date and Done are visible.
 - Spending calendar (Home, next to the eye, and in Activity): month grid with what was spent each day in lime shades, month total, daily average, days with nothing spent; tap a day for its expenses. Refunds from friends count back. Amounts rounded to whole units.
 - Tests: SpendingCalendarTests (daily totals, levels, grid start, rounding). Screenshot 36-calendar.
+
+## M17 — When the month ends (24 Nov 2026)
+- New model MonthClose (one decision per ended month; latest wins across iPhones). CloudKit schema updated and imported to Development.
+- Carry-over is not an entry: PeriodSummary has carriedIn/carriedOut, so Insights never counts it as income. Saving to a goal is a GoalMove on the month's last moment, so the ended month closes at zero.
+- Card asked only when the app was used before that month ended, money came in that month, nothing decided yet, within 10 days of payday.
+- Undo removes the decision (and the goal move); the card comes back.
+- Settings: When the month ends (automatic choice for months with money left); Alerts: Month done (monthly notification on payday at 10:00).
+- Insights: Past months (last 6). Widget subtitle shows the carried amount the first 5 days.
+- Tests: MonthEndTests (carry, overspend, latest wins, pending rules, history). Screenshots 37-monthend, 38-monthover, 39-monthend-pick.

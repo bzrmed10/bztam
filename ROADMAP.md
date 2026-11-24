@@ -142,7 +142,18 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] Plain words: "without a budget", "left over", "Move to another category"
 - [x] Friends: small amounts you owe in normal text; Split options folded; onboarding bills card scrolls above the number pad
 
-## M16 — Small fixes and the spending calendar (done 24 Nov)
+## M17 — When the month ends (24 Nov, mockups: canvas row "When the month ends")
+- [x] Card on Home the first days after payday: "You have 640 DH left" → Add to next month (big), Add to savings, Leave it; "Later" hides it for a day.
+- [x] Went over: "You went 300 DH over · It happens." → Take it from next month, From a goal, Leave it.
+- [x] Several goals: a sheet to pick one, with each goal's progress after the money.
+- [x] After a choice: a note with Undo for 3 days; "+640 DH from last month" under Left to spend.
+- [x] Payday notification "Your month is done" (Alerts → Month done).
+- [x] Settings → When the month ends: Ask me / Add to next month / Add to savings / Leave it (automatic only when money is left).
+- [x] Insights → Past months: how each month ended and where the money went.
+- [x] Widget: "+640 DH from last month" the first days.
+- [ ] User: deploy the CloudKit schema to Production (new record type MonthClose) before the App Store release.
+
+M16 — Small fixes and the spending calendar (done 24 Nov)
 - [x] Category management is hard to find since the Plan tab: add a clear "Categories" row in Plan (add, rename, reorder, archive), not only behind the Budgets card.
 - [x] "Move to another category" is too long for the category screen button: use "Move" (keep the full sentence as the sheet's subtitle).
 - [x] Date sheet in Add/Edit expense opens half-way, so its "Date" title and "Done" are hidden: open it fully, or put Done where it is always visible.
