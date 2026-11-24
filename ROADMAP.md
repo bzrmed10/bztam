@@ -151,7 +151,7 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] Settings → When the month ends: Ask me / Add to next month / Add to savings / Leave it (automatic only when money is left).
 - [x] Insights → Past months: how each month ended and where the money went.
 - [x] Widget: "+640 DH from last month" the first days.
-- [ ] User: deploy the CloudKit schema to Production (new record type MonthClose) before the App Store release.
+- [x] CloudKit schema deployed to Production (24 Nov): Development and Production match.
 
 M16 — Small fixes and the spending calendar (done 24 Nov)
 - [x] Category management is hard to find since the Plan tab: add a clear "Categories" row in Plan (add, rename, reorder, archive), not only behind the Budgets card.
