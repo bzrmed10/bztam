@@ -192,6 +192,11 @@ final class ScreenshotTests: XCTestCase {
         save("\(lang)-08-pdf-review")
         app.terminate()
 
+        app = launch(lang, ["-demoData", "-openScreen", "calendar"])
+        sleep(3)
+        save("\(lang)-36-calendar")
+        app.terminate()
+
         app = launch(lang, ["-demoData", "-openScreen", "goals"])
         XCTAssertTrue(app.buttons["goals.new"].waitForExistence(timeout: 15))
         sleep(1)

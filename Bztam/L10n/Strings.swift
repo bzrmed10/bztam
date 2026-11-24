@@ -10,6 +10,19 @@ enum Strings {
 
     private static let json = #"""
 {
+ "%d days to go": "Encore %d jours",
+ "%d days with nothing spent": "%d jours sans dépense",
+ "1 day to go": "Encore 1 jour",
+ "1 day with nothing spent": "1 jour sans dépense",
+ "About %@ a day": "Environ %@ par jour",
+ "Add, rename, reorder or hide categories": "Ajouter, renommer, trier ou masquer",
+ "Less": "Moins",
+ "Next month": "Mois suivant",
+ "Nothing spent this day.": "Rien dépensé ce jour-là.",
+ "Previous month": "Mois précédent",
+ "Spending calendar": "Calendrier des dépenses",
+ "Spent in %@": "Dépensé en %@",
+ "paid": "payé",
  "%@ left over": "%@ en trop",
  "%@ of %@ spent": "%@ sur %@ dépensés",
  "%@ without a budget": "%@ sans budget",

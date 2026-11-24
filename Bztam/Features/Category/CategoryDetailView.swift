@@ -29,7 +29,7 @@ struct CategoryDetailView: View {
                 HStack {
                     CircleIconButton(symbol: "chevron.backward", label: L10n.t("Back")) { dismiss() }
                     Spacer()
-                    Button(L10n.t("Move to another category")) { moving = true }
+                    Button(L10n.t("Move")) { moving = true }
                         .buttonStyle(.plain)
                         .font(.scaled(size: 14, weight: .semibold))
                         .foregroundStyle(Theme.Colors.ink)
@@ -44,27 +44,37 @@ struct CategoryDetailView: View {
                         .frame(height: 40)
                         .background(Theme.Colors.surface, in: Capsule())
                 }
-                VStack(alignment: .leading, spacing: 14) {
-                    IconCircle(symbol: category.symbol, size: 56)
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(headline(status)).font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 12) {
+                        IconCircle(symbol: category.symbol, size: 44)
+                        Text(category.displayName)
+                            .font(.scaled(size: 28, weight: .heavy))
+                            .tracking(-0.6)
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.8)
+                    }
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(hero(status))
                             .font(.bzAmountHero)
                             .tracking(-1.2)
                             .foregroundStyle(heroColor(status))
                             .lineLimit(1)
                             .minimumScaleFactor(0.6)
-                        Text(detail(status)).font(.scaled(size: 15, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
-                        let back = SplitActions.comingBack(categoryID: category.id, in: period, context: context)
-                        if back > 0 {
-                            Label(L10n.t("%@ coming back from friends", Money.format(back)), systemImage: "arrow.uturn.backward")
-                                .font(.scaled(size: 14, weight: .semibold))
-                                .foregroundStyle(Theme.Colors.positive)
-                                .padding(.top, 2)
-                        }
+                        Text(word(status))
+                            .font(.scaled(size: 16, weight: .semibold))
+                            .foregroundStyle(heroColor(status) == Theme.Colors.ink ? Theme.Colors.inkMuted : heroColor(status))
+                    }
+                    .padding(.top, 4)
+                    Text(detail(status)).font(.scaled(size: 15, weight: .medium)).foregroundStyle(Theme.Colors.inkMuted)
+                    let back = SplitActions.comingBack(categoryID: category.id, in: period, context: context)
+                    if back > 0 {
+                        Label(L10n.t("%@ coming back from friends", Money.format(back)), systemImage: "arrow.uturn.backward")
+                            .font(.scaled(size: 14, weight: .semibold))
+                            .foregroundStyle(Theme.Colors.positive)
                     }
                     if status.budget > 0 {
                         ProgressPill(value: status.progress, fill: heroColor(status) == Theme.Colors.negative ? Theme.Colors.negative : Theme.Colors.ink)
+                            .padding(.top, 6)
                     }
                 }
                 HStack {
@@ -96,7 +106,7 @@ struct CategoryDetailView: View {
                     .listRowBackground(Color.clear)
             } else {
                 ForEach(entries) { entry in
-                    Button { editing = entry } label: { EntryRow(entry: entry, showsDate: true) }
+                    Button { editing = entry } label: { EntryRow(entry: entry, showsDate: true, inCategory: true) }
                         .buttonStyle(.plain)
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
@@ -132,12 +142,12 @@ struct CategoryDetailView: View {
         }
     }
 
-    private func headline(_ s: CategoryStatus) -> String {
+    private func word(_ s: CategoryStatus) -> String {
         switch s.state {
-        case .over: L10n.t("%@ · over budget", category.displayName)
-        case .paid: L10n.t("%@ · paid", category.displayName)
-        case .noBudget: L10n.t("%@ · spent this period", category.displayName)
-        case .left: L10n.t("%@ · left this period", category.displayName)
+        case .over: L10n.t("over")
+        case .paid: L10n.t("paid")
+        case .noBudget: L10n.t("spent")
+        case .left: L10n.t("left")
         }
     }
 
@@ -157,7 +167,10 @@ struct CategoryDetailView: View {
 
     private func detail(_ s: CategoryStatus) -> String {
         if s.budget == 0 { return L10n.t("No budget set") }
-        return L10n.t("%@ spent of %@", Money.format(s.spent, symbol: false), Money.format(s.budget))
+        let spent = L10n.t("%@ of %@ spent", Money.format(s.spent, symbol: false), Money.format(s.budget))
+        guard period.contains(.now) else { return spent }
+        let days = max(0, Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: .now), to: period.end).day ?? 0)
+        return spent + " · " + (days == 1 ? L10n.t("1 day to go") : L10n.t("%d days to go", days))
     }
 }
 

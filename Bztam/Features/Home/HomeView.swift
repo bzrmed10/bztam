@@ -23,6 +23,7 @@ struct HomeView: View {
     @State private var openGoalID: UUID?
     @State private var goalMove: GoalMoveRequest?
     @State private var showSetup = false
+    @State private var showCalendar = LaunchOptions.openScreen == "calendar"
     @AppStorage(OnboardingView.setupSkippedKey) private var setupSkipped = false
     @AppStorage(Money.hiddenKey) private var amountsHidden = false
     @Namespace private var zoom
@@ -93,6 +94,7 @@ struct HomeView: View {
                               suggested: r.amount)
             }
             .fullScreenCover(isPresented: $showSetup) { OnboardingView(setupMode: true) }
+            .sheet(isPresented: $showCalendar) { SpendingCalendarView() }
             .sheet(item: $splitDemo) { SplitSheet(draft: $0) }
             .navigationDestination(for: BudgetCategory.self) { category in
                 CategoryDetailView(category: category, period: period, onAdd: onAdd)
@@ -229,6 +231,14 @@ struct HomeView: View {
                 .opacity(offset >= 0 ? 0.3 : 1)
                 .accessibilityLabel(L10n.t("Next period"))
                 Spacer()
+                Button { showCalendar = true } label: {
+                    Image(systemName: "calendar")
+                        .frame(width: 44, height: 44)
+                        .background(Theme.Colors.surface, in: Circle())
+                }
+                .accessibilityLabel(L10n.t("Spending calendar"))
+                .accessibilityIdentifier("home.calendar")
+                .padding(.trailing, 6)
                 Button { amountsHidden.toggle() } label: {
                     Image(systemName: amountsHidden ? "eye.slash" : "eye")
                         .frame(width: 44, height: 44)

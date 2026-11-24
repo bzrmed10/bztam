@@ -18,42 +18,52 @@ struct MoveMoneySheet: View {
     private var canSave: Bool { amount.centimes > 0 && otherID != nil }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(spacing: 8) {
                 CircleIconButton(symbol: "xmark", label: L10n.t("Close")) { dismiss() }
-                Spacer()
                 SegmentedPill(options: [(true, L10n.t("Give")), (false, L10n.t("Take"))], selection: $giving)
-                    .frame(width: 180)
-                Spacer()
-                Color.clear.frame(width: 44, height: 44)
+                    .frame(maxWidth: 200)
+                Spacer(minLength: 0)
             }
-            .padding(.bottom, 12)
-
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    ScreenTitle(text: L10n.t("Move to another category"))
-                    Text(giving ? L10n.t("From %@ to another category, for this month only.", category.displayName)
-                                : L10n.t("From another category to %@, for this month only.", category.displayName))
-                        .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
-                    AmountField(caption: L10n.t("Amount"), text: amount.display())
-                    Text(giving ? L10n.t("To") : L10n.t("From")).font(.scaled(size: 14, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
-                    FlowLayout(spacing: 8) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L10n.t("Move")).font(.bzTitleXL).tracking(-0.6)
+                Text(giving ? L10n.t("From %@ to another category, for this month only.", category.displayName)
+                            : L10n.t("From another category to %@, for this month only.", category.displayName))
+                    .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
+            }
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text(amount.display())
+                    .font(.scaled(size: 56, weight: .heavy).monospacedDigit())
+                    .tracking(-1.5)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+                    .contentTransition(.numericText())
+                    .animation(.snappy, value: amount.display())
+                Text(Money.currencySymbol).font(.scaled(size: 22, weight: .bold)).foregroundStyle(Theme.Colors.inkMuted)
+            }
+            .environment(\.layoutDirection, .leftToRight)
+            .frame(maxWidth: .infinity)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(L10n.t("Amount"))
+            VStack(alignment: .leading, spacing: 8) {
+                Text(giving ? L10n.t("To") : L10n.t("From")).font(.scaled(size: 13, weight: .semibold)).foregroundStyle(Theme.Colors.inkMuted)
+                ScrollView(.horizontal) {
+                    HStack(spacing: 8) {
                         ForEach(others) { c in
                             Chip(title: c.displayName, selected: otherID == c.id) { otherID = c.id }
                         }
                     }
+                    .padding(.horizontal, Theme.Space.l)
                 }
-                .padding(.bottom, 12)
+                .scrollIndicators(.hidden)
+                .padding(.horizontal, -Theme.Space.l)
             }
-
-            VStack(spacing: 10) {
-                KeypadView { amount.press($0) }
-                Button(L10n.t("Move")) { move() }
-                    .buttonStyle(.pillPrimary)
-                    .disabled(!canSave)
-                    .opacity(canSave ? 1 : 0.5)
-            }
-            .padding(.top, 8)
+            Spacer(minLength: 0)
+            KeypadView { amount.press($0) }
+            Button(L10n.t("Move")) { move() }
+                .buttonStyle(.pillPrimary)
+                .disabled(!canSave)
+                .opacity(canSave ? 1 : 0.5)
         }
         .padding(.horizontal, Theme.Space.l)
         .padding(.top, Theme.Space.m)

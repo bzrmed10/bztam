@@ -25,12 +25,16 @@ enum EntryActions {
 struct EntryRow: View {
     let entry: Entry
     var showsDate = false
+    /// Inside one category: no icon and no category name (they would repeat on every row).
+    var inCategory = false
 
     private var details: String {
         var parts: [String] = []
         if showsDate { parts.append(DateText.day(entry.date)) }
         if entry.kind == .income {
             parts.append(L10n.t("Money in"))
+        } else if inCategory {
+            if entry.splitID != nil && entry.amount > 0 { parts.append(L10n.t("Split with friends")) }
         } else if let c = entry.category {
             parts.append(c.displayName)
         }
@@ -45,7 +49,9 @@ struct EntryRow: View {
 
     var body: some View {
         HStack(spacing: Theme.Space.m) {
-            if entry.kind == .income {
+            if inCategory {
+                EmptyView()
+            } else if entry.kind == .income {
                 IconCircle(symbol: "arrow.down.to.line", fill: Theme.Colors.brandTint, tint: Theme.Colors.positive)
             } else if let c = entry.category {
                 IconCircle(symbol: c.symbol)

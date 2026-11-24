@@ -10,6 +10,19 @@ enum StringsArabic {
 
     private static let json = #"""
 {
+ "%d days to go": "تبقى %d أيام",
+ "%d days with nothing spent": "%d أيام بدون مصاريف",
+ "1 day to go": "يبقى يوم واحد",
+ "1 day with nothing spent": "يوم واحد بدون مصاريف",
+ "About %@ a day": "حوالي %@ في اليوم",
+ "Add, rename, reorder or hide categories": "أضف، أعد التسمية، رتّب أو أخفِ الفئات",
+ "Less": "أقل",
+ "Next month": "الشهر التالي",
+ "Nothing spent this day.": "لا مصاريف في هذا اليوم.",
+ "Previous month": "الشهر السابق",
+ "Spending calendar": "تقويم المصاريف",
+ "Spent in %@": "المصروف في %@",
+ "paid": "مدفوع",
  "%@ left over": "%@ متبقية",
  "%@ of %@ spent": "%@ من %@ مصروفة",
  "%@ without a budget": "%@ بدون ميزانية",

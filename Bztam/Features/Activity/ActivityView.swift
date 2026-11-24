@@ -18,6 +18,7 @@ struct ActivityView: View {
     @State private var editing: Entry?
     @State private var search = ""
     @State private var filter: ActivityFilter = .all
+    @State private var showCalendar = false
 
     private var filtered: [Entry] {
         let query = ReceiptParser.fold(search.trimmingCharacters(in: .whitespaces))
@@ -55,6 +56,16 @@ struct ActivityView: View {
         List {
             HStack {
                 ScreenTitle(text: L10n.t("Activity"))
+                Button { showCalendar = true } label: {
+                    Image(systemName: "calendar")
+                        .font(.scaled(size: 17, weight: .semibold))
+                        .foregroundStyle(Theme.Colors.ink)
+                        .frame(width: 44, height: 44)
+                        .background(Theme.Colors.surface, in: Circle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(L10n.t("Spending calendar"))
+                .accessibilityIdentifier("activity.calendar")
                 Button(action: onAdd) {
                     Image(systemName: "plus")
                         .font(.scaled(size: 18, weight: .bold))
@@ -174,6 +185,7 @@ struct ActivityView: View {
         .scrollDismissesKeyboard(.immediately)
         .background(Theme.Colors.canvas)
         .statusBarFade()
+        .sheet(isPresented: $showCalendar) { SpendingCalendarView() }
         .sheet(item: $editing) { entry in
             AddEntryView(editing: entry).environment(undo)
         }

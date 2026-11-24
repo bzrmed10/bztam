@@ -357,8 +357,11 @@ struct AddEntryView: View {
                 .tint(Theme.Colors.positive)
         }
         .padding(Theme.Space.l)
+        .frame(maxHeight: .infinity, alignment: .top)
         .foregroundStyle(Theme.Colors.ink)
-        .presentationDetents([.medium, .large])
+        .background(Theme.Colors.canvas)
+        .presentationDetents([.large])
+        .presentationDragIndicator(.visible)
     }
 
     /// Most used in the last 60 days first, then the usual order.

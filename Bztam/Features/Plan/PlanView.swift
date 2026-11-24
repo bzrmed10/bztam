@@ -91,6 +91,8 @@ struct PlanView: View {
 
                     VStack(alignment: .leading, spacing: 2) {
                         SectionTitle(text: L10n.t("More"))
+                        link("square.grid.2x2", L10n.t("Categories"), L10n.t("Add, rename, reorder or hide categories"),
+                             value: String(categories.count), id: "plan.categories") { showCategories = true }
                         link("arrow.triangle.2.circlepath", L10n.t("Every month"),
                              rules.isEmpty ? L10n.t("Rent, salary, subscriptions") : rules.prefix(3).map(\.displayTitle).joined(separator: ", "),
                              value: rules.isEmpty ? nil : L10n.t("%d active", rules.count), id: "plan.recurring") { showRecurring = true }

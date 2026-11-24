@@ -59,6 +59,9 @@ enum DateText {
     /// "July 2027"
     static func month(_ date: Date) -> String { formatter("MMMM yyyy").string(from: date) }
 
+    /// "July"
+    static func monthName(_ date: Date) -> String { formatter("MMMM").string(from: date) }
+
     /// "Today", "Yesterday" or "12 Nov".
     static func day(_ date: Date, calendar: Calendar = .current) -> String {
         if calendar.isDateInToday(date) { return L10n.t("Today") }
