@@ -142,7 +142,16 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] Plain words: "without a budget", "left over", "Move to another category"
 - [x] Friends: small amounts you owe in normal text; Split options folded; onboarding bills card scrolls above the number pad
 
-## M17 — When the month ends (24 Nov, mockups: canvas row "When the month ends")
+## Next — to do (noted 24 Nov): more currencies and Moroccans abroad
+- [ ] About 30 currencies with local symbols and writing (DA, DT, FCFA after the number…): Maghreb (DZD, TND, LYD), Europe (EUR, GBP, CHF, SEK, NOK, DKK, PLN, TRY), Gulf and Middle East (SAR, AED, QAR, KWD, BHD, OMR, JOD, EGP), Africa (XOF, XAF, NGN), Americas (USD, CAD, BRL, MXN), Asia (INR, MYR, JPY).
+- [ ] Onboarding: the iPhone's region currency at the top (detection already exists, but only for the 8 current currencies; others fall back to DH), plus a search field.
+- [ ] Currencies without cents (FCFA, yen): no decimals, no comma on the keypad. 3-decimal dinars keep 2 decimals.
+- [ ] Keypad: more digits for big currencies (FCFA, naira salaries).
+- [ ] Fixed limits made for dirhams scale per currency (rough size vs DH): Advice step 50 / gap 100, InsightsCalculator minimum 50, Recap 200 and 50. Amounts are never converted.
+- [ ] Moroccans abroad: a "Sent to family" category; euros suggested for European regions.
+- Market notes: focus marketing on Morocco and Moroccans in France, Spain and Belgium; release worldwide; Android later if Morocco grows.
+
+M17 — When the month ends (24 Nov, mockups: canvas row "When the month ends")
 - [x] Card on Home the first days after payday: "You have 640 DH left" → Add to next month (big), Add to savings, Leave it; "Later" hides it for a day.
 - [x] Went over: "You went 300 DH over · It happens." → Take it from next month, From a goal, Leave it.
 - [x] Several goals: a sheet to pick one, with each goal's progress after the money.
