@@ -3,7 +3,7 @@ import SwiftData
 
 /// Builds the SwiftData container and seeds data.
 enum DataStore {
-    static let schema = Schema([Entry.self, BudgetCategory.self, AppSettings.self, RecurringRule.self, Dart.self, Friend.self, SplitBill.self, SplitShare.self, SavingsGoal.self, GoalMove.self])
+    static let schema = Schema([Entry.self, BudgetCategory.self, AppSettings.self, RecurringRule.self, Dart.self, Friend.self, SplitBill.self, SplitShare.self, SavingsGoal.self, GoalMove.self, MonthClose.self])
 
     /// The one container of the app process, shared with Siri / Shortcuts.
     @MainActor static let shared: ModelContainer = makeContainer(inMemory: LaunchOptions.demoData || LaunchOptions.freshStart)
@@ -70,6 +70,7 @@ enum DataStore {
         settings.payday = 25
         settings.onboardingDone = true
         settings.expectedIncome = 800_000
+        settings.createdAt = Calendar.current.date(byAdding: .month, value: -3, to: now) ?? now
 
         let budgets: [String: Centimes] = [
             "rent": 300_000, "bills": 40_000, "phone": 20_000, "courses": 120_000,
@@ -159,6 +160,17 @@ enum DataStore {
         context.insert(eid)
         context.insert(GoalMove(goalID: trip.id, amount: 150_000, date: prev(2)))
         context.insert(GoalMove(goalID: eid.id, amount: 120_000, date: prev(3)))
+
+        // Last month ended 310 DH over. Screenshots of the month-end card leave it undecided
+        // (with a freelance job for the "money left" one); otherwise it was already settled.
+        switch LaunchOptions.openScreen {
+        case "monthend":
+            context.insert(Entry(kind: .income, amount: 95_000, date: prev(18), merchant: "Logo design", incomeSource: .freelance))
+        case "monthover":
+            break
+        default:
+            context.insert(MonthClose(period: previous, amount: -31_000, moved: 0, choice: .leave))
+        }
         try? context.save()
     }
 }

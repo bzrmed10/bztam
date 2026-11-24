@@ -115,9 +115,10 @@ struct LeftToSpendIntent: AppIntent {
         let entries = (try? context.fetch(FetchDescriptor<Entry>())) ?? []
         let categories = ((try? context.fetch(FetchDescriptor<BudgetCategory>())) ?? []).filter { !$0.isArchived }
         let moves = (try? context.fetch(FetchDescriptor<GoalMove>())) ?? []
+        let closes = (try? context.fetch(FetchDescriptor<MonthClose>())) ?? []
         let period = BudgetCalculator.period(containing: .now, payday: settings.payday)
         let s = BudgetSnapshot.summary(entries: entries, categories: categories, period: period,
-                                       expectedIncome: settings.expectedIncome, moves: moves)
+                                       expectedIncome: settings.expectedIncome, moves: moves, closes: closes)
         let days = max(1, Calendar.current.dateComponents([.day], from: .now, to: period.end).day ?? 1)
         let message = L10n.t("%@ left to spend, for %d more days.", Money.format(s.left, privacy: .never), days)
         return .result(dialog: IntentDialog(stringLiteral: message))

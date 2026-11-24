@@ -316,6 +316,7 @@ struct OnboardingView: View {
             _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])
             notificationsAsked = true
             InsightAlerts.scheduleWeekly()
+            MonthEnd.scheduleNotification(payday: DataStore.settings(in: context).payday)
         }
     }
 }

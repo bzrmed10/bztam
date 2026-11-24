@@ -29,6 +29,8 @@ MODELS = {
     "SavingsGoal": [("id", "S"), ("name", "S"), ("symbol", "S"), ("target", "I"), ("deadline", "T"), ("monthlyPlan", "I"),
                     ("order", "I"), ("isArchived", "I"), ("reachedAt", "T"), ("createdAt", "T")],
     "GoalMove": [("id", "S"), ("goalID", "S"), ("amount", "I"), ("date", "T"), ("createdAt", "T")],
+    "MonthClose": [("id", "S"), ("periodStart", "T"), ("periodEnd", "T"), ("amount", "I"), ("moved", "I"), ("choiceRaw", "S"),
+                   ("goalID", "S"), ("goalMoveID", "S"), ("automatic", "I"), ("decidedAt", "T")],
 }
 
 SYS = '''        "___createTime" TIMESTAMP,

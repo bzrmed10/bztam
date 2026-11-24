@@ -20,10 +20,13 @@ enum BudgetSnapshot {
     }
 
     static func summary(entries: [Entry], categories: [BudgetCategory], period: BudgetPeriod, expectedIncome: Centimes,
-                        moves: [GoalMove] = []) -> PeriodSummary {
-        BudgetCalculator.summary(entries: values(entries), categories: categories.map { value($0, period: period) },
-                                 period: period, expectedIncome: expectedIncome,
-                                 saved: GoalMath.saved(in: period, moves: GoalMove.values(moves)))
+                        moves: [GoalMove] = [], closes: [MonthClose] = []) -> PeriodSummary {
+        let cv = MonthClose.values(closes)
+        return BudgetCalculator.summary(entries: values(entries), categories: categories.map { value($0, period: period) },
+                                        period: period, expectedIncome: expectedIncome,
+                                        saved: GoalMath.saved(in: period, moves: GoalMove.values(moves)),
+                                        carriedIn: MonthEndMath.carriedIn(period, closes: cv),
+                                        carriedOut: MonthEndMath.carriedOut(period, closes: cv))
     }
 
     /// Lines in Home order: still being spent first, then paid, then unused; each group by the user's order.

@@ -9,6 +9,9 @@ struct InsightsView: View {
     @Query private var entries: [Entry]
     @Query private var allCategories: [BudgetCategory]
     @Query private var settingsRows: [AppSettings]
+    @Query private var goalMoves: [GoalMove]
+    @Query private var closes: [MonthClose]
+    @Query private var goals: [SavingsGoal]
     @State private var offset = 0
 
     private static let palette: [Color] = [
@@ -64,6 +67,12 @@ struct InsightsView: View {
                     whereItWent(slices, total: summary.spent)
                     inVsOut(summary)
                     comparison(spent: summary.spent, previous: previousSpent, changes: changes)
+                }
+                let past = MonthEndMath.history(entries: values, moves: GoalMove.values(goalMoves), closes: MonthClose.values(closes),
+                                                current: BudgetCalculator.period(containing: .now, payday: payday), payday: payday)
+                if !past.isEmpty {
+                    PastMonthsSection(results: past) { id in goals.first { $0.id == id }?.name ?? L10n.t("savings") }
+                        .id("pastMonths")
                 }
             }
             .padding(.horizontal, Theme.Space.l)

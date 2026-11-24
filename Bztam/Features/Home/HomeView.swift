@@ -19,6 +19,7 @@ struct HomeView: View {
     @Query private var darts: [Dart]
     @Query(filter: #Predicate<SavingsGoal> { !$0.isArchived }, sort: \SavingsGoal.order) private var goals: [SavingsGoal]
     @Query private var goalMoves: [GoalMove]
+    @Query private var closes: [MonthClose]
     @State private var showGoals = LaunchOptions.openScreen == "goals"
     @State private var openGoalID: UUID?
     @State private var goalMove: GoalMoveRequest?
@@ -47,13 +48,16 @@ struct HomeView: View {
 
     var body: some View {
         let summary = BudgetSnapshot.summary(entries: entries, categories: categories, period: period,
-                                             expectedIncome: settingsRows.first?.expectedIncome ?? 0, moves: goalMoves)
+                                             expectedIncome: settingsRows.first?.expectedIncome ?? 0, moves: goalMoves, closes: closes)
         let lines = BudgetSnapshot.lines(entries: entries, categories: categories, period: period)
 
         NavigationStack(path: $path) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
                     hero(summary)
+                    if offset == 0 {
+                        MonthEndSection(payday: payday)
+                    }
                     quickActions
                     if offset == 0 {
                         let cards = forYouCards(categories: categories)
@@ -268,7 +272,9 @@ struct HomeView: View {
 
             (Text(Money.format(s.moneyIn, sign: true, privacy: .income) + " " + L10n.t("in")).foregroundColor(Theme.Colors.positive).fontWeight(.semibold)
              + Text(" · " + Money.format(s.spent) + " " + L10n.t("spent")).foregroundColor(Theme.Colors.inkMuted)
-             + Text(s.saved > 0 ? " · " + Money.format(s.saved, privacy: .income) + " " + L10n.t("saved") : "").foregroundColor(Theme.Colors.inkMuted))
+             + Text(s.saved > 0 ? " · " + Money.format(s.saved, privacy: .income) + " " + L10n.t("saved") : "").foregroundColor(Theme.Colors.inkMuted)
+             + Text(s.carriedIn != 0 ? " · " + L10n.t("%@ from last month", Money.format(s.carriedIn, sign: true, privacy: .income)) : "")
+                .foregroundColor(s.carriedIn > 0 ? Theme.Colors.positive : Theme.Colors.inkMuted).fontWeight(s.carriedIn > 0 ? .semibold : .medium))
                 .font(.scaled(size: 15, weight: .medium))
 
             ProgressPill(value: s.progress)

@@ -192,6 +192,21 @@ final class ScreenshotTests: XCTestCase {
         save("\(lang)-08-pdf-review")
         app.terminate()
 
+        app = launch(lang, ["-demoData", "-openScreen", "monthend"])
+        sleep(2)
+        save("\(lang)-37-monthend")
+        app.terminate()
+
+        app = launch(lang, ["-demoData", "-openScreen", "monthover"])
+        sleep(2)
+        save("\(lang)-38-monthover")
+        if app.buttons["monthend.savings"].waitForExistence(timeout: 3) {
+            app.buttons["monthend.savings"].tap()
+            sleep(2)
+            save("\(lang)-39-monthend-pick")
+        }
+        app.terminate()
+
         app = launch(lang, ["-demoData", "-openScreen", "calendar"])
         sleep(3)
         save("\(lang)-36-calendar")

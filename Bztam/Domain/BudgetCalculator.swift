@@ -55,18 +55,23 @@ struct CategoryStatus: Sendable, Equatable {
 struct PeriodSummary: Sendable, Equatable {
     var moneyIn: Centimes
     var spent: Centimes
-    /// Money in minus spent, minus what was put aside in savings goals.
-    var left: Centimes { moneyIn - spent - saved }
+    /// Money in (plus what came from last month) minus spent, minus what was put aside in savings goals.
+    var left: Centimes { moneyIn + carriedIn - carriedOut - spent - saved }
     /// Sum of category budgets.
     var planned: Centimes
     /// Money in (or the expected income when nothing came in yet) not given to any category.
     var notPlanned: Centimes
     /// Net money put aside in savings goals this period (saved, not spent).
     var saved: Centimes = 0
+    /// Left over (or over, negative) from last month and carried into this one.
+    var carriedIn: Centimes = 0
+    /// Carried from this month into the next one, once this month ended.
+    var carriedOut: Centimes = 0
     /// Share of money in already spent or put aside, 0...1.
     var progress: Double {
-        guard moneyIn > 0 else { return spent + saved > 0 ? 1 : 0 }
-        return min(1, Double(max(0, spent + saved)) / Double(moneyIn))
+        let base = moneyIn + carriedIn
+        guard base > 0 else { return spent + saved > 0 ? 1 : 0 }
+        return min(1, Double(max(0, spent + saved + carriedOut)) / Double(base))
     }
 }
 
@@ -92,7 +97,8 @@ enum BudgetCalculator {
     }
 
     static func summary(entries: [EntryValue], categories: [CategoryValue], period: BudgetPeriod,
-                        expectedIncome: Centimes = 0, saved: Centimes = 0) -> PeriodSummary {
+                        expectedIncome: Centimes = 0, saved: Centimes = 0,
+                        carriedIn: Centimes = 0, carriedOut: Centimes = 0) -> PeriodSummary {
         var moneyIn = 0, spent = 0
         for e in entries where period.contains(e.date) {
             switch e.kind {
@@ -102,7 +108,8 @@ enum BudgetCalculator {
         }
         let planned = categories.reduce(0) { $0 + max(0, $1.budget) }
         let base = moneyIn > 0 ? moneyIn : expectedIncome
-        return PeriodSummary(moneyIn: moneyIn, spent: spent, planned: planned, notPlanned: max(0, base - planned), saved: saved)
+        return PeriodSummary(moneyIn: moneyIn, spent: spent, planned: planned, notPlanned: max(0, base - planned), saved: saved,
+                             carriedIn: carriedIn, carriedOut: carriedOut)
     }
 
     static func status(for category: CategoryValue, entries: [EntryValue], period: BudgetPeriod) -> CategoryStatus {

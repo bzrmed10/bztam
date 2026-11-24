@@ -219,6 +219,29 @@ DEFINE SCHEMA
         GRANT READ TO "_world"
     );
 
+    RECORD TYPE CD_MonthClose (
+        "___createTime" TIMESTAMP,
+        "___createdBy"  REFERENCE,
+        "___etag"       STRING,
+        "___modTime"    TIMESTAMP,
+        "___modifiedBy" REFERENCE,
+        "___recordID"   REFERENCE QUERYABLE,
+        CD_amount                    INT64,
+        CD_automatic                 INT64,
+        CD_choiceRaw                 STRING,
+        CD_decidedAt                 TIMESTAMP,
+        CD_entityName                STRING,
+        CD_goalID                    STRING,
+        CD_goalMoveID                STRING,
+        CD_id                        STRING,
+        CD_moved                     INT64,
+        CD_periodEnd                 TIMESTAMP,
+        CD_periodStart               TIMESTAMP,
+        GRANT WRITE TO "_creator",
+        GRANT CREATE TO "_icloud",
+        GRANT READ TO "_world"
+    );
+
     RECORD TYPE Users (
         "___createTime" TIMESTAMP,
         "___createdBy"  REFERENCE,

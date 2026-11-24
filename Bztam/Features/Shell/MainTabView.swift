@@ -162,6 +162,7 @@ struct MainTabView: View {
                 refreshSubscription()
                 DartActions.scheduleReminders(context: context)
                 InsightAlerts.scheduleWeekly()
+                MonthEnd.scheduleNotification(payday: DataStore.settings(in: context).payday)
                 Task {
                     await scanner.openNextShared()
                     await watcher.check()

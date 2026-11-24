@@ -15,6 +15,8 @@ struct SettingsView: View {
     @AppStorage(Money.hideOnOpenKey) private var hideOnOpen = false
     @AppStorage(InsightAlerts.weeklyKey) private var weeklyRecap = true
     @AppStorage(InsightAlerts.unusualKey) private var unusualAlerts = true
+    @AppStorage(MonthEnd.modeKey) private var monthEndMode = MonthEndMode.ask.rawValue
+    @AppStorage(MonthEnd.notifyKey) private var monthEndNotify = true
     @AppStorage(Money.hideIncomeOnlyKey) private var hideIncomeOnly = false
     @AppStorage(L10n.storageKey) private var language = AppLanguage.system.rawValue
     @AppStorage(Appearance.storageKey) private var appearance = Appearance.system.rawValue
@@ -48,7 +50,7 @@ struct SettingsView: View {
                         Menu {
                             Picker(L10n.t("Payday"), selection: Binding(
                                 get: { settings?.payday ?? 1 },
-                                set: { settings?.payday = $0; try? context.save() }
+                                set: { settings?.payday = $0; try? context.save(); MonthEnd.scheduleNotification(payday: $0) }
                             )) {
                                 ForEach(1...28, id: \.self) { Text("\($0)").tag($0) }
                             }
@@ -68,6 +70,16 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
 
+                        Menu {
+                            Picker(L10n.t("When the month ends"), selection: $monthEndMode) {
+                                ForEach(MonthEndMode.allCases) { Text($0.title).tag($0.rawValue) }
+                            }
+                        } label: {
+                            SettingsRow(symbol: "arrow.uturn.forward", title: L10n.t("When the month ends"),
+                                        value: (MonthEndMode(rawValue: monthEndMode) ?? .ask).title)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("settings.monthend")
                     }
 
                     section(L10n.t("Privacy")) {
@@ -105,6 +117,9 @@ struct SettingsView: View {
                             .onChange(of: weeklyRecap) { _, _ in InsightAlerts.scheduleWeekly() }
                         ToggleRow(symbol: "exclamationmark.triangle", title: L10n.t("Unusual spending"),
                                   detail: L10n.t("When a bill or a category is well above usual"), isOn: $unusualAlerts)
+                        ToggleRow(symbol: "flag.checkered", title: L10n.t("Month done"),
+                                  detail: L10n.t("On payday: what's left and where it goes"), isOn: $monthEndNotify)
+                            .onChange(of: monthEndNotify) { _, _ in MonthEnd.scheduleNotification(payday: settings?.payday ?? 1) }
                     }
 
                     section(L10n.t("Receipts")) {
