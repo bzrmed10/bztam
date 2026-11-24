@@ -147,5 +147,5 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [ ] "Move to another category" is too long for the category screen button: use "Move" (keep the full sentence as the sheet's subtitle).
 - [ ] Date sheet in Add/Edit expense opens half-way, so its "Date" title and "Done" are hidden: open it fully, or put Done where it is always visible.
 - [ ] Move sheet still has the old design: categories in one sideways row like Add expense, amount big in the middle.
-- [ ] Privacy mode: hidden amounts show stars (***** DH) instead of dots (approved idea, 24 Nov).
-- [ ] Category screen: remove the big category icon at the top (the name becomes the title) and the icon on every row (they're all the same category); split rows say "split with 3 friends". Mockup: canvas "Bztam: easier screens", artboard Category.
+- [ ] Privacy mode: hidden amounts show stars (***** DH) instead of dots. Nothing else changes (the eye button stays as it is).
+- [ ] Category screen: no icon on the rows (all the same category); the category icon sits small next to the name at the top; "730 DH left" big under it; split rows say "split with 3 friends". Mockup: canvas "Bztam: easier screens", artboard Category.
