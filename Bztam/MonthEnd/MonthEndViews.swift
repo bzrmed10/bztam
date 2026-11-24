@@ -17,6 +17,9 @@ struct MonthEndSection: View {
     @State private var tick = 0
     @State private var decided = 0
 
+    /// Screenshots of the card: the demo month may be past the days when the card is asked.
+    static var screenshotMode: Bool { ["monthend", "monthover"].contains(LaunchOptions.openScreen ?? "") && LaunchOptions.demoData }
+
     /// How long the note with Undo stays on Home.
     static let noteDays = 3
 
@@ -51,7 +54,8 @@ struct MonthEndSection: View {
         let summary = BudgetSnapshot.summary(entries: entries, categories: categories, period: previous,
                                              expectedIncome: 0, moves: goalMoves, closes: closes)
         return MonthEndMath.pending(previous: previous, current: current, previousSummary: summary,
-                                    closes: MonthClose.values(closes), firstUse: settingsRows.first?.createdAt ?? .now)
+                                    closes: MonthClose.values(closes), firstUse: settingsRows.first?.createdAt ?? .now,
+                                    now: Self.screenshotMode ? current.start.addingTimeInterval(86_400) : .now)
     }
 
     private var laterKey: String { "monthEndLater-" + BudgetCategory.periodKey(previous) }
