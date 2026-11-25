@@ -21,9 +21,7 @@ for i in call("GET", f"/apps/{app['id']}/appInfos")["data"]:
 # In-app purchases and subscriptions: are they ready for TestFlight (status READY_TO_SUBMIT or later)?
 for p in call("GET", f"/apps/{app['id']}/inAppPurchasesV2?limit=50").get("data", []):
     a = p["attributes"]
-    locs = call("GET", f"/inAppPurchases/{p['id']}/inAppPurchaseLocalizations?limit=10").get("data", [])
-    print("IAP", a.get("productId"), a.get("inAppPurchaseType"), a.get("state"), "familySharable:", a.get("familySharable"),
-          "locales:", [l["attributes"].get("locale") for l in locs])
+    print("IAP", a.get("productId"), a.get("inAppPurchaseType"), a.get("state"), "familySharable:", a.get("familySharable"))
 for g in call("GET", f"/apps/{app['id']}/subscriptionGroups?limit=10").get("data", []):
     print("Subscription group", g["attributes"].get("referenceName"))
     for s in call("GET", f"/subscriptionGroups/{g['id']}/subscriptions?limit=10").get("data", []):
