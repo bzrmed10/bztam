@@ -192,6 +192,11 @@ final class ScreenshotTests: XCTestCase {
         save("\(lang)-08-pdf-review")
         app.terminate()
 
+        app = launch(lang, ["-demoData", "-paywallShot"])
+        sleep(3)
+        save("\(lang)-40-plus")
+        app.terminate()
+
         app = launch(lang, ["-demoData", "-openScreen", "monthend"])
         sleep(2)
         save("\(lang)-37-monthend")

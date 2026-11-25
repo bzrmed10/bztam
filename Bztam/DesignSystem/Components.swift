@@ -113,6 +113,25 @@ struct Chip: View {
     }
 }
 
+/// The "+" at the end of a row of category chips: makes a new category.
+struct AddChip: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "plus")
+                .font(.scaled(size: 15, weight: .bold))
+                .foregroundStyle(Theme.Colors.ink)
+                .frame(width: 44, height: 36)
+                .background(Capsule().strokeBorder(Theme.Colors.line, style: StrokeStyle(lineWidth: 1.5, dash: [4, 3])))
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.pressable)
+        .accessibilityLabel(L10n.t("New category"))
+        .accessibilityIdentifier("category.add")
+    }
+}
+
 /// Round 44pt icon button (back, close, settings).
 struct CircleIconButton: View {
     let symbol: String

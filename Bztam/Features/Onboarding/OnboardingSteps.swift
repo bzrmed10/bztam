@@ -133,16 +133,21 @@ extension OnboardingView {
     var currencyStep: some View {
         VStack(alignment: .leading, spacing: 20) {
             header(L10n.t("Your currency"), L10n.t("Every amount in Bztam uses it. You can change it later in Settings."))
+            SearchField(placeholder: L10n.t("Search currencies"), text: $currencyQuery)
             ScrollView {
-                VStack(spacing: 8) {
-                    ForEach(Currency.allCases) { c in
-                        choice(c.title, detail: c == Self.detectedCurrency ? L10n.t("Your iPhone's region") : nil,
-                               selected: (pickedCurrency?.rawValue ?? currency) == c.rawValue) { pickedCurrency = c }
+                LazyVStack(spacing: 6) {
+                    ForEach(Currency.sorted().filter { $0.matches(currencyQuery) }) { c in
+                        CurrencyRow(currency: c, isRegion: c == Currency.ofRegion,
+                                    selected: (pickedCurrency?.rawValue ?? currency) == c.rawValue) {
+                            withAnimation(.snappy) { pickedCurrency = c }
+                        }
                     }
                 }
             }
+            .scrollDismissesKeyboard(.immediately)
             continueButton {
                 if let pickedCurrency { currency = pickedCurrency.rawValue }
+                hideKeyboard()
                 next()
             }
         }
@@ -264,7 +269,7 @@ extension OnboardingView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 8) {
-                        ForEach(BillCatalog.kinds) { kind in
+                        ForEach(BillCatalog.shown()) { kind in
                             let on = bills.contains { $0.kindID == kind.id }
                             billTile(L10n.t(kind.title), symbol: kind.symbol, on: on) {
                                 toggle(kind)

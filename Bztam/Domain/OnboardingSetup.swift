@@ -28,7 +28,17 @@ enum BillCatalog {
         Kind(id: "housekeeper", title: "Housekeeper", symbol: "sparkles.rectangle.stack", categoryKey: "homehelp", sameEveryMonth: true)
     ]
 
-    static func kind(_ id: String) -> Kind? { kinds.first { $0.id == id } }
+    static func kind(_ id: String) -> Kind? { shown().first { $0.id == id } }
+
+    /// The bills as offered: for people living outside Morocco, money sent to family comes right after rent.
+    static func shown(abroad: Bool = DefaultCategories.abroad) -> [Kind] {
+        guard abroad, let i = kinds.firstIndex(where: { $0.id == "family" }) else { return kinds }
+        var list = kinds
+        let family = list.remove(at: i)
+        list.insert(Kind(id: family.id, title: "Sent to family", symbol: "paperplane", categoryKey: family.categoryKey,
+                         sameEveryMonth: family.sameEveryMonth), at: 1)
+        return list
+    }
 
     /// A bill the user picked.
     struct Bill: Identifiable, Equatable, Sendable {

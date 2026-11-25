@@ -40,3 +40,6 @@
 • وضع الخصوصية: لمسة واحدة تخفي المبالغ.
 • مزامنة اختيارية مع iCloud الخاص بك. قفل Face ID.
 • الوضع الداكن، العربية والفرنسية والإنجليزية.
+
+شروط الاستعمال: https://bztam.netlify.app/ar/terms.html
+الخصوصية: https://bztam.netlify.app/ar/privacy.html

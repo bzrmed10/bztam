@@ -31,6 +31,7 @@ struct AddEntryView: View {
     @State private var splitting: SplitDraft?
     @State private var keyboardShown = false
     @State private var pickingDate = false
+    @State private var addingCategory = false
 
     init(request: AddRequest, onScan: ((ScanKind) -> Void)? = nil) {
         editing = nil
@@ -135,6 +136,12 @@ struct AddEntryView: View {
         .presentationCornerRadius(Theme.Radius.large)
         .sheet(item: $splitting) { d in
             SplitSheet(draft: d) { dismiss() }
+        }
+        .sheet(isPresented: $addingCategory) {
+            CategoryEditSheet(category: nil, nextOrder: (categories.map(\.order).max() ?? 0) + 1) { new in
+                categoryID = new.id
+                userPickedCategory = true
+            }
         }
         .sheet(isPresented: $pickingDate) { dateSheet }
         .fullScreenCover(isPresented: $showReceipt) {
@@ -258,6 +265,7 @@ struct AddEntryView: View {
                         Chip(title: c.displayName, selected: c.id == categoryID) { categoryID = c.id; userPickedCategory = true }
                             .id(c.id)
                     }
+                    AddChip { addingCategory = true }
                 } else {
                     ForEach(IncomeSource.allCases) { s in
                         Chip(title: s.title, selected: s == incomeSource) { incomeSource = s }

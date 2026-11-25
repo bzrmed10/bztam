@@ -52,7 +52,7 @@ enum Advice {
         let periods = (1...3).map { BudgetCalculator.period(current, offset: -$0, payday: payday, calendar: calendar) }
         let active = periods.filter { p in entries.contains { $0.kind == .expense && p.contains($0.date) } }
         guard active.count >= 2 else { return [] }
-        let step = 5_000
+        let step = Money.scaled(5_000)
         return categories.compactMap { c in
             let total = entries.filter { e in e.kind == .expense && e.categoryID == c.id && active.contains { $0.contains(e.date) } }
                 .reduce(0) { $0 + $1.amount }
@@ -61,7 +61,7 @@ enum Advice {
             let rounded = (average + step - 1) / step * step
             if c.budget == 0 { return rounded >= step ? BudgetSuggestion(categoryID: c.id, amount: rounded) : nil }
             let gap = abs(rounded - c.budget)
-            guard gap >= max(10_000, c.budget * 15 / 100) else { return nil }
+            guard gap >= max(Money.scaled(10_000), c.budget * 15 / 100) else { return nil }
             return BudgetSuggestion(categoryID: c.id, amount: rounded)
         }
     }

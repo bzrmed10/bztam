@@ -20,7 +20,7 @@ struct GoalsView: View {
                     HStack {
                         CircleIconButton(symbol: "xmark", label: L10n.t("Close")) { dismiss() }
                         Spacer()
-                        Button { creating = true } label: {
+                        Button { newGoal() } label: {
                             Label(L10n.t("New goal"), systemImage: "plus")
                                 .font(.scaled(size: 15, weight: .bold))
                                 .foregroundStyle(Theme.Colors.onBrand)
@@ -34,7 +34,7 @@ struct GoalsView: View {
                     if goals.isEmpty {
                         EmptyState(symbol: "leaf", title: L10n.t("Save for something"),
                                    message: L10n.t("A trip, Eid, a new phone. Put money aside and watch it grow."),
-                                   actionTitle: L10n.t("New goal")) { creating = true }
+                                   actionTitle: L10n.t("New goal")) { newGoal() }
                             .padding(.top, 40)
                     } else {
                         VStack(alignment: .leading, spacing: 4) {
@@ -64,6 +64,11 @@ struct GoalsView: View {
         .onAppear {
             if let id = openGoalID, let g = goals.first(where: { $0.id == id }) { path.append(g) }
         }
+    }
+
+    /// One goal is free; more need Plus.
+    private func newGoal() {
+        if goals.count < Store.freeGoals { creating = true } else { Store.shared.require(.goals) { creating = true } }
     }
 }
 

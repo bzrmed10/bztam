@@ -123,7 +123,7 @@ struct MonthEndSection: View {
 
     /// The "When the month ends" setting, for months with money left.
     private func autoDecide() {
-        guard let amount = pendingAmount, amount > 0 else { return }
+        guard let amount = pendingAmount, amount > 0, Store.shared.isPlus else { return }
         switch MonthEnd.mode {
         case .ask: break
         case .nextMonth: choose(.nextMonth, amount: amount, automatic: true)

@@ -3,10 +3,20 @@ import Foundation
 /// Amounts are always whole centimes (`Int`). 1 DH = 100 centimes. Never `Double` for money.
 typealias Centimes = Int
 
-/// Currencies the user can pick in Settings. Amounts are never converted; only the label changes.
+/// Currencies the user can pick. Amounts are never converted; only the label and the way numbers are written change.
+/// Amounts are always stored in hundredths, even for currencies without cents.
 enum Currency: String, CaseIterable, Identifiable, Sendable {
-    case mad, eur, usd, gbp, cad, chf, sar, aed
+    // Morocco first, then the places Bztam fits best, then the rest.
+    case mad, eur, usd, gbp, cad, chf
+    case dzd, tnd, lyd
+    case sar, aed, qar, kwd, bhd, omr, jod, egp
+    case sek, nok, dkk, pln, try_ = "try"
+    case xof, xaf, ngn
+    case brl, mxn, inr, myr, jpy
     var id: String { rawValue }
+
+    /// The ISO code: "MAD", "EUR"…
+    var code: String { rawValue.uppercased() }
 
     var symbol: String {
         switch self {
@@ -16,27 +26,108 @@ enum Currency: String, CaseIterable, Identifiable, Sendable {
         case .gbp: "£"
         case .cad: "CA$"
         case .chf: "CHF"
+        case .dzd: "DA"
+        case .tnd: "DT"
+        case .lyd: "LD"
         case .sar: "SAR"
         case .aed: "AED"
+        case .qar: "QAR"
+        case .kwd: "KWD"
+        case .bhd: "BHD"
+        case .omr: "OMR"
+        case .jod: "JOD"
+        case .egp: "E£"
+        case .sek, .nok, .dkk: "kr"
+        case .pln: "zł"
+        case .try_: "₺"
+        case .xof, .xaf: "FCFA"
+        case .ngn: "₦"
+        case .brl: "R$"
+        case .mxn: "MX$"
+        case .inr: "₹"
+        case .myr: "RM"
+        case .jpy: "¥"
         }
     }
 
-    var title: String {
+    /// The currency's name in the app's language, from iOS ("Algerian dinar", "dinar algérien", "دينار جزائري").
+    var name: String {
+        let n = Locale(identifier: L10n.code).localizedString(forCurrencyCode: code) ?? code
+        return n.prefix(1).uppercased() + n.dropFirst()
+    }
+
+    /// "Algerian dinar (DA)"
+    var title: String { "\(name) (\(symbol))" }
+
+    /// Currencies whose amounts have no cents in daily life: no decimals, no comma on the keypad.
+    var hasCents: Bool { ![.xof, .xaf, .jpy].contains(self) }
+
+    /// Roughly how many units of this currency make 1 DH. Only for the few fixed limits in tips and the
+    /// rounding of suggested budgets, so they stay sensible everywhere. Never used to convert amounts.
+    var perDirham: Double {
         switch self {
-        case .mad: L10n.t("Moroccan dirham (DH)")
-        case .eur: L10n.t("Euro (€)")
-        case .usd: L10n.t("US dollar ($)")
-        case .gbp: L10n.t("British pound (£)")
-        case .cad: L10n.t("Canadian dollar (CA$)")
-        case .chf: L10n.t("Swiss franc (CHF)")
-        case .sar: L10n.t("Saudi riyal (SAR)")
-        case .aed: L10n.t("UAE dirham (AED)")
+        case .mad: 1
+        case .eur, .usd, .chf: 0.1
+        case .gbp: 0.08
+        case .cad: 0.14
+        case .dzd: 13
+        case .tnd: 0.3
+        case .lyd: 0.5
+        case .sar, .aed, .qar: 0.4
+        case .kwd: 0.03
+        case .bhd, .omr: 0.04
+        case .jod: 0.07
+        case .egp: 5
+        case .sek, .nok: 1
+        case .dkk: 0.7
+        case .pln: 0.4
+        case .try_: 4
+        case .xof, .xaf: 60
+        case .ngn: 150
+        case .brl: 0.6
+        case .mxn: 2
+        case .inr: 9
+        case .myr: 0.45
+        case .jpy: 15
         }
+    }
+
+    /// A dirham-sized limit in this currency, rounded to a round number (1, 2 or 5 followed by zeros).
+    /// `scaled(5_000)` is 50 DH, 5 €, 500 FCFA… (in hundredths).
+    func scaled(_ dirhamCentimes: Centimes) -> Centimes {
+        guard self != .mad else { return dirhamCentimes }
+        let raw = Double(dirhamCentimes) * perDirham
+        guard raw >= 1 else { return 1 }
+        let magnitude = pow(10, floor(log10(raw)))
+        let first = raw / magnitude
+        let nice: Double = first < 1.5 ? 1 : first < 3.5 ? 2 : first < 7.5 ? 5 : 10
+        let value = Centimes(nice * magnitude)
+        // Without cents, keep whole units.
+        return hasCents ? max(1, value) : max(100, value / 100 * 100)
     }
 
     /// English writes £245.50, $12 and €9; French and Arabic put every symbol after the number, like "245,50 £".
     func symbolFirst(language: String) -> Bool {
-        language == "en" && [.eur, .usd, .gbp, .cad].contains(self)
+        language == "en" && [.eur, .usd, .gbp, .cad, .egp, .ngn, .brl, .mxn, .inr, .myr, .jpy, .try_].contains(self)
+    }
+
+    /// The currency of the iPhone's region, when Bztam has it.
+    static var ofRegion: Currency? {
+        guard let code = Locale.current.currency?.identifier.lowercased() else { return nil }
+        return Currency(rawValue: code)
+    }
+
+    /// For the pickers: the iPhone's currency first, then DH, then the rest in order.
+    static func sorted(region: Currency? = ofRegion) -> [Currency] {
+        guard let region else { return allCases }
+        return [region] + allCases.filter { $0 != region }
+    }
+
+    /// Search by name, symbol or code.
+    func matches(_ query: String) -> Bool {
+        let q = query.trimmingCharacters(in: .whitespaces)
+        guard !q.isEmpty else { return true }
+        return [name, symbol, code].contains { $0.range(of: q, options: [.caseInsensitive, .diacriticInsensitive]) != nil }
     }
 }
 
@@ -66,6 +157,9 @@ enum Money {
     /// Currency label shown with amounts.
     static var currencySymbol: String { currency.symbol }
 
+    /// A dirham-sized limit in the user's currency (see `Currency.scaled`).
+    static func scaled(_ dirhamCentimes: Centimes) -> Centimes { currency.scaled(dirhamCentimes) }
+
     static func isHidden(_ privacy: AmountPrivacy) -> Bool {
         let d = UserDefaults.standard
         guard privacy != .never, d.bool(forKey: hiddenKey) else { return false }
@@ -75,9 +169,10 @@ enum Money {
     /// "2,760 DH" (en) or "2 760 DH" (fr). Decimals only when there are centimes: "245.50 DH" / "245,50 DH".
     /// With privacy mode on, the number becomes "••••".
     static func format(_ amount: Centimes, language: String = L10n.code, sign: Bool = false, symbol: Bool = true,
-                       privacy: AmountPrivacy = .any) -> String {
+                       privacy: AmountPrivacy = .any, currency: Currency = Money.currency) -> String {
         let negative = amount < 0
-        let absolute = abs(amount)
+        // Currencies without cents round to whole units.
+        let absolute = currency.hasCents ? abs(amount) : (abs(amount) + 50) / 100 * 100
         let units = absolute / 100
         let cents = absolute % 100
         let grouping = language == "en" ? "," : "\u{202F}"
@@ -102,8 +197,8 @@ enum Money {
             text = signText + grouped
         } else {
             text = currency.symbolFirst(language: language)
-                ? signText + currencySymbol + grouped
-                : signText + grouped + " " + currencySymbol
+                ? signText + currency.symbol + grouped
+                : signText + grouped + " " + currency.symbol
         }
         // In Arabic, keep "2 310 DH" together as one left-to-right piece inside right-to-left sentences.
         return language == "ar" ? "\u{2066}" + text + "\u{2069}" : text
@@ -114,7 +209,7 @@ enum Money {
 struct AmountInput: Equatable, Sendable {
     private(set) var text: String = ""
 
-    static let maxUnitsDigits = 7
+    static let maxUnitsDigits = 9
 
     init(text: String = "") { self.text = text }
 
@@ -134,7 +229,7 @@ struct AmountInput: Equatable, Sendable {
         case "⌫":
             if !text.isEmpty { text.removeLast() }
         case ",", ".":
-            guard !hasDecimal else { return }
+            guard !hasDecimal, Money.currency.hasCents else { return }
             text = (text.isEmpty ? "0" : text) + ","
         default:
             guard key.count == 1, key.first?.isNumber == true else { return }

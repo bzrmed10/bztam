@@ -88,7 +88,7 @@ struct UnusualSpending: Equatable, Sendable, Identifiable {
             }
             guard before.count >= 2 else { continue }
             let usual = before.reduce(0, +) / before.count
-            if usual > 0, spentNow >= usual * 3 / 2, spentNow - usual >= 20_000 {
+            if usual > 0, spentNow >= usual * 3 / 2, spentNow - usual >= Money.scaled(20_000) {
                 out.append(UnusualSpending(kind: .category(id), amount: spentNow, usual: usual))
             }
         }
@@ -108,7 +108,7 @@ struct UnusualSpending: Equatable, Sendable, Identifiable {
             guard months.count >= 3, earlier.count <= months.count + 1 else { continue }
             let recent = Array(earlier.suffix(4))
             let usual = recent.reduce(0) { $0 + $1.amount } / recent.count
-            if usual > 0, last.amount >= usual * 13 / 10, last.amount - usual >= 5_000 {
+            if usual > 0, last.amount >= usual * 13 / 10, last.amount - usual >= Money.scaled(5_000) {
                 out.append(UnusualSpending(kind: .bill(merchant: last.merchant.trimmingCharacters(in: .whitespaces)), amount: last.amount, usual: usual))
             }
         }

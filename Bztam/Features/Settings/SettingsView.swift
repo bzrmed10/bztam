@@ -1,3 +1,4 @@
+import StoreKit
 import CloudKit
 import SwiftData
 import SwiftUI
@@ -21,6 +22,9 @@ struct SettingsView: View {
     @AppStorage(L10n.storageKey) private var language = AppLanguage.system.rawValue
     @AppStorage(Appearance.storageKey) private var appearance = Appearance.system.rawValue
     @AppStorage(Money.currencyKey) private var currency = Currency.mad.rawValue
+    @State private var pickingCurrency = false
+    @State private var store = Store.shared
+    @State private var managingSubscription = false
     @State private var photosDenied = false
     @State private var showExport = false
     @State private var restartNeeded = false
@@ -60,15 +64,12 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
 
-                        Menu {
-                            Picker(L10n.t("Currency"), selection: $currency) {
-                                ForEach(Currency.allCases) { Text($0.title).tag($0.rawValue) }
-                            }
-                        } label: {
+                        Button { pickingCurrency = true } label: {
                             SettingsRow(symbol: "banknote", title: L10n.t("Currency"),
                                         value: (Currency(rawValue: currency) ?? .mad).title)
                         }
                         .buttonStyle(.plain)
+                        .accessibilityIdentifier("settings.currency")
 
                         Menu {
                             Picker(L10n.t("When the month ends"), selection: $monthEndMode) {
@@ -80,6 +81,13 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("settings.monthend")
+                        .onChange(of: monthEndMode) { _, mode in
+                            // Choosing for you at the month end is part of Plus; "Ask me" is free.
+                            if mode != MonthEndMode.ask.rawValue && !Store.shared.isPlus {
+                                monthEndMode = MonthEndMode.ask.rawValue
+                                PlusPresenter.show(.monthEnd)
+                            }
+                        }
                     }
 
                     section(L10n.t("Privacy")) {
@@ -153,7 +161,7 @@ struct SettingsView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Theme.Colors.surface, in: RoundedRectangle(cornerRadius: Theme.Radius.small))
                         }
-                        Button { showExport = true } label: {
+                        Button { Store.shared.require(.export) { showExport = true } } label: {
                             SettingsRow(symbol: "square.and.arrow.up", title: L10n.t("Export"), value: L10n.t("PDF report or CSV for spreadsheets"))
                         }
                         .buttonStyle(.plain)
@@ -178,6 +186,18 @@ struct SettingsView: View {
                     }
 
                     section(L10n.t("App")) {
+                        Button {
+                            if store.yearlyActive { managingSubscription = true } else if !store.ownsLifetime { PlusPresenter.show(.general) }
+                        } label: {
+                            SettingsRow(symbol: "plus.circle", title: L10n.t("Bztam Plus"), value: plusStatus,
+                                        chevron: !store.ownsLifetime)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier("settings.plus")
+                        if Store.isTestFlight {
+                            ToggleRow(symbol: "testtube.2", title: L10n.t("Test as free user"),
+                                      detail: L10n.t("TestFlight only: see Bztam without Plus"), isOn: $store.testAsFree)
+                        }
                         Menu {
                             Picker(L10n.t("Language"), selection: $language) {
                                 ForEach(AppLanguage.allCases) { Text($0.nativeName).tag($0.rawValue) }
@@ -266,6 +286,8 @@ struct SettingsView: View {
                      ? L10n.t("Every expense, money in, category, dart and friend is deleted from this iPhone and from your iCloud. This can't be undone. Export first if you want a copy.")
                      : L10n.t("Every expense, money in, category, dart and friend is deleted from this iPhone. This can't be undone. Export first if you want a copy."))
             }
+            .manageSubscriptionsSheet(isPresented: $managingSubscription)
+            .sheet(isPresented: $pickingCurrency) { CurrencyPickerSheet(selection: $currency) }
             .sheet(isPresented: $showExport) { ExportView() }
             .alert(L10n.t("Restart Bztam to apply"), isPresented: $restartNeeded) {
                 Button(L10n.t("OK"), role: .cancel) {}
@@ -317,6 +339,16 @@ struct SettingsView: View {
         c.path = "support@healus-ai.com"
         c.queryItems = [URLQueryItem(name: "subject", value: L10n.t("Bztam feedback")), URLQueryItem(name: "body", value: body)]
         if let url = c.url { openURL(url) }
+    }
+
+    private var plusStatus: String {
+        if store.ownsLifetime { return L10n.t("Lifetime") }
+        if store.yearlyActive { return L10n.t("Yearly") }
+        if store.trialActive, let end = store.trialEnd {
+            let days = max(1, Calendar.current.dateComponents([.day], from: .now, to: end).day ?? 1)
+            return days == 1 ? L10n.t("Trial · 1 day left") : L10n.t("Trial · %d days left", days)
+        }
+        return L10n.t("Free")
     }
 
     private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {

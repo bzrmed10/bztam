@@ -141,6 +141,8 @@ struct CategoriesEditorView: View {
 struct CategoryEditSheet: View {
     let category: BudgetCategory?
     var nextOrder = 0
+    /// Called with a new category once it's saved (to select it where it was made).
+    var onCreate: ((BudgetCategory) -> Void)? = nil
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
@@ -254,7 +256,12 @@ struct CategoryEditSheet: View {
             c.budget = budget
             c.isFixed = isFixed
         } else {
-            context.insert(BudgetCategory(name: trimmed, symbol: symbol, budget: budget, isFixed: isFixed, order: nextOrder))
+            let new = BudgetCategory(name: trimmed, symbol: symbol, budget: budget, isFixed: isFixed, order: nextOrder)
+            context.insert(new)
+            try? context.save()
+            onCreate?(new)
+            dismiss()
+            return
         }
         try? context.save()
         dismiss()

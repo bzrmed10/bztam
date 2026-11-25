@@ -24,6 +24,7 @@ struct HomeView: View {
     @State private var openGoalID: UUID?
     @State private var goalMove: GoalMoveRequest?
     @State private var showSetup = false
+    @State private var addingCategory = false
     @State private var showCalendar = LaunchOptions.openScreen == "calendar"
     @AppStorage(OnboardingView.setupSkippedKey) private var setupSkipped = false
     @AppStorage(Money.hiddenKey) private var amountsHidden = false
@@ -79,6 +80,23 @@ struct HomeView: View {
                             }
                             .buttonStyle(.plain)
                         }
+                        if offset == 0 {
+                            Button { addingCategory = true } label: {
+                                HStack(spacing: 14) {
+                                    Image(systemName: "plus")
+                                        .font(.scaled(size: 18, weight: .bold))
+                                        .frame(width: 46, height: 46)
+                                        .background(Circle().strokeBorder(Theme.Colors.line, style: StrokeStyle(lineWidth: 1.5, dash: [4, 3])))
+                                    Text(L10n.t("Add a category")).font(.scaled(size: 16, weight: .bold))
+                                    Spacer()
+                                }
+                                .foregroundStyle(Theme.Colors.ink)
+                                .padding(.vertical, 6)
+                                .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.pressable)
+                            .accessibilityIdentifier("home.addCategory")
+                        }
                     }
                     if !goals.isEmpty && offset == 0 {
                         goalsSection
@@ -92,6 +110,9 @@ struct HomeView: View {
             .statusBarFade()
             .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $showFriends) { FriendsView() }
+            .sheet(isPresented: $addingCategory) {
+                CategoryEditSheet(category: nil, nextOrder: (categories.map(\.order).max() ?? 0) + 1)
+            }
             .sheet(isPresented: $showGoals, onDismiss: { openGoalID = nil }) { GoalsView(openGoalID: openGoalID) }
             .sheet(item: $goalMove) { r in
                 GoalMoveSheet(goal: r.goal, mode: .putAside, saved: GoalMath.saved(r.goal.id, in: GoalMove.values(goalMoves)),

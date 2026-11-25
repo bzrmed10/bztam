@@ -107,5 +107,6 @@ struct RootView: View {
             try? await Task.sleep(for: .milliseconds(500))
             await lock.unlock()
         }
+        .task { await Store.shared.start() }
     }
 }

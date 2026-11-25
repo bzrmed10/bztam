@@ -33,6 +33,9 @@ enum DefaultCategories {
         Template(key: "homehelp", englishName: "Home help", symbol: "sparkles.rectangle.stack", isFixed: true, suggestedPercent: 0)
     ]
 
+    /// The iPhone is set to a region outside Morocco: "Family help" reads "Sent to family".
+    static var abroad: Bool { (Locale.current.region?.identifier ?? "MA") != "MA" }
+
     static func template(for key: String) -> Template? {
         all.first { $0.key == key } ?? extras.first { $0.key == key }
     }
@@ -41,7 +44,7 @@ enum DefaultCategories {
     static func suggestedBudget(_ template: Template, income: Centimes) -> Centimes {
         guard income > 0 else { return 0 }
         let raw = income * template.suggestedPercent / 100
-        let step = 50 * 100
+        let step = Money.scaled(5_000)
         return raw / step * step
     }
 }

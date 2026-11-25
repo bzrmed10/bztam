@@ -12,6 +12,7 @@ struct MoveMoneySheet: View {
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
     @State private var giving = true
     @State private var otherID: UUID?
+    @State private var addingCategory = false
     @State private var amount = AmountInput()
 
     private var others: [BudgetCategory] { categories.filter { $0.id != category.id } }
@@ -52,6 +53,7 @@ struct MoveMoneySheet: View {
                         ForEach(others) { c in
                             Chip(title: c.displayName, selected: otherID == c.id) { otherID = c.id }
                         }
+                        AddChip { addingCategory = true }
                     }
                     .padding(.horizontal, Theme.Space.l)
                 }
@@ -71,6 +73,9 @@ struct MoveMoneySheet: View {
         .foregroundStyle(Theme.Colors.ink)
         .background(Theme.Colors.canvas)
         .presentationDetents([.large])
+        .sheet(isPresented: $addingCategory) {
+            CategoryEditSheet(category: nil, nextOrder: (categories.map(\.order).max() ?? 0) + 1) { otherID = $0.id }
+        }
     }
 
     private func move() {

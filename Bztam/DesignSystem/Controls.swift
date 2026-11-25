@@ -5,6 +5,8 @@ struct KeypadView: View {
     let onKey: (String) -> Void
 
     private let keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ",", "0", "⌫"]
+    /// Currencies without cents (FCFA, yen) have no decimal key.
+    private let cents = Money.currency.hasCents
 
     var body: some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 3), spacing: 4) {
@@ -16,7 +18,7 @@ struct KeypadView: View {
                         if key == "⌫" {
                             Image(systemName: "delete.left").font(.scaled(size: 22, weight: .medium))
                         } else {
-                            Text(key == "," ? (L10n.code == "fr" ? "," : ".") : key)
+                            Text(key == "," ? (cents ? (L10n.code == "fr" ? "," : ".") : "") : key)
                                 .font(.scaled(size: 24, weight: .semibold))
                         }
                     }
@@ -25,6 +27,8 @@ struct KeypadView: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(KeyButtonStyle())
+                .disabled(key == "," && !cents)
+                .accessibilityHidden(key == "," && !cents)
                 .accessibilityLabel(key == "⌫" ? L10n.t("Delete") : (key == "," ? L10n.t("Decimal") : key))
             }
         }

@@ -31,6 +31,7 @@ struct OnboardingView: View {
     @State var step: Step = .welcome
     /// The currency picked on the currency step; saved only when you continue.
     @State var pickedCurrency: Currency?
+    @State var currencyQuery = ""
     @State var payday = 1
     @State var salary = AmountInput()
     @State var salaryRepeats = true
@@ -181,16 +182,11 @@ struct OnboardingView: View {
         if setupMode {
             step = .payday
             if settings.expectedIncome > 0 { salary = AmountInput(centimes: settings.expectedIncome) }
-        } else if UserDefaults.standard.string(forKey: Money.currencyKey) == nil, let detected = Self.detectedCurrency {
+        } else if UserDefaults.standard.string(forKey: Money.currencyKey) == nil, let detected = Currency.ofRegion {
             pickedCurrency = detected
         }
     }
 
-    /// The phone's region currency, when Bztam supports it.
-    static var detectedCurrency: Currency? {
-        guard let code = Locale.current.currency?.identifier.lowercased() else { return nil }
-        return Currency(rawValue: code)
-    }
 
     // MARK: Plan
 

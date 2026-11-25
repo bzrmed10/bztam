@@ -44,7 +44,7 @@ enum InsightsCalculator {
 
     /// The categories that changed the most (at least 50 DH in one of the two periods), up to `limit`.
     static func biggestChanges(current: [CategorySpend], previous: [CategorySpend],
-                               minimum: Centimes = 5_000, limit: Int = 3) -> [CategoryChange] {
+                               minimum: Centimes = Money.scaled(5_000), limit: Int = 3) -> [CategoryChange] {
         var ids = Set(current.map(\.categoryID))
         ids.formUnion(previous.map(\.categoryID))
         let changes: [CategoryChange] = ids.compactMap { id in

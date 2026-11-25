@@ -94,9 +94,9 @@ enum BudgetPlanner {
         return p
     }
 
-    /// Down to the nearest 50 DH: 1,249 DH becomes 1,200 DH.
+    /// Down to the nearest 50 DH (or a round amount of the same size in other currencies): 1,249 DH becomes 1,200 DH.
     static func round50(_ centimes: Centimes) -> Centimes {
-        let step = 50 * 100
+        let step = Money.scaled(5_000)
         return max(0, centimes) / step * step
     }
 }

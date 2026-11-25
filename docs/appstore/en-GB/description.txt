@@ -54,5 +54,8 @@ PRIVATE BY DESIGN
 • Receipts, voice and questions are processed on your iPhone.
 • Privacy mode: one tap hides amounts, or only your money in.
 • Optional iCloud sync to your own iCloud. Face ID lock.
-• Dirham, euro, dollar, pound, Canadian dollar, Swiss franc, riyal and UAE dirham.
+• 30 currencies: dirham, euro, dinar, riyal, CFA franc, pound, dollar and more.
 • Dark mode, English, French and Arabic.
+
+Terms of Use: https://bztam.netlify.app/terms.html
+Privacy: https://bztam.netlify.app/privacy.html

@@ -54,5 +54,8 @@ PRIVÉ PAR CONCEPTION
 • Tickets, voix et questions traités sur votre iPhone.
 • Mode discret : un geste masque les montants, ou seulement vos rentrées.
 • Synchro iCloud facultative vers votre propre iCloud. Verrouillage Face ID.
-• Dirham, euro, dollar, livre, dollar canadien, franc suisse, riyal et dirham des Émirats.
+• 30 devises : dirham, euro, dinar, riyal, franc CFA, livre, dollar et plus.
 • Mode sombre, français, anglais et arabe.
+
+Conditions d'utilisation : https://bztam.netlify.app/fr/terms.html
+Confidentialité : https://bztam.netlify.app/fr/privacy.html

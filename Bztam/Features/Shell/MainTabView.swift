@@ -183,7 +183,8 @@ struct MainTabView: View {
             if LaunchOptions.openScreen == "pdf", let url = DemoBill.writeTemporaryPDF() {
                 _ = await scanner.read(pdf: url, source: .share)
             }
-            await scanner.openNextShared()
+            // Files shared from other apps wait in the inbox until Plus is on.
+            if Store.shared.isPlus { await scanner.openNextShared() } else if !ShareInbox.pending().isEmpty { PlusPresenter.show(.scan) }
             await watcher.check()
         }
     }
@@ -191,6 +192,7 @@ struct MainTabView: View {
 
 extension MainTabView {
     func startScan(_ kind: ScanKind) {
+        guard Store.shared.isPlus else { PlusPresenter.show(.scan); return }
         switch kind {
         case .camera:
             if DocumentScannerView.isAvailable { showCamera = true } else { noCamera = true }
@@ -202,6 +204,7 @@ extension MainTabView {
     }
 
     func addSuggestion() {
+        guard Store.shared.isPlus else { PlusPresenter.show(.scan); return }
         guard let image = watcher.suggestion else { return }
         watcher.clear()
         Task { await scanner.read([image], source: .screenshot) }
