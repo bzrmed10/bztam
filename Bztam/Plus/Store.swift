@@ -65,7 +65,12 @@ final class Store {
         didSet { UserDefaults.standard.set(testAsFree, forKey: "testAsFreeUser") }
     }
 
-    var canStartTrial: Bool { paywallShot || (!(testAsFree ? false : trialUsed) && trialProduct != nil && !owns) }
+    /// The free trial is offered once, and not to people who already bought (except when testing as a free user).
+    var canStartTrial: Bool {
+        if paywallShot { return true }
+        guard trialProduct != nil else { return false }
+        return testAsFree || (!trialUsed && !owns)
+    }
 
     var lifetimePrice: String? { lifetime?.displayPrice ?? (paywallShot ? "$24.99" : nil) }
     var yearlyPrice: String? { yearly?.displayPrice ?? (paywallShot ? "$9.99" : nil) }
