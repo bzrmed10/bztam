@@ -178,6 +178,19 @@ Product IDs: com.bzrmed.bztam.plus.lifetime (non-consumable, Family Sharing on),
 - [ ] Review notes: "Ask Bztam answers with the app's own engine on the user's data; it works on devices without Apple Intelligence, which only helps understand wording when available."
 - [ ] If App Review rejects it under 4.10: make Ask free again and resubmit.
 
+### Ask Bztam: answer more (Bztam's engine computes; Apple's model only helps understand the question; no outside AI, nothing leaves the phone)
+- [ ] 1. Comparisons: "Did I spend more than last month?" → both periods, the difference and %.
+- [ ] 2. A named month or dates: "in October", "between the 1st and the 10th", "in March 2026".
+- [ ] 3. Several categories together: "food and transport", "everything except rent".
+- [ ] 4. Goals, dart and recurring bills: saved for a goal and what's left to reach it, next dart turn and who's next, what's due this month.
+- [ ] 5. Facts-based "can I…" and "will I…": "Can I afford a 3,000 DH phone?" → compares with left to spend and goals; "Will I finish the month?" → today's pace vs what's left. Numbers only, never financial advice.
+- [ ] 6. Follow-ups: "And last month?", "And at Marjane?" reuse the previous question and change one part.
+- [ ] 7. Income by source: "How much from freelance?" (salary, freelance, side job…).
+- [ ] 8. Unusual wording without Apple Intelligence: more words in the lists (EN/FR/AR/Darija), and when unsure, suggest the closest questions to tap.
+- [ ] Apple's model: new fields to fill (compare, month/dates, several categories, goal/dart, follow-up, income source) so it recognises these on iPhones that have it.
+- [ ] Tests for each new kind of question in the 4 languages.
+
+
 ## App Review rules — check before every submission (from Inly's rejection, 24 Nov)
 - **2.3.7 Accurate metadata:** no price words anywhere in screenshots, name, subtitle, keywords or promotional text: no "free", "gratuit", "مجاني", "no subscription", "pay once", "lifetime", discounts or prices. Captions describe what the app does, nothing about cost. (Checked 25 Nov: current texts and screenshots are clean.)
 - **4.10 Built-in capabilities:** never charge for iCloud sync, Face ID lock, notifications, widgets, Siri, or camera/photo access. Ask Bztam in Plus is a deliberate try (own engine, works without Apple Intelligence); free again if rejected. Plus only sells Bztam's own work (unlimited goals, scanning that reads receipts, automatic choices, exports).
