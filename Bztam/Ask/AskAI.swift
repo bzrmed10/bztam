@@ -7,7 +7,7 @@ import FoundationModels
 struct AIAskFields {
     @Guide(description: "true if the question is about the user's money, spending, income or budget; false otherwise.")
     var isAboutMoney: Bool
-    @Guide(description: "One of: spent (total spent), earned (money received), left (what's left to spend), count (how many expenses or times), biggest (largest single expense), top (category where most money went), owed (who owes the user or whom the user owes, from split bills).")
+    @Guide(description: "One of: spent (total spent), earned (money received), left (what's left to spend), count (how many expenses or times), biggest (largest single expense), top (category where most money went), owed (who owes the user or whom the user owes, from split bills), goal (money saved for a savings goal), dart (a dart or tontine: next round, whose turn), bills (recurring bills still to pay), afford (can the user afford a price), pace (will the money last until payday).")
     var metric: String
     @Guide(description: "One of: thisPeriod (this month, the default), lastPeriod (last month), thisWeek, lastWeek, today, yesterday, thisYear, all (since the start).")
     var range: String
@@ -15,19 +15,55 @@ struct AIAskFields {
     var category: String
     @Guide(description: "A shop name from the list, copied exactly, or empty if the question names no shop.")
     var shop: String
+    @Guide(description: "true if the question compares two periods (more or less than before); false otherwise.")
+    var compare: Bool
+    @Guide(description: "The month named in the question, 1 to 12, or 0 if none.")
+    var month: Int
+    @Guide(description: "The year named in the question, like 2026, or 0 if none.")
+    var year: Int
+    @Guide(description: "A savings goal name from the list, copied exactly, or empty.")
+    var goal: String
+    @Guide(description: "For afford questions, the price in whole units of money, or 0.")
+    var price: Int
+    @Guide(description: "For money received: salary, freelance, family, or empty.")
+    var incomeSource: String
 }
 
 enum AskAI {
     static var isAvailable: Bool { ReceiptAI.isAvailable }
 
     /// Rules first; the model only fills what the rules did not find. Returns nil when Ask should show examples.
-    static func understand(_ question: String, context: AskContext) async -> AskQuery? {
+    /// `previous` is the last question, for follow-ups ("and last month?").
+    static func understand(_ question: String, context: AskContext, previous: AskQuery? = nil) async -> AskQuery? {
         let rules = AskParser.parse(question, context: context)
-        let complete = rules.foundMetric && rules.foundRange && (rules.query.categoryID != nil || rules.query.merchant != nil)
+        if let follow = AskParser.followUp(question, result: rules, previous: previous) { return follow }
+        let complete = rules.foundMetric && rules.foundRange && (!rules.query.categoryIDs.isEmpty || rules.query.merchant != nil)
         guard !complete, isAvailable, let fields = await ask(question, context: context) else {
             return rules.aboutMoney ? rules.query : nil
         }
-        return merge(rules, fields: (fields.isAboutMoney, fields.metric, fields.range, fields.category, fields.shop), context: context)
+        guard var q = merge(rules, fields: (fields.isAboutMoney, fields.metric, fields.range, fields.category, fields.shop), context: context)
+        else { return nil }
+        q = mergeExtra(q, rules: rules, compare: fields.compare, month: fields.month, year: fields.year, goal: fields.goal,
+                       price: fields.price, incomeSource: fields.incomeSource, context: context)
+        return q
+    }
+
+    /// The new fields: only valid values, and never over what the rules found. Pure, unit-tested.
+    static func mergeExtra(_ q: AskQuery, rules: AskParser.Result, compare: Bool, month: Int, year: Int, goal: String,
+                           price: Int, incomeSource: String, context: AskContext) -> AskQuery {
+        var q = q
+        if compare { q.compare = true }
+        if q.month == nil, (1...12).contains(month) {
+            q.month = month
+            if (2000...2100).contains(year) { q.year = year }
+        }
+        if q.goalID == nil, let g = context.goals.first(where: { CategoryMemory.key($0.name) == CategoryMemory.key(goal) && !goal.isEmpty }) {
+            q.goalID = g.id
+        }
+        if q.metric == .afford, q.amount == nil, price > 0 { q.amount = price * 100 }
+        if q.metric == .afford, q.amount == nil { q.metric = .left }
+        if q.metric == .earned, q.incomeSource == nil, IncomeSource(rawValue: incomeSource) != nil { q.incomeSource = incomeSource }
+        return q
     }
 
     private static func ask(_ question: String, context: AskContext) async -> AIAskFields? {
@@ -39,6 +75,7 @@ enum AskAI {
             Categories (key: name):
             \(categories)
             Shops the user has paid: \(shops)
+            Savings goals: \(context.goals.map(\.name).joined(separator: ", "))
             """)
         return try? await session.respond(to: "Question: " + question, generating: AIAskFields.self).content
     }

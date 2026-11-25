@@ -7,7 +7,7 @@ import UserNotifications
 
 /// Why the Plus screen was opened: the matching benefit is shown first.
 enum PaywallReason: String, Identifiable, CaseIterable, Sendable {
-    case general, goals, scan, monthEnd, export
+    case general, goals, scan, monthEnd, export, ask
     var id: String { rawValue }
 }
 

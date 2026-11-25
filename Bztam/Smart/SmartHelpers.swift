@@ -7,11 +7,14 @@ struct EntryRecord: Sendable, Equatable {
     var date: Date
     var merchant: String
     var categoryID: UUID?
+    /// For money in: salary, freelance, family, other.
+    var incomeSource: String? = nil
 }
 
 extension EntryRecord {
     @MainActor init(_ entry: Entry) {
-        self.init(kind: entry.kind, amount: entry.amount, date: entry.date, merchant: entry.merchant, categoryID: entry.category?.id)
+        self.init(kind: entry.kind, amount: entry.amount, date: entry.date, merchant: entry.merchant, categoryID: entry.category?.id,
+                  incomeSource: entry.kind == .income ? entry.incomeSourceRaw : nil)
     }
 }
 

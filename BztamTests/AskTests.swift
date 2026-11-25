@@ -39,9 +39,9 @@ struct AskTests {
 
     @Test func englishFrenchAndDarija() {
         let en = parse("How much did I spend on coffee last month?").query
-        #expect(en == AskQuery(metric: .spent, range: .lastPeriod, categoryID: food.id))
+        #expect(en == AskQuery(metric: .spent, range: .lastPeriod, categoryIDs: [food.id]))
         let fr = parse("Combien il me reste pour les courses ?").query
-        #expect(fr == AskQuery(metric: .left, range: .thisPeriod, categoryID: courses.id))
+        #expect(fr == AskQuery(metric: .left, range: .thisPeriod, categoryIDs: [courses.id]))
         let darija = parse("ch7al sreft f taxi had simana").query
         #expect(darija.metric == .spent && darija.range == .thisWeek)
         #expect(darija.merchant == "TAXI")

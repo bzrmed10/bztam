@@ -8,6 +8,12 @@ struct AskView: View {
     @Query private var entries: [Entry]
     @Query(filter: #Predicate<BudgetCategory> { !$0.isArchived }, sort: \BudgetCategory.order) private var categories: [BudgetCategory]
     @Query private var settingsRows: [AppSettings]
+    @Query(filter: #Predicate<SavingsGoal> { !$0.isArchived }, sort: \SavingsGoal.order) private var goals: [SavingsGoal]
+    @Query private var goalMoves: [GoalMove]
+    @Query(sort: \Dart.createdAt) private var darts: [Dart]
+    @Query(filter: #Predicate<RecurringRule> { $0.isActive }) private var rules: [RecurringRule]
+    @State private var store = Store.shared
+    @State private var freeUsed = AskAllowance.used()
     @State private var question = ""
     @State private var turns: [AskTurn] = []
     @State private var thinking = false
@@ -19,11 +25,31 @@ struct AskView: View {
     private var context: AskContext {
         let period = BudgetCalculator.period(containing: .now, payday: payday)
         let balances = SplitActions.balances(context: modelContext)
+        let moves = GoalMove.values(goalMoves)
+        let now = Date.now
+        let askDarts = darts.map { d -> AskDart in
+            let plan = d.plan
+            let upcoming = plan.upcomingRounds(after: now, limit: plan.count).map { r in
+                let who = plan.collector(ofRound: r.round)
+                return (date: r.date, collector: d.displayName(who), isMe: who == d.meIndex)
+            }
+            let mine = upcoming.first(where: \.isMe)?.date
+            return AskDart(name: d.name, amount: d.amount, pot: plan.pot, upcoming: Array(upcoming.prefix(3)), myTurn: mine)
+        }
+        let askBills = rules.filter { $0.kind == .expense }.flatMap { rule in
+            RecurringEngine.occurrences(frequency: rule.frequency, start: rule.startDate, after: rule.lastGenerated, through: period.end, limit: 3)
+                .filter { $0 >= period.start }
+                .map { AskBill(name: rule.merchant.isEmpty ? (rule.category?.displayName ?? L10n.t("Bill")) : rule.merchant,
+                               amount: rule.amount, date: $0, categoryID: rule.category?.id) }
+        }
         return AskContext(records: entries.map { EntryRecord($0) },
                           categories: categories.map { AskCategory(id: $0.id, key: $0.key, name: $0.displayName, budget: $0.budget(in: period)) },
                           payday: payday,
                           owedToMe: balances.map { AskDebt(name: $0.name, amount: $0.owesYou) },
-                          iOwe: balances.map { AskDebt(name: $0.name, amount: $0.youOwe) })
+                          iOwe: balances.map { AskDebt(name: $0.name, amount: $0.youOwe) },
+                          goals: goals.map { AskGoal(id: $0.id, name: $0.name, saved: GoalMath.saved($0.id, in: moves), target: $0.target,
+                                                     deadline: $0.deadline) },
+                          darts: askDarts, bills: askBills)
     }
 
     private var suggestions: [String] {
@@ -34,8 +60,10 @@ struct AskView: View {
         if let shop = context.merchants.first {
             list.append(L10n.t("How many times at %@ this month?", shop.name))
         }
+        list.append(L10n.t("Did I spend more than last month?"))
+        list.append(L10n.t("Will I finish the month?"))
+        if let goal = goals.first { list.append(L10n.t("How much have I saved for %@?", goal.name)) }
         list.append(L10n.t("Where did most of my money go?"))
-        list.append(L10n.t("Biggest expense this year?"))
         if !SplitActions.balances(context: modelContext).filter({ $0.owesYou > 0 || $0.youOwe > 0 }).isEmpty {
             list.insert(L10n.t("Who owes me?"), at: 2)
         }
@@ -58,6 +86,18 @@ struct AskView: View {
                             ScreenTitle(text: L10n.t("Ask Bztam"))
                             Label(L10n.t("Answered on your iPhone. Your data stays on it."), systemImage: "lock")
                                 .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
+                            if !store.isPlus {
+                                Button { PlusPresenter.show(.ask) } label: {
+                                    Text(freeLeft == 0 ? L10n.t("No free questions left this month · Get Plus")
+                                         : freeLeft == 1 ? L10n.t("1 free question left this month")
+                                         : L10n.t("%d free questions left this month", freeLeft))
+                                        .font(.scaled(size: 13, weight: .bold))
+                                        .padding(.horizontal, 12).padding(.vertical, 6)
+                                        .background(Theme.Colors.brandTint, in: Capsule())
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityIdentifier("ask.freeLeft")
+                            }
                         }
                         if turns.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
@@ -78,7 +118,7 @@ struct AskView: View {
                             }
                         }
                         ForEach(turns) { turn in
-                            AskTurnView(turn: turn, categoryName: name).id(turn.id)
+                            AskTurnView(turn: turn, categoryName: name, onSuggestion: { submit($0) }).id(turn.id)
                         }
                         if thinking {
                             ProgressView().tint(Theme.Colors.ink).padding(.vertical, 8)
@@ -154,16 +194,27 @@ struct AskView: View {
         categories.first { $0.id == id }?.displayName ?? L10n.t("Other")
     }
 
+    private var freeLeft: Int { max(0, AskAllowance.free - freeUsed) }
+
     private func submit(_ text: String) {
         let q = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !q.isEmpty, !thinking else { return }
+        // Free users: 3 questions a month; the next one opens Bztam Plus.
+        if !store.isPlus && freeLeft == 0 {
+            PlusPresenter.show(.ask)
+            return
+        }
         question = ""
         thinking = true
         let ctx = context
+        let previous = turns.last(where: { $0.query != nil })?.query
         Task {
-            let query = await AskAI.understand(q, context: ctx)
-            let answer = query.map { AskEngine.answer($0, context: ctx) } ?? AskEngine.help()
-            turns.append(AskTurn(question: q, answer: answer))
+            let query = await AskAI.understand(q, context: ctx, previous: previous)
+            var answer = query.map { AskEngine.answer($0, context: ctx) } ?? AskEngine.help()
+            if query == nil { answer.suggestions = AskParser.suggestions(for: q, context: ctx) }
+            turns.append(AskTurn(question: q, answer: answer, query: query))
+            // Only answered questions count.
+            if query != nil && !store.isPlus { freeUsed = AskAllowance.use() }
             thinking = false
         }
     }
@@ -173,11 +224,29 @@ struct AskTurn: Identifiable {
     let id = UUID()
     let question: String
     let answer: AskAnswer
+    var query: AskQuery? = nil
+}
+
+/// Free users get a few questions each calendar month (counted on this iPhone).
+enum AskAllowance {
+    static let free = 3
+    private static var key: String {
+        let c = Calendar.current.dateComponents([.year, .month], from: .now)
+        return "askUsed-\(c.year ?? 0)-\(c.month ?? 0)"
+    }
+    static func used() -> Int { UserDefaults.standard.integer(forKey: key) }
+    @discardableResult
+    static func use() -> Int {
+        let n = used() + 1
+        UserDefaults.standard.set(n, forKey: key)
+        return n
+    }
 }
 
 private struct AskTurnView: View {
     let turn: AskTurn
     let categoryName: (UUID?) -> String
+    var onSuggestion: (String) -> Void = { _ in }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -198,6 +267,21 @@ private struct AskTurnView: View {
                         .accessibilityIdentifier("ask.amount")
                 }
                 Text(turn.answer.sentence).font(.bzBody)
+                if !turn.answer.suggestions.isEmpty {
+                    VStack(alignment: .leading, spacing: 6) {
+                        ForEach(turn.answer.suggestions, id: \.self) { s in
+                            Button { onSuggestion(s) } label: {
+                                HStack(spacing: 6) {
+                                    Text(s).font(.scaled(size: 14, weight: .semibold)).multilineTextAlignment(.leading)
+                                    Image(systemName: "arrow.up.right").font(.scaled(size: 11, weight: .bold))
+                                }
+                                .padding(.horizontal, 12).padding(.vertical, 8)
+                                .background(Theme.Colors.surface, in: Capsule())
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
                 if !turn.answer.understood.isEmpty {
                     FlowLayout(spacing: 6) {
                         ForEach(turn.answer.understood, id: \.self) { TagPill(text: $0) }

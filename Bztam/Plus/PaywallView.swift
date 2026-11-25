@@ -31,7 +31,9 @@ struct PaywallView: View {
             Benefit(id: .monthEnd, symbol: "arrow.uturn.forward", title: L10n.t("Month end on autopilot"),
                     detail: L10n.t("What's left goes where you chose, every payday.")),
             Benefit(id: .export, symbol: "square.and.arrow.up", title: L10n.t("Export and backups"),
-                    detail: L10n.t("Your expenses as a spreadsheet, or a full backup file."))
+                    detail: L10n.t("Your expenses as a spreadsheet, or a full backup file.")),
+            Benefit(id: .ask, symbol: "sparkles", title: L10n.t("Ask anything about your money"),
+                    detail: L10n.t("Compare months, check a goal, see if you can afford it."))
         ]
         guard let i = all.firstIndex(where: { $0.id == reason }) else { return all }
         var sorted = all
@@ -46,6 +48,7 @@ struct PaywallView: View {
         case .scan: L10n.t("Snap it, it's added.")
         case .monthEnd: L10n.t("Payday, sorted by itself.")
         case .export: L10n.t("Take your data anywhere.")
+        case .ask: L10n.t("Keep asking, as much as you like.")
         }
     }
 
