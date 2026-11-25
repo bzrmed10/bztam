@@ -171,9 +171,16 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 
 Product IDs: com.bzrmed.bztam.plus.lifetime (non-consumable, Family Sharing on), com.bzrmed.bztam.plus.yearly (auto-renewable, group "Bztam Plus", 1 year), com.bzrmed.bztam.plus.trial (non-consumable, free). Paywall screenshot for review: en-40-plus.png (-paywallShot).
 
+## Next — Ask Bztam in Plus (decided 25 Nov, to build)
+- [ ] Free users: 3 questions a month (counted per calendar month, on the device); the 4th opens the Plus screen (new reason "ask"). Plus: unlimited.
+- [ ] Same on every iPhone, with or without Apple Intelligence (the paid value never depends on Apple's model).
+- [ ] Plus screen: a 5th benefit "Ask anything about your money". Ask screen shows "2 free questions left this month" for free users.
+- [ ] Review notes: "Ask Bztam answers with the app's own engine on the user's data; it works on devices without Apple Intelligence, which only helps understand wording when available."
+- [ ] If App Review rejects it under 4.10: make Ask free again and resubmit.
+
 ## App Review rules — check before every submission (from Inly's rejection, 24 Nov)
 - **2.3.7 Accurate metadata:** no price words anywhere in screenshots, name, subtitle, keywords or promotional text: no "free", "gratuit", "مجاني", "no subscription", "pay once", "lifetime", discounts or prices. Captions describe what the app does, nothing about cost. (Checked 25 Nov: current texts and screenshots are clean.)
-- **4.10 Built-in capabilities:** never charge for iCloud sync, Face ID lock, notifications, widgets, Siri, or camera/photo access. Plus only sells Bztam's own work (unlimited goals, scanning that reads receipts, automatic choices, exports).
+- **4.10 Built-in capabilities:** never charge for iCloud sync, Face ID lock, notifications, widgets, Siri, or camera/photo access. Ask Bztam in Plus is a deliberate try (own engine, works without Apple Intelligence); free again if rejected. Plus only sells Bztam's own work (unlimited goals, scanning that reads receipts, automatic choices, exports).
 - **3.1.1 / 3.1.2 In-app purchase:** only Apple IAP; Restore purchases; the subscription screen shows price, length, auto-renew and links to Terms of Use (EULA) and Privacy; the Terms link is also in the App Store description or as the custom EULA.
 - **2.1 Completeness:** no login; everything works for the reviewer; IAPs submitted with the version (Add for Review → the draft); review notes explain scanning, dart and where Plus appears.
 - **5.1.1 Privacy:** "Data Not Collected"; privacy policy URL live; every permission asked only when used, with a clear reason; nothing breaks if a permission is refused.
