@@ -10,6 +10,7 @@ enum Strings {
 
     private static let json = #"""
 {
+ "Face ID is off for Bztam. Turn it on in Settings.": "Face ID est désactivé pour Bztam. Activez-le dans Réglages.",
  "%@ added to %@": "%@ ajoutés à %@",
  "%@ added to this month": "%@ ajoutés à ce mois",
  "%@ from last month": "%@ du mois dernier",

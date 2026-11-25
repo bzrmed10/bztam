@@ -142,14 +142,41 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 - [x] Plain words: "without a budget", "left over", "Move to another category"
 - [x] Friends: small amounts you owe in normal text; Split options folded; onboarding bills card scrolls above the number pad
 
-## Next — to do (noted 24 Nov): more currencies and Moroccans abroad
+## ## M18 — Ready for the world, ready to sell (next, planned 25 Nov)
+
+### More currencies
 - [ ] About 30 currencies with local symbols and writing (DA, DT, FCFA after the number…): Maghreb (DZD, TND, LYD), Europe (EUR, GBP, CHF, SEK, NOK, DKK, PLN, TRY), Gulf and Middle East (SAR, AED, QAR, KWD, BHD, OMR, JOD, EGP), Africa (XOF, XAF, NGN), Americas (USD, CAD, BRL, MXN), Asia (INR, MYR, JPY).
 - [ ] Onboarding: the iPhone's region currency at the top (detection already exists, but only for the 8 current currencies; others fall back to DH), plus a search field.
 - [ ] Currencies without cents (FCFA, yen): no decimals, no comma on the keypad. 3-decimal dinars keep 2 decimals.
 - [ ] Keypad: more digits for big currencies (FCFA, naira salaries).
 - [ ] Fixed limits made for dirhams scale per currency (rough size vs DH): Advice step 50 / gap 100, InsightsCalculator minimum 50, Recap 200 and 50. Amounts are never converted.
-- [ ] Moroccans abroad: a "Sent to family" category; euros suggested for European regions.
-- Market notes: focus marketing on Morocco and Moroccans in France, Spain and Belgium; release worldwide; Android later if Morocco grows.
+
+### Moroccans abroad
+- [ ] A "Sent to family" category; euros suggested for European regions.
+
+### Add a category from where you pick one
+- [ ] A "+" at the end of the sideways category chips (Add/Edit expense, Move sheet) and a "+ Add a category" row at the end of the categories on Home. Opens the new-category sheet; the new category is selected right away.
+
+### Bztam Plus (pricing decided 24 Nov)
+- [ ] Yearly ~9.99 $ and Lifetime ~24.99 $ (lifetime shown as the main choice: "Pay once. Yours forever."). Morocco/Maghreb ~49 DH and ~129 DH (per-country prices in App Store Connect). No monthly plan.
+- [ ] 14-day free trial (introductory offer on the yearly plan; for lifetime, a free non-consumable "14-Day Trial" like Inly). No paywall at launch.
+- [ ] Free: budget, categories, expenses, Home, Activity, calendar, month-end card, 1 savings goal, dart, splitting, Face ID lock, privacy mode, iCloud sync, notifications, widgets, Siri.
+- [ ] Plus: unlimited savings goals, receipt scanning and PDF bill import, automatic month-end choices, export and backup files, later big features (shared budget…).
+- [ ] Plus offered only at moments of value (2nd goal, first scan, automatic month end, export). Paywall: price, period, renewal terms, Restore purchases, Redeem code, Terms of Use + Privacy links.
+- [ ] TestFlight-only "Test as free user" switch.
+- [ ] User: create the 2 products (+ trial) in App Store Connect, prices per country, Family Sharing on lifetime.
+
+### Face ID
+- [x] Fixed (25 Nov): Face ID was asked while the app was still opening, so iOS went straight to the passcode. Now asked once the app is on screen; if Face ID is turned off for Bztam, the lock screen says so with a link to Settings.
+
+## App Review rules — check before every submission (from Inly's rejection, 24 Nov)
+- **2.3.7 Accurate metadata:** no price words anywhere in screenshots, name, subtitle, keywords or promotional text: no "free", "gratuit", "مجاني", "no subscription", "pay once", "lifetime", discounts or prices. Captions describe what the app does, nothing about cost. (Checked 25 Nov: current texts and screenshots are clean.)
+- **4.10 Built-in capabilities:** never charge for iCloud sync, Face ID lock, notifications, widgets, Siri, or camera/photo access. Plus only sells Bztam's own work (unlimited goals, scanning that reads receipts, automatic choices, exports).
+- **3.1.1 / 3.1.2 In-app purchase:** only Apple IAP; Restore purchases; the subscription screen shows price, length, auto-renew and links to Terms of Use (EULA) and Privacy; the Terms link is also in the App Store description or as the custom EULA.
+- **2.1 Completeness:** no login; everything works for the reviewer; IAPs submitted with the version (Add for Review → the draft); review notes explain scanning, dart and where Plus appears.
+- **5.1.1 Privacy:** "Data Not Collected"; privacy policy URL live; every permission asked only when used, with a clear reason; nothing breaks if a permission is refused.
+- **2.3.3 / 2.3.10 Screenshots:** show the real app in use; no other platforms (Android) or competitors named.
+- **Health of the build:** no crash on launch for a fresh install, iPad not targeted (iPhone only), all links in Settings work.
 
 M17 — When the month ends (24 Nov, mockups: canvas row "When the month ends")
 - [x] Card on Home the first days after payday: "You have 640 DH left" → Add to next month (big), Add to savings, Leave it; "Later" hides it for a day.

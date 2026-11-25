@@ -10,6 +10,7 @@ enum StringsArabic {
 
     private static let json = #"""
 {
+ "Face ID is off for Bztam. Turn it on in Settings.": "Face ID متوقف لبزطام. فعّله في الإعدادات.",
  "%@ added to %@": "أُضيف %@ إلى %@",
  "%@ added to this month": "أُضيف %@ إلى هذا الشهر",
  "%@ from last month": "%@ من الشهر الماضي",

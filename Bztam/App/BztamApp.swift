@@ -67,7 +67,7 @@ struct RootView: View {
             .environment(\.locale, L10n.locale)
 
             if lock.locked {
-                LockView { Task { await lock.unlock() } }
+                LockView(faceIDDenied: lock.faceIDDenied) { Task { await lock.unlock() } }
                     .transition(.opacity)
             }
         }
@@ -94,10 +94,18 @@ struct RootView: View {
         .onChange(of: scenePhase) { _, phase in
             switch phase {
             case .background: lock.lockIfNeeded()
-            case .active: Task { await lock.unlock() }
+            case .active:
+                Task { @MainActor in
+                    // Let the app finish coming on screen before Face ID.
+                    try? await Task.sleep(for: .milliseconds(300))
+                    await lock.unlock()
+                }
             default: break
             }
         }
-        .task { await lock.unlock() }
+        .task {
+            try? await Task.sleep(for: .milliseconds(500))
+            await lock.unlock()
+        }
     }
 }
