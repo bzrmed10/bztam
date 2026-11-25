@@ -53,6 +53,6 @@ struct MoneyTests {
         #expect(!Currency.gbp.symbolFirst(language: "fr"))
         #expect(!Currency.mad.symbolFirst(language: "en"))
         #expect(!Currency.sar.symbolFirst(language: "ar"))
-        #expect(Currency.allCases.count == 8)
+        #expect(Currency.allCases.count == 30)
     }
 }
