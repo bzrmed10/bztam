@@ -281,12 +281,12 @@ struct PlusCard: View {
                     Text("Bztam ")
                     Text("Plus").foregroundStyle(Theme.Colors.onBrand)
                         .padding(.horizontal, 8).padding(.vertical, 1)
-                        .background(plus ? Theme.Colors.canvas : Theme.Colors.brand, in: Capsule())
+                        .background(plus ? Color.white.opacity(0.7) : Theme.Colors.brand, in: Capsule())
                     Spacer(minLength: 8)
                     Text(plan)
                         .font(.scaled(size: 13, weight: .heavy))
                         .padding(.horizontal, 10).padding(.vertical, 5)
-                        .background(plus ? Theme.Colors.canvas.opacity(0.7) : Theme.Colors.canvas, in: Capsule())
+                        .background(plus ? Color.white.opacity(0.7) : Theme.Colors.canvas, in: Capsule())
                 }
                 .font(.scaled(size: 20, weight: .heavy))
                 if plus {
