@@ -54,6 +54,8 @@ struct CurrencyPickerSheet: View {
                 }
             }
             .scrollDismissesKeyboard(.immediately)
+            .contentMargins(.horizontal, 5, for: .scrollContent)
+            .scrollIndicators(.hidden)
         }
         .padding(Theme.Space.l)
         .background(Theme.Colors.canvas)
@@ -89,7 +91,7 @@ struct CurrencyRow: View {
             }
             .padding(10)
             .background(Theme.Colors.surface.opacity(selected ? 1 : 0.5), in: RoundedRectangle(cornerRadius: Theme.Radius.small))
-            .overlay(RoundedRectangle(cornerRadius: Theme.Radius.small).stroke(selected ? Theme.Colors.ink : .clear, lineWidth: 1.5))
+            .overlay(RoundedRectangle(cornerRadius: Theme.Radius.small).strokeBorder(selected ? Theme.Colors.ink : .clear, lineWidth: 1.5))
             .contentShape(Rectangle())
         }
         .buttonStyle(.pressable)

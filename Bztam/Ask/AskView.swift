@@ -225,7 +225,7 @@ private struct AskTurnView: View {
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .overlay(RoundedRectangle(cornerRadius: Theme.Radius.small).stroke(Theme.Colors.line, lineWidth: 1))
+            .overlay(RoundedRectangle(cornerRadius: Theme.Radius.small).strokeBorder(Theme.Colors.line, lineWidth: 1))
         }
     }
 

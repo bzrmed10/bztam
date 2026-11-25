@@ -272,6 +272,8 @@ struct MonthEndGoalSheet: View {
                 }
             }
             .scrollBounceBehavior(.basedOnSize)
+            .contentMargins(.horizontal, 3, for: .scrollContent)
+            .scrollIndicators(.hidden)
             if let chosen {
                 Button {
                     onPick(chosen)
@@ -322,7 +324,7 @@ struct MonthEndGoalSheet: View {
             }
             .padding(12)
             .background(isOn ? Theme.Colors.brandTint : Theme.Colors.surface, in: RoundedRectangle(cornerRadius: 20))
-            .overlay(RoundedRectangle(cornerRadius: 20).stroke(isOn ? Theme.Colors.ink : .clear, lineWidth: 2))
+            .overlay(RoundedRectangle(cornerRadius: 20).strokeBorder(isOn ? Theme.Colors.ink : .clear, lineWidth: 2))
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(isOn ? .isSelected : [])

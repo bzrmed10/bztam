@@ -153,7 +153,7 @@ struct PaywallView: View {
             }
             .padding(16)
             .background(on ? Theme.Colors.brandTint : Theme.Colors.surface, in: RoundedRectangle(cornerRadius: 20))
-            .overlay(RoundedRectangle(cornerRadius: 20).stroke(on ? Theme.Colors.ink : .clear, lineWidth: 2))
+            .overlay(RoundedRectangle(cornerRadius: 20).strokeBorder(on ? Theme.Colors.ink : .clear, lineWidth: 2))
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(on ? .isSelected : [])
@@ -252,5 +252,69 @@ struct PaywallView: View {
             try? await Task.sleep(for: .seconds(1.6))
             dismiss()
         }
+    }
+}
+
+/// Top of Settings: your plan when you have Plus, or an invitation to try it.
+struct PlusCard: View {
+    let store: Store
+    let manage: () -> Void
+
+    private var plan: String {
+        if store.testAsFree { return L10n.t("Free") }
+        if store.ownsLifetime || store.demo { return L10n.t("Lifetime") }
+        if store.yearlyActive { return L10n.t("Yearly") }
+        if store.trialActive, let end = store.trialEnd {
+            let days = max(1, Calendar.current.dateComponents([.day], from: .now, to: end).day ?? 1)
+            return days == 1 ? L10n.t("Trial · 1 day left") : L10n.t("Trial · %d days left", days)
+        }
+        return L10n.t("Free")
+    }
+
+    var body: some View {
+        let plus = store.isPlus
+        Button {
+            if store.yearlyActive { manage() } else if !store.ownsLifetime || store.testAsFree { PlusPresenter.show(.general) }
+        } label: {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(alignment: .center, spacing: 0) {
+                    Text("Bztam ")
+                    Text("Plus").foregroundStyle(Theme.Colors.onBrand)
+                        .padding(.horizontal, 8).padding(.vertical, 1)
+                        .background(plus ? Theme.Colors.canvas : Theme.Colors.brand, in: Capsule())
+                    Spacer(minLength: 8)
+                    Text(plan)
+                        .font(.scaled(size: 13, weight: .heavy))
+                        .padding(.horizontal, 10).padding(.vertical, 5)
+                        .background(plus ? Theme.Colors.canvas.opacity(0.7) : Theme.Colors.canvas, in: Capsule())
+                }
+                .font(.scaled(size: 20, weight: .heavy))
+                if plus {
+                    Text(store.trialActive && !store.owns
+                         ? L10n.t("Everything is on during your trial: goals, scans, autopilot and exports.")
+                         : L10n.t("Everything is on: unlimited goals, scans, month-end autopilot and exports."))
+                        .font(.bzCaption)
+                    if store.yearlyActive {
+                        Text(L10n.t("Manage subscription")).font(.scaled(size: 14, weight: .bold)).underline()
+                    } else if store.trialActive && !store.owns {
+                        Text(L10n.t("Keep Plus")).font(.scaled(size: 14, weight: .bold)).underline()
+                    }
+                } else {
+                    Text(L10n.t("Unlimited goals, receipt scanning, month-end autopilot and exports."))
+                        .font(.bzCaption).foregroundStyle(Theme.Colors.inkMuted)
+                    Text(store.canStartTrial ? L10n.t("Try Plus free for %d days", Store.trialDays) : L10n.t("Get Bztam Plus"))
+                        .font(.scaled(size: 15, weight: .bold))
+                        .foregroundStyle(Theme.Colors.onBrand)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .background(Theme.Colors.brand, in: Capsule())
+                }
+            }
+            .foregroundStyle(plus ? Theme.Colors.onBrand : Theme.Colors.ink)
+            .padding(18)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(plus ? Theme.Colors.brand : Theme.Colors.surface, in: RoundedRectangle(cornerRadius: 24))
+        }
+        .buttonStyle(.pressable)
+        .accessibilityIdentifier("settings.plus")
     }
 }

@@ -88,7 +88,7 @@ struct MoneyTextField: View {
         .padding(.horizontal, 14)
         .frame(width: width, height: 44)
         .background(Theme.Colors.canvas, in: Capsule())
-        .overlay(Capsule().stroke(focused ? Theme.Colors.ink : Theme.Colors.line, lineWidth: focused ? 1.5 : 1))
+        .overlay(Capsule().strokeBorder(focused ? Theme.Colors.ink : Theme.Colors.line, lineWidth: focused ? 1.5 : 1))
         .contentShape(Capsule())
         .onTapGesture { focused = true }
         .environment(\.layoutDirection, .leftToRight)

@@ -129,7 +129,7 @@ struct AmountField: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.small).stroke(Theme.Colors.line, lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: Theme.Radius.small).strokeBorder(Theme.Colors.line, lineWidth: 1))
         .accessibilityElement(children: .combine)
     }
 }

@@ -210,7 +210,7 @@ struct EmptyState: View {
                 RoundedRectangle(cornerRadius: 20).fill(Theme.Colors.brandTint)
                     .frame(width: 84, height: 64).rotationEffect(.degrees(8)).offset(x: 16, y: 4)
                 RoundedRectangle(cornerRadius: 22).fill(Theme.Colors.surface)
-                    .overlay(RoundedRectangle(cornerRadius: 22).stroke(Theme.Colors.line, lineWidth: 1))
+                    .overlay(RoundedRectangle(cornerRadius: 22).strokeBorder(Theme.Colors.line, lineWidth: 1))
                     .frame(width: 92, height: 72)
                     .overlay(Image(systemName: symbol).font(.scaled(size: 28, weight: .semibold)).foregroundStyle(Theme.Colors.ink))
                     .offset(y: float ? -4 : 0)

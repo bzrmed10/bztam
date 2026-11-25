@@ -116,7 +116,7 @@ struct SpendingCalendarView: View {
                     Text(L10n.t("Less"))
                     ForEach(0..<4) { level in
                         RoundedRectangle(cornerRadius: 3).fill(DayCell.fill(level)).frame(width: 16, height: 10)
-                            .overlay(RoundedRectangle(cornerRadius: 3).stroke(Theme.Colors.line, lineWidth: level == 0 ? 1 : 0))
+                            .overlay(RoundedRectangle(cornerRadius: 3).strokeBorder(Theme.Colors.line, lineWidth: level == 0 ? 1 : 0))
                     }
                     Text(L10n.t("More"))
                 }
@@ -202,7 +202,7 @@ private struct DayCell: View {
             .foregroundStyle(level >= 2 ? Theme.Colors.onBrand : Theme.Colors.ink)
             .frame(maxWidth: .infinity, minHeight: 52)
             .background(future ? Color.clear : Self.fill(level), in: RoundedRectangle(cornerRadius: 12))
-            .overlay(RoundedRectangle(cornerRadius: 12).stroke(isSelected ? Theme.Colors.ink : isToday ? Theme.Colors.positive : .clear,
+            .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(isSelected ? Theme.Colors.ink : isToday ? Theme.Colors.positive : .clear,
                                                                 lineWidth: isSelected ? 2 : 1.5))
             .opacity(future ? 0.4 : 1)
         }

@@ -10,6 +10,11 @@ enum Strings {
 
     private static let json = #"""
 {
+ "Everything is on during your trial: goals, scans, autopilot and exports.": "Tout est activé pendant l'essai : objectifs, scans, pilote automatique et exports.",
+ "Everything is on: unlimited goals, scans, month-end autopilot and exports.": "Tout est activé : objectifs illimités, scans, fin de mois automatique et exports.",
+ "Keep Plus": "Garder Plus",
+ "Manage subscription": "Gérer l'abonnement",
+ "Unlimited goals, receipt scanning, month-end autopilot and exports.": "Objectifs illimités, scan des tickets, fin de mois automatique et exports.",
  "%@ a year": "%@ par an",
  "%@ a year, renews automatically until you cancel. Cancel anytime in Settings → your name → Subscriptions, at least 24 hours before it renews.": "%@ par an, renouvelé automatiquement jusqu'à résiliation. Résiliez quand vous voulez dans Réglages → votre nom → Abonnements, au moins 24 heures avant le renouvellement.",
  "A trip, Eid, a new phone: save for all of them.": "Un voyage, l'Aïd, un nouveau téléphone : épargnez pour tout.",

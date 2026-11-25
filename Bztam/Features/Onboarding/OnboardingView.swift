@@ -83,6 +83,9 @@ struct OnboardingView: View {
         .padding(.horizontal, Theme.Space.l)
         .padding(.top, Theme.Space.m)
         .padding(.bottom, Theme.Space.s)
+        // Room inside the lists for selected borders and toggles, so the scroll view never cuts them; no scroll bar over the cards.
+        .contentMargins(.horizontal, 5, for: .scrollContent)
+        .scrollIndicators(.hidden)
         .background(Theme.Colors.canvas)
         .foregroundStyle(Theme.Colors.ink)
         .keyboardDoneButton()

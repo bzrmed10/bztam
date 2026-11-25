@@ -10,6 +10,11 @@ enum StringsArabic {
 
     private static let json = #"""
 {
+ "Everything is on during your trial: goals, scans, autopilot and exports.": "كل شيء مفعّل خلال التجربة: الأهداف والمسح والتلقائي والتصدير.",
+ "Everything is on: unlimited goals, scans, month-end autopilot and exports.": "كل شيء مفعّل: أهداف بلا حدود، مسح، نهاية شهر تلقائية وتصدير.",
+ "Keep Plus": "احتفظ ببلس",
+ "Manage subscription": "إدارة الاشتراك",
+ "Unlimited goals, receipt scanning, month-end autopilot and exports.": "أهداف بلا حدود، مسح التذاكر، نهاية شهر تلقائية وتصدير.",
  "%@ a year": "%@ في السنة",
  "%@ a year, renews automatically until you cancel. Cancel anytime in Settings → your name → Subscriptions, at least 24 hours before it renews.": "%@ في السنة، يتجدد تلقائيًا حتى تلغيه. ألغه متى شئت من الإعدادات ← اسمك ← الاشتراكات، قبل 24 ساعة على الأقل من التجديد.",
  "A trip, Eid, a new phone: save for all of them.": "سفر، العيد، هاتف جديد: ادّخر لها كلها.",

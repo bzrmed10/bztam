@@ -39,7 +39,7 @@ final class Store {
     /// `-paywallShot`: screenshot of the Plus screen for App Review (sample prices, no StoreKit).
     var paywallShot: Bool { args.contains("-paywallShot") }
     /// Demo data and UI tests have everything unlocked, unless they test the free version.
-    private var demo: Bool { (args.contains("-demoData") || args.contains("-plusUnlocked")) && !paywallShot && !args.contains("-freeUser") }
+    var demo: Bool { (args.contains("-demoData") || args.contains("-plusUnlocked")) && !paywallShot && !args.contains("-freeUser") }
     private var updates: Task<Void, Never>?
 
     private init() {

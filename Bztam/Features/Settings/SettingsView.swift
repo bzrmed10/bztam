@@ -49,6 +49,7 @@ struct SettingsView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
                     ScreenTitle(text: L10n.t("Settings"))
+                    PlusCard(store: store) { managingSubscription = true }
 
                     section(L10n.t("Your month")) {
                         Menu {
@@ -186,14 +187,6 @@ struct SettingsView: View {
                     }
 
                     section(L10n.t("App")) {
-                        Button {
-                            if store.yearlyActive { managingSubscription = true } else if !store.ownsLifetime { PlusPresenter.show(.general) }
-                        } label: {
-                            SettingsRow(symbol: "plus.circle", title: L10n.t("Bztam Plus"), value: plusStatus,
-                                        chevron: !store.ownsLifetime)
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityIdentifier("settings.plus")
                         if Store.isTestFlight {
                             ToggleRow(symbol: "testtube.2", title: L10n.t("Test as free user"),
                                       detail: L10n.t("TestFlight only: see Bztam without Plus"), isOn: $store.testAsFree)
@@ -339,16 +332,6 @@ struct SettingsView: View {
         c.path = "support@healus-ai.com"
         c.queryItems = [URLQueryItem(name: "subject", value: L10n.t("Bztam feedback")), URLQueryItem(name: "body", value: body)]
         if let url = c.url { openURL(url) }
-    }
-
-    private var plusStatus: String {
-        if store.ownsLifetime { return L10n.t("Lifetime") }
-        if store.yearlyActive { return L10n.t("Yearly") }
-        if store.trialActive, let end = store.trialEnd {
-            let days = max(1, Calendar.current.dateComponents([.day], from: .now, to: end).day ?? 1)
-            return days == 1 ? L10n.t("Trial · 1 day left") : L10n.t("Trial · %d days left", days)
-        }
-        return L10n.t("Free")
     }
 
     private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {

@@ -59,7 +59,7 @@ extension OnboardingView {
             }
             .padding(12)
             .background(Theme.Colors.surface.opacity(selected ? 1 : 0.5), in: RoundedRectangle(cornerRadius: Theme.Radius.small))
-            .overlay(RoundedRectangle(cornerRadius: Theme.Radius.small).stroke(selected ? Theme.Colors.ink : .clear, lineWidth: 1.5))
+            .overlay(RoundedRectangle(cornerRadius: Theme.Radius.small).strokeBorder(selected ? Theme.Colors.ink : .clear, lineWidth: 1.5))
             .contentShape(Rectangle())
         }
         .buttonStyle(.pressable)
@@ -353,7 +353,7 @@ extension OnboardingView {
             .padding(.horizontal, 6)
             .frame(maxWidth: .infinity)
             .background(Theme.Colors.surface.opacity(on ? 1 : 0.55), in: RoundedRectangle(cornerRadius: Theme.Radius.small))
-            .overlay(RoundedRectangle(cornerRadius: Theme.Radius.small).stroke(on ? Theme.Colors.ink : .clear, lineWidth: 1.5))
+            .overlay(RoundedRectangle(cornerRadius: Theme.Radius.small).strokeBorder(on ? Theme.Colors.ink : .clear, lineWidth: 1.5))
         }
         .buttonStyle(.pressable)
         .foregroundStyle(Theme.Colors.ink)
@@ -730,7 +730,7 @@ struct PlanBar: View {
                 ForEach(parts.indices, id: \.self) { i in
                     HStack(spacing: 6) {
                         Circle().fill(parts[i].2).frame(width: 9, height: 9)
-                            .overlay(Circle().stroke(Theme.Colors.line, lineWidth: i == 3 ? 1 : 0))
+                            .overlay(Circle().strokeBorder(Theme.Colors.line, lineWidth: i == 3 ? 1 : 0))
                         Text(parts[i].0 + " " + Money.format(parts[i].1, privacy: .never))
                             .font(.scaled(size: 12, weight: .semibold))
                             .foregroundStyle(Theme.Colors.inkMuted)
