@@ -171,12 +171,12 @@ One task = one commit. Mark `[x]` when committed and CI is green. Progress is su
 
 Product IDs: com.bzrmed.bztam.plus.lifetime (non-consumable, Family Sharing on), com.bzrmed.bztam.plus.yearly (auto-renewable, group "Bztam Plus", 1 year), com.bzrmed.bztam.plus.trial (non-consumable, free). Paywall screenshot for review: en-40-plus.png (-paywallShot).
 
-## Next — Fixes from TestFlight (noted 25 Nov, with screenshots)
-- [ ] Settings: a Bztam Plus card at the top. Free: "Try Bztam Plus" with the main benefits, opens the Plus screen. Plus: "Bztam Plus · Lifetime" (or Yearly / Trial, N days left), and Manage subscription for Yearly. Remove the small row from the App section.
-- [ ] Currency list (onboarding and Settings): the selected row's border is cut at the edges, and the scroll bar runs over the rows. Draw the border inside the row (strokeBorder), give the list a little side padding, hide the scroll bar.
-- [ ] Your fixed bills grid: same problem (selected tile border cut on the right, scroll bar over the tiles). Same fix.
-- [ ] Saving step and goal editor: the "By a date" toggle looks cut on the right. Give it room (no clipping, normal toggle size).
-- [ ] Check every list and grid with a selected border for the same clipping (categories, Move sheet, goal picker, month-end picker).
+## Fixes from TestFlight (done 25 Nov)
+- [x] Settings: a Bztam Plus card at the top. Free: "Try Bztam Plus" with the main benefits, opens the Plus screen. Plus: "Bztam Plus · Lifetime" (or Yearly / Trial, N days left), and Manage subscription for Yearly. Remove the small row from the App section.
+- [x] Currency list (onboarding and Settings): the selected row's border is cut at the edges, and the scroll bar runs over the rows. Draw the border inside the row (strokeBorder), give the list a little side padding, hide the scroll bar.
+- [x] Your fixed bills grid: same problem (selected tile border cut on the right, scroll bar over the tiles). Same fix.
+- [x] Saving step and goal editor: the "By a date" toggle looks cut on the right. Give it room (no clipping, normal toggle size).
+- [x] Check every list and grid with a selected border for the same clipping (categories, Move sheet, goal picker, month-end picker).
 - Note: "Test as free user" only appears in TestFlight builds; App Store users never see it.
 
 ## Next — Ask Bztam in Plus (decided 25 Nov, to build)
