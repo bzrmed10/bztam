@@ -1,0 +1,9 @@
+Bztam is a budget app. No account or login is needed: everything is stored on the device (and in the user's own iCloud if they turn on sync).
+
+Bztam Plus (in-app purchase): Lifetime (non-consumable), Yearly (auto-renewable subscription) and a free 14-Day Trial (non-consumable, never charges). Plus unlocks: more than one savings goal, receipt scanning and PDF bill import, automatic month-end choices, export, and unlimited Ask Bztam questions. iCloud sync, Face ID lock, notifications, widgets and Siri are always free.
+
+Where Plus appears: Settings (card at the top), adding a second savings goal (Plan → Savings goals → +), the Scan / Import buttons on Home, Settings → When the month ends, Settings → Export, and Ask Bztam after 3 free questions in a month.
+
+Ask Bztam (Insights → "Ask about your money"): answers are computed by the app's own engine from the user's data on the device. It works on devices without Apple Intelligence; on devices with Apple Intelligence, the on-device model only helps understand the wording of a question. It never sees amounts and never generates the answer.
+
+Dart: a Moroccan rotating savings circle (tontine). Bztam only tracks it; no money moves through the app.
