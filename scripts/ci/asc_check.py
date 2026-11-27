@@ -28,3 +28,18 @@ for g in call("GET", f"/apps/{app['id']}/subscriptionGroups?limit=10").get("data
         a = s["attributes"]
         locs = call("GET", f"/subscriptions/{s['id']}/subscriptionLocalizations?limit=10").get("data", [])
         print("  SUB", a.get("productId"), a.get("subscriptionPeriod"), a.get("state"), "locales:", [l["attributes"].get("locale") for l in locs])
+        # Why it may be "Missing Metadata": each piece Apple needs.
+        def safe(path):
+            try:
+                return call("GET", path)
+            except Exception as e:  # noqa: BLE001
+                return {"error": str(e)[:120]}
+        shot = safe(f"/subscriptions/{s['id']}/appStoreReviewScreenshot")
+        prices = safe(f"/subscriptions/{s['id']}/prices?limit=1")
+        avail = safe(f"/subscriptions/{s['id']}/subscriptionAvailability")
+        print("    review screenshot:", "yes" if (shot.get("data") or {}).get("id") else "NO", (shot.get("data") or {}).get("attributes", {}).get("assetDeliveryState") if shot.get("data") else shot.get("error", ""))
+        print("    prices (territories):", (prices.get("meta") or {}).get("paging", {}).get("total", prices.get("error", "?")))
+        print("    availability:", (avail.get("data") or {}).get("attributes") if avail.get("data") else ("NOT SET " + avail.get("error", "")))
+        print("    review note / name:", a.get("reviewNote") is not None, a.get("name"), "familySharable:", a.get("familySharable"))
+    glocs = call("GET", f"/subscriptionGroups/{g['id']}/subscriptionGroupLocalizations?limit=10").get("data", [])
+    print("  group localizations:", [(l["attributes"].get("locale"), l["attributes"].get("name")) for l in glocs] or "NONE")
